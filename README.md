@@ -13,6 +13,8 @@ Provisional title:
 ## Repository contents
 
 - [`docs/research-requirements.md`](docs/research-requirements.md): research requirements, corpus plan, domestic and international sources, book recommendations, and reproducibility rules.
+- [`scripts/download_public_corpus.ps1`](scripts/download_public_corpus.ps1): rate-limited downloader for legally public RAIB reports.
+- [`data/catalog/book_metadata.csv`](data/catalog/book_metadata.csv): book metadata and licensed purchase links; no copyrighted ebook full text is stored.
 
 ## Planned agent pipeline
 
