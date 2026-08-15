@@ -1,0 +1,26 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+
+# Data and model outputs
+data/raw/
+data/processed/
+models/
+outputs/
+*.parquet
+*.pkl
+*.pt
+*.ckpt
+
+# Secrets and local configuration
+.env
+.env.*
+!.env.example
+
+# Editors and OS files
+.idea/
+.vscode/
+*.swp
+Thumbs.db
+Desktop.ini
