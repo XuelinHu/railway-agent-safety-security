@@ -18,6 +18,7 @@
 | Qwen3-4B + compact QLoRA + KG prompt | 36.67% | 12.50% | 18.64% | 0.00% | 0.00% | 0.00% | 4 |
 | Qwen3-4B + v1.2 compact QLoRA + KG prompt | 15.05% | 20.29% | 17.28% | 20.00% | 4.76% | 7.69% | 3 |
 | Qwen3-4B + v1.2 windowed compact QLoRA + KG prompt | 15.73% | 20.29% | 17.72% | 20.00% | 4.76% | 7.69% | 3 |
+| Qwen3.8-27B GGUF + windowed compact extraction | 24.62% | 36.36% | 29.36% | 6.12% | 11.54% | 8.00% | 4 |
 
 ## QLoRA Status
 
@@ -46,3 +47,5 @@
 - On the 3 valid v1.2 jobs, pooled strict entity F1 was 17.28% and relation F1 was 7.69%; Chinese entity F1 was 11.62% and Chinese relation F1 was 0.00%. Because one test job failed structurally, these remain engineering diagnostics and are not final manuscript claims.
 - The v1.2 long-Chinese diagnostic required an explicit 32K input window but exceeded the 24GB GPU memory budget when a concurrent local model occupied the GPU; its 29-entity/28-relation output was nevertheless recovered from the saved log and evaluated after structural repair.
 - Tokenizer-budgeted windowing split the long Chinese job into two overlapping windows and produced 3 valid window outputs from 5. After document-level merge, pooled strict entity F1 was 17.72%, relation F1 was 7.69%, and Chinese entity F1 was 12.01%; this is a resource/robustness diagnostic over 3 evaluated documents.
+- Qwen3.8-27B-UD-Q4_K_M GGUF was evaluated through llama.cpp with 4K output budgets and tokenizer-budgeted windows. All 5 windows and 4 documents produced valid parsed outputs; pooled strict entity F1 was 29.36% and relation F1 was 8.00%. Chinese entity F1 was 27.26%, while Chinese relation F1 remained 0.00%.
+- The Qwen3.8 GGUF grammar-constrained path failed during llama.cpp sampler initialization on the current build, including a minimal schema. The reported Qwen3.8 result therefore uses ordinary generation followed by JSON parsing, evidence recovery, ontology validation, and ID normalization; constrained decoding remains a separate pending experiment after a compatible runtime is available.

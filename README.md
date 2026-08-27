@@ -54,7 +54,7 @@ Official public reports and open datasets are preferred for experiments. Purchas
 
 Current research and implementation tasks are tracked in [`docs/work-plan.md`](docs/work-plan.md). The annotation ontology and output contract are defined in [`configs/risk_ontology.yaml`](configs/risk_ontology.yaml), [`schemas/preannotation_candidate.schema.json`](schemas/preannotation_candidate.schema.json), and [`schemas/risk_annotation.schema.json`](schemas/risk_annotation.schema.json).
 
-The reproducible experiment entry points are [`scripts/build_experiment_jobs.py`](scripts/build_experiment_jobs.py), [`scripts/evaluate_annotations.py`](scripts/evaluate_annotations.py), [`scripts/train_qlora.py`](scripts/train_qlora.py), and [`scripts/run_qlora_inference.py`](scripts/run_qlora_inference.py). Current pilot numbers and limitations are recorded in [`docs/experiment-report.md`](docs/experiment-report.md).
+The reproducible experiment entry points are [`scripts/build_experiment_jobs.py`](scripts/build_experiment_jobs.py), [`scripts/evaluate_annotations.py`](scripts/evaluate_annotations.py), [`scripts/train_qlora.py`](scripts/train_qlora.py), [`scripts/run_qlora_inference.py`](scripts/run_qlora_inference.py), and [`scripts/run_gguf_inference.py`](scripts/run_gguf_inference.py). Current pilot numbers and limitations are recorded in [`docs/experiment-report.md`](docs/experiment-report.md).
 
 The frozen teacher-prompt A/B evidence and batch cost estimate are recorded in [`docs/preannotation-gate-report.md`](docs/preannotation-gate-report.md).
 

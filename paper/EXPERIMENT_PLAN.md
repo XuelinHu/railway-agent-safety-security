@@ -43,6 +43,7 @@ All gates below are required before the main results are frozen.
 |---|---|---|
 | B1 | Multilingual encoder NER + relation classifier | Non-generative baseline, preferably XLM-RoBERTa |
 | B2 | Qwen3 zero-shot | Unadapted local LLM baseline |
+| B2a | Qwen3.8-27B GGUF | Larger local GGUF baseline with post-generation validation |
 | B3 | Qwen3 few-shot | Controls for demonstration-only gains |
 | B4 | Qwen3 QLoRA | Parameter-efficient baseline without KG/evidence constraints |
 | M1 | QLoRA + compact structured target | Tests output simplification |
@@ -53,6 +54,8 @@ All gates below are required before the main results are frozen.
 | X1 | A second architecture such as GLM-4-9B | Checks architecture dependence |
 
 Model comparisons must use identical document splits, ontology version, prompt budget, and evaluation code.
+
+The current Qwen3.8-27B pilot uses the same four frozen test documents, tokenizer-budgeted windows, 4-bit GGUF weights, and post-generation evidence/ontology validation as the Qwen3-4B diagnostics. The current llama.cpp build cannot initialize its JSON grammar sampler for this GGUF, so grammar-constrained decoding is not included in the Qwen3.8 score.
 
 ## 5. Required experiments
 

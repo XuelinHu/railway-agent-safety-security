@@ -1,0 +1,40 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Compact safety annotation",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "document_id", "language", "entities", "relations"],
+  "properties": {
+    "schema_version": {"const": "0.1.0"},
+    "document_id": {"type": "string"},
+    "language": {"enum": ["en", "zh", "mixed"]},
+    "entities": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "text", "type"],
+        "properties": {
+          "id": {"type": "string", "pattern": "^E[1-9][0-9]*$"},
+          "text": {"type": "string", "minLength": 1},
+          "type": {"enum": ["ACTOR", "LOCATION", "TIME", "ASSET", "EVENT", "FAILURE", "HAZARD", "CONSEQUENCE", "OPERATION", "REGULATION", "BARRIER", "MITIGATION", "HUMAN_FACTOR", "ORGANIZATIONAL_FACTOR", "ENVIRONMENT"]}
+        }
+      }
+    },
+    "relations": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "source_id", "type", "target_id", "claim_status"],
+        "properties": {
+          "id": {"type": "string", "pattern": "^R[1-9][0-9]*$"},
+          "source_id": {"type": "string", "pattern": "^E[1-9][0-9]*$"},
+          "type": {"enum": ["causes", "contributes_to", "precedes", "results_in", "occurs_at", "involves", "affects", "performed_by", "fails_during", "protected_by", "violates", "mitigated_by", "recommended_for", "part_of", "same_as"]},
+          "target_id": {"type": "string", "pattern": "^E[1-9][0-9]*$"},
+          "claim_status": {"enum": ["explicit", "inferred", "normative", "uncertain"]}
+        }
+      }
+    }
+  }
+}

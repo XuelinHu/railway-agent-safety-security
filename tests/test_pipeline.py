@@ -157,6 +157,25 @@ class PipelineTest(unittest.TestCase):
         self.assertEqual(len(merged[0]["annotation"]["entities"]), 2)
         self.assertEqual(len(merged[0]["annotation"]["relations"]), 1)
 
+    def test_gguf_runner_prompt_is_compact_and_model_tagged(self):
+        runner = load_script("run_gguf_inference.py")
+        job = {
+            "document_id": "D", "language": "zh", "ontology": {},
+            "segments": [{"segment_id": "S1", "text": "火灾", "start": 0}],
+        }
+        text = runner.prompt(job)
+        self.assertIn("qwen3.8-27b-gguf", text)
+        self.assertIn("language, entities, relations", text)
+        self.assertIn("Do not repeat entities", text)
+        normalized = runner.normalize_ids({
+            "entities": [{"id": "e7", "text": "火灾", "type": "EVENT"}],
+            "relations": [{"id": "r9", "source_id": "e7", "type": "part_of", "target_id": "e7", "claim_status": "explicit"}],
+        })
+        self.assertEqual(normalized["entities"][0]["id"], "E1")
+        self.assertEqual(normalized["relations"][0]["id"], "R1")
+        self.assertEqual(normalized["relations"][0]["source_id"], "E1")
+        self.assertEqual(normalized["schema_version"], "0.1.0")
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -73,6 +73,7 @@ The paper studies knowledge-graph-constrained, evidence-grounded, low-resource l
 - [x] Diagnose QLoRA generation parsing, EOS truncation, and compact-target prompt mismatch; v1.2 removes the conflicting prompt and adds auditable structural JSON repair.
 - [x] Add tokenizer-budgeted document windows and overlap-aware compact prediction merging for long-document inference.
 - [ ] Evaluate Qwen3-4B and Qwen3-8B zero-shot baselines on the expanded benchmark.
+- [x] Add Qwen3.8-27B GGUF baseline through llama.cpp and evaluate windowed compact extraction on the frozen pilot test set.
 - [ ] Add vector RAG, KG retrieval, and graph-constrained decoding variants.
 - [ ] Validate cross-architecture behavior with GLM-4-9B.
 - [ ] Run low-resource budgets of 10, 25, 50, and 100 documents.
