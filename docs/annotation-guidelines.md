@@ -15,6 +15,8 @@ The annotation task identifies safety entities, evidence-grounded relations, and
 
 Use the entity types in `configs/risk_ontology.yaml`.
 
+The frozen ontology version is `1.0.0`; annotation records continue to use schema version `0.1.0`. Ontology and annotation-schema versions are tracked separately.
+
 - `EVENT` is an occurrence; `HAZARD` is a potentially harmful condition.
 - `ASSET` is the physical or technical object; `FAILURE` is its failed state or function.
 - `BARRIER` is an existing prevention, detection, protection, or recovery control.
@@ -39,6 +41,8 @@ Use the entity types in `configs/risk_ontology.yaml`.
 3. A human reviewer accepts, rejects, or modifies every candidate.
 4. At least 20% of gold documents receive independent second review.
 5. Disagreements are adjudicated without using the teacher model as the final judge.
+
+Deterministic repair is limited to auditable cases: an invalid entity quote may be rebound only when its text has one occurrence in the supplied source segments, and an illegal relation may be reversed only when the swapped direction satisfies the frozen ontology signature. Missing relation claim status is rejected by default. Repairs remain pending until human review and are never promoted directly to gold.
 
 ## 6. Dataset integrity
 

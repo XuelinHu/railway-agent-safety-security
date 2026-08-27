@@ -126,6 +126,8 @@ def run(args: argparse.Namespace) -> int:
                 "job_id": job["job_id"],
                 "provider": args.provider,
                 "model": args.model,
+                "prompt_version": job.get("prompt_version"),
+                "ontology_version": job.get("ontology", {}).get("version"),
             }
             try:
                 call_job = job

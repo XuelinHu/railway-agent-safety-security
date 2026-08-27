@@ -33,6 +33,8 @@ class PipelineTest(unittest.TestCase):
             set(schema["$defs"]["relation"]["properties"]["type"]["enum"]),
         )
         self.assertEqual(set(ontology["relation_types"]), set(ontology["allowed_relation_signatures"]))
+        self.assertEqual(ontology["version"], "1.0.0")
+        self.assertEqual(ontology["annotation_schema_version"], schema["properties"]["schema_version"]["const"])
 
     def test_segments_preserve_global_offsets(self):
         corpus = load_script("build_corpus.py")
@@ -49,6 +51,46 @@ class PipelineTest(unittest.TestCase):
         self.assertEqual(source[start:end], source)
         with self.assertRaises(ValueError):
             normalizer.flexible_span(source, "Collision near Shalesmoor, Sheffield")
+
+    def test_unique_entity_evidence_repair_rejects_ambiguity(self):
+        normalizer = load_script("normalize_preannotations.py")
+        self.assertEqual(normalizer.matching_spans("source", ""), [])
+        segments = {
+            "S1": {"segment_id": "S1", "text": "Signal failure occurred.", "start": 10, "page": 1},
+            "S2": {"segment_id": "S2", "text": "The driver stopped.", "start": 40, "page": 2},
+        }
+        evidence = normalizer.locate_unique_entity_evidence("Signal failure", segments)
+        self.assertEqual(evidence["segment_id"], "S1")
+        self.assertEqual((evidence["start"], evidence["end"]), (10, 24))
+        segments["S2"]["text"] = "A second Signal failure was recorded."
+        with self.assertRaises(ValueError):
+            normalizer.locate_unique_entity_evidence("Signal failure", segments)
+
+    def test_inverse_relation_repair_requires_legal_swap(self):
+        normalizer = load_script("normalize_preannotations.py")
+        entities = {"E1": {"type": "ACTOR"}, "E2": {"type": "OPERATION"}}
+        signatures = {"performed_by": {"source": ["OPERATION"], "target": ["ACTOR"]}}
+        relation = {"id": "R1", "type": "performed_by", "source_id": "E1", "target_id": "E2"}
+        repaired, message = normalizer.constrain_relation_direction(
+            relation, entities, signatures, repair_inverse=True
+        )
+        self.assertEqual((repaired["source_id"], repaired["target_id"]), ("E2", "E1"))
+        self.assertIn("swapped direction", message)
+        rejected, _ = normalizer.constrain_relation_direction(
+            relation, entities, signatures, repair_inverse=False
+        )
+        self.assertIsNone(rejected)
+        unknown = {**relation, "type": "unknown_relation"}
+        rejected, _ = normalizer.constrain_relation_direction(
+            unknown, entities, signatures, repair_inverse=True
+        )
+        self.assertIsNone(rejected)
+
+    def test_representative_chunks_keep_document_coverage(self):
+        preparer = load_script("prepare_preannotation_jobs.py")
+        self.assertEqual(preparer.representative_chunk_indices(10, 3), [0, 5, 9])
+        self.assertEqual(preparer.representative_chunk_indices(2, 3), [0, 1])
+        self.assertEqual(preparer.representative_chunk_indices(10, 1), [5])
 
 
 if __name__ == "__main__":

@@ -82,8 +82,9 @@ def validate(args: argparse.Namespace) -> int:
     validator = Draft202012Validator(schema)
     failures = 0
     total = 0
-    for record_number, annotation in records(args.annotations):
+    for record_number, record in records(args.annotations):
         total += 1
+        annotation = record.get("annotation", record)
         record_errors = [error.message for error in validator.iter_errors(annotation)]
         document_id = annotation.get("document_id", "")
         document_path = args.document_root / f"{document_id}.json"

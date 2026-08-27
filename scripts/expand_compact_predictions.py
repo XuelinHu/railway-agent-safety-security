@@ -50,7 +50,20 @@ def run(args: argparse.Namespace) -> int:
             entities = []
             for entity in compact.get("entities", []):
                 evidence = locate(entity["text"], job["segments"], used_spans)
-                entities.append({**entity, "evidence": evidence, "confidence": 1.0, "review_status": "pending", "created_by": "qwen3-4b-qlora"})
+                contracted_entity = {
+                    key: entity[key]
+                    for key in ("id", "text", "normalized_name", "type")
+                    if key in entity
+                }
+                entities.append(
+                    {
+                        **contracted_entity,
+                        "evidence": evidence,
+                        "confidence": 1.0,
+                        "review_status": "pending",
+                        "created_by": "qwen3-4b-qlora",
+                    }
+                )
             by_id = {entity["id"]: entity for entity in entities}
             relations = []
             for relation in compact.get("relations", []):
@@ -61,7 +74,20 @@ def run(args: argparse.Namespace) -> int:
                 evidence = next((s for s in job["segments"] if source["evidence"]["segment_id"] == s["segment_id"] and target["evidence"]["segment_id"] == s["segment_id"]), source["evidence"])
                 if "segment_type" in evidence:
                     evidence = {"text": evidence["text"], "segment_id": evidence["segment_id"], "page": evidence.get("page"), "start": evidence["start"], "end": evidence["end"]}
-                relations.append({**relation, "evidence": [evidence], "confidence": 1.0, "review_status": "pending", "created_by": "qwen3-4b-qlora"})
+                contracted_relation = {
+                    key: relation[key]
+                    for key in ("id", "source_id", "type", "target_id", "claim_status")
+                    if key in relation
+                }
+                relations.append(
+                    {
+                        **contracted_relation,
+                        "evidence": [evidence],
+                        "confidence": 1.0,
+                        "review_status": "pending",
+                        "created_by": "qwen3-4b-qlora",
+                    }
+                )
             annotation = {
                 "schema_version": "0.1.0",
                 "document_id": job["document_id"],

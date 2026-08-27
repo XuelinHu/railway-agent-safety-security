@@ -14,7 +14,7 @@
 - `book_metadata.csv`：推荐电子书的书目信息和正版购买链接。出版社电子书受版权保护，仓库不保存其全文。
 - `corpus_inventory.csv`：本地语料格式、哈希、重复关系和抽取状态，不保存正文。
 - `pilot_set.csv`：首批中英文人工审核候选文档。
-- `annotation_expansion_set.csv`：近重复感知、分层抽样后的 150 份标注扩展清单，其中 28 份为已有 pilot，122 份待审核。
+- `annotation_expansion_set.csv`：近重复感知、分层抽样后的 150 份标注扩展清单，其中 28 份为已有 pilot，122 份文档选择已审核、待实体关系标注。
 - `near_duplicate_clusters.csv`：成功解析文档的近重复簇清单。
 
 当前审核结果与知识图谱输出保存在被 Git 忽略的 `data/processed/reviewed/`：
@@ -33,12 +33,14 @@
 python3 scripts/promote_reviewed_annotations.py
 ```
 
-生成扩展标注清单和待审核任务：
+生成扩展标注清单和代表性文本块任务（122 份文档共 301 个任务）：
 
 ```bash
 python3 scripts/build_annotation_expansion.py
-python3 scripts/prepare_preannotation_jobs.py --pilot-set data/catalog/annotation_expansion_set.csv --pending-only --output data/processed/experiments/annotation_pending_jobs.jsonl --teacher-model gpt-5.6-terra
+python3 scripts/prepare_preannotation_jobs.py --pilot-set data/catalog/annotation_expansion_set.csv --pending-only --max-chunks-per-document 3 --output data/processed/experiments/annotation_pending_sampled_jobs.jsonl --teacher-model gpt-5.6-terra
 ```
+
+任务使用本体 `1.0.0`、提示 `teacher-preannotation-v1.1.0`，并显式携带合法关系签名。生成候选仍是 `pending`，只有逐条实体关系审核后才能并入 gold。
 
 ## 预处理命令
 

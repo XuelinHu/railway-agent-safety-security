@@ -45,11 +45,15 @@ Official public reports and open datasets are preferred for experiments. Purchas
 - [x] Generate the initial strict evaluation report with compact-output failure analysis
 - [x] Build a 150-document near-duplicate-aware annotation expansion manifest
 - [x] Validate a ten-job serial expansion batch through the local sub2API proxy
+- [x] Freeze ontology 1.0 and an evidence-copy teacher prompt after a three-job A/B quality gate
+- [x] Build 301 representative-chunk jobs for the approved 122-document expansion
 - [ ] Implement and evaluate the multi-agent pipeline
 - [ ] Draft the English manuscript
 
 Current research and implementation tasks are tracked in [`docs/work-plan.md`](docs/work-plan.md). The annotation ontology and output contract are defined in [`configs/risk_ontology.yaml`](configs/risk_ontology.yaml), [`schemas/preannotation_candidate.schema.json`](schemas/preannotation_candidate.schema.json), and [`schemas/risk_annotation.schema.json`](schemas/risk_annotation.schema.json).
 
 The reproducible experiment entry points are [`scripts/build_experiment_jobs.py`](scripts/build_experiment_jobs.py), [`scripts/evaluate_annotations.py`](scripts/evaluate_annotations.py), [`scripts/train_qlora.py`](scripts/train_qlora.py), and [`scripts/run_qlora_inference.py`](scripts/run_qlora_inference.py). Current pilot numbers and limitations are recorded in [`docs/experiment-report.md`](docs/experiment-report.md).
+
+The frozen teacher-prompt A/B evidence and batch cost estimate are recorded in [`docs/preannotation-gate-report.md`](docs/preannotation-gate-report.md).
 
 The JSSR special-issue manuscript workspace is in [`paper/`](paper/README.md). Required publication experiments and the schedule to the 28 February 2027 deadline are defined in [`paper/EXPERIMENT_PLAN.md`](paper/EXPERIMENT_PLAN.md).

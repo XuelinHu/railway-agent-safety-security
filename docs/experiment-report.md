@@ -25,9 +25,11 @@
 - Both adapter training runs completed successfully.
 - The full-schema adapter did not produce the required top-level `entities`/`relations` JSON object on the four test jobs; its F1 is not treated as a valid extraction result.
 - The compact adapter produced parseable envelopes for all four jobs, but Chinese jobs still returned incomplete structures and relation candidates were removed by schema constraints; the compact F1 is an engineering pilot result, not a final claim.
+- Auditable inverse-direction repair recovered five schema-valid compact relations after missing claim statuses were conservatively marked `uncertain`; none matched the 26 gold relations, so strict relation F1 remains 0%. This rules out presenting post-hoc signature repair alone as the relation-extraction innovation.
 
 ## Interpretation
 
 - The KG prompt variant improved entity F1 in this pilot from 11.11% to 13.10%, but relation F1 remained 0%; this is a smoke signal, not a statistically supported claim.
 - The compact target improved entity F1 in this pilot, but relation extraction and Chinese structured output remain unresolved; the next engineering task is constrained decoding with explicit relation-signature repair, followed by regeneration on validation and test splits.
 - Final experiments should add a second reviewer, expand the gold set, and report confidence intervals or paired tests.
+- The teacher-prompt evidence-copy gate reduced normalization findings on three fixed Chinese chunks from 75 to 47 and increased retained relations from 14 to 19. These are pipeline-quality measurements, not extraction-accuracy results, because the new candidates have not received human gold labels.

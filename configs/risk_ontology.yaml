@@ -1,4 +1,5 @@
-version: "0.1.0"
+version: "1.0.0"
+annotation_schema_version: "0.1.0"
 name: safety_risk_ontology
 scope: Cross-domain safety risk extraction with railway accident reports as the primary case study.
 

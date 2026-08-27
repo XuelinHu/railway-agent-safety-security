@@ -29,7 +29,7 @@ The paper studies knowledge-graph-constrained, evidence-grounded, low-resource l
 - [x] Define explicit, inferred, normative, and uncertain claim statuses.
 - [x] Define candidate and reviewed-annotation JSON Schemas.
 - [x] Define human review and adjudication rules.
-- [ ] Run a human pilot and revise the ontology to version 1.0.
+- [x] Run a human pilot and freeze the ontology as version 1.0.
 
 ### WP3: Pilot dataset
 
@@ -49,6 +49,9 @@ The paper studies knowledge-graph-constrained, evidence-grounded, low-resource l
 - [x] Promote the screened annotations to the current `gold v0.1.0` set.
 - [x] Generate a 150-document expansion manifest with 122 pending documents.
 - [x] Verify a ten-job serial sub2API batch through the Chat Completions fallback and preserve candidate-level errors.
+- [x] Add auditable unique-span and inverse-relation repair without automatically promoting repaired candidates.
+- [x] Reduce the 122-document expansion from 1,056 full-coverage jobs to 301 representative-chunk jobs.
+- [x] Freeze teacher prompt `v1.1.0` after a three-job evidence-copy A/B gate.
 - [ ] Run two-model pre-annotation and human adjudication.
 - [ ] Double-annotate at least 20% of the gold set.
 
@@ -84,8 +87,8 @@ The paper studies knowledge-graph-constrained, evidence-grounded, low-resource l
 
 The pilot pipeline is executable end to end. Before treating the numbers as manuscript results:
 
-1. Freeze ontology version 1.0 after recording the current screening disagreements.
-2. Obtain an independent second review for at least 20% of the current gold set.
-3. Keep the four test documents frozen and excluded from pseudo-label training.
-4. Add constrained JSON decoding and relation-signature repair, then rerun validation and test.
-5. Expand the test set before making cross-language or model-comparison claims.
+1. Run the remaining 298 representative teacher jobs in cost-controlled batches and review the resulting entities and relations.
+2. Obtain an independent second review for at least 20% of the expanded gold set.
+3. Keep the four pilot test documents frozen and excluded from pseudo-label training.
+4. Implement constrained generation beyond post-hoc relation repair; repaired compact QLoRA relations still score zero strict F1.
+5. Freeze a cluster-aware expanded split before making cross-language or model-comparison claims.

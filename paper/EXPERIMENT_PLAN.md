@@ -28,7 +28,7 @@ The current pilot results must be presented as engineering evidence, not as the 
 
 All gates below are required before the main results are frozen.
 
-1. Freeze ontology version 1.0 after reviewing relation direction and legal signatures.
+1. Freeze ontology version 1.0 after reviewing relation direction and legal signatures. **Completed 27 August 2026.**
 2. Cluster exact and near-duplicate Chinese templates before any new split.
 3. Expand to at least 120 reviewed documents; target 150 documents.
 4. Use a cluster-aware, document-level split. Recommended target: 100 train, 20 validation, and 30 test documents, with railway reports intentionally prominent in the test set.
@@ -149,25 +149,27 @@ This experiment connects the paper to the special issue without claiming full ca
 
 ## 8. Immediate next jobs
 
-1. Correct relation signatures using errors observed in the pilot and freeze ontology 1.0.
-2. Review the 122 pending documents in `annotation_expansion_set.csv`; the first 10-task teacher batch is validated but not yet human-accepted.
+1. Run the remaining 298 representative teacher jobs in bounded batches; the 122-document selection is approved, but generated entities and relations are not yet human-accepted.
+2. Review and adjudicate all generated entities and relations before gold promotion.
 3. Assign a second reviewer to at least 30 selected documents.
 4. Implement schema-constrained generation and relation repair before another QLoRA run.
 5. Implement the XLM-RoBERTa extraction baseline.
 6. Replace the four-document smoke test with the expanded frozen test set.
 7. Start writing Introduction, corpus governance, ontology, and method sections while annotation continues.
 
-The pending teacher jobs are in `data/processed/experiments/annotation_pending_jobs.jsonl`. The serial proxy command is:
+The representative teacher jobs are in `data/processed/experiments/annotation_pending_sampled_jobs.jsonl`. The serial proxy command is:
 
 ```bash
 python3 scripts/run_preannotation.py \
   --provider openai --model gpt-5.6-terra \
   --base-url http://127.0.0.1:8999/v1 \
   --api-key-env SUB2API_API_KEY \
-  --jobs data/processed/experiments/annotation_pending_jobs.jsonl \
-  --output data/processed/experiments/annotation_pending_candidates.jsonl \
-  --log outputs/annotation_pending_run.jsonl \
+  --jobs data/processed/experiments/annotation_pending_sampled_jobs.jsonl \
+  --output data/processed/experiments/annotation_pending_sampled_v2_candidates.jsonl \
+  --log outputs/annotation_pending_sampled_v2_run.jsonl \
   --repair-schema --resume --max-jobs 10
 ```
 
 The runner uses `/v1/chat/completions` with JSON Schema because the local proxy's `/v1/responses` endpoint currently returns an upstream 400 error. Never commit API keys or generated candidate files.
+
+The prompt `teacher-preannotation-v1.1.0` was frozen after a three-job A/B gate. Compared with the prior prompt on the same chunks, audit findings fell from 75 to 47, deterministic repairs from 31 to 3, retained entities increased from 62 to 66, and retained relations from 14 to 19. All three normalized records passed schema, source-offset, and ontology checks. The gate used 78,209 tokens and 286.3 seconds in total; extrapolating directly to all 301 jobs would be costly, so production annotation must remain batched and monitored.
