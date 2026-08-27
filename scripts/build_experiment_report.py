@@ -27,6 +27,7 @@ def run(args: argparse.Namespace) -> int:
     expanded_compact_training = read_json(args.root / "qwen3_4b_compact_qlora_v1_1_eos" / "training_metrics.json")
     system_compact_training = read_json(args.root / "qwen3_4b_compact_qlora_v1_2_system" / "training_metrics.json")
     system_compact = read_json(args.root / "test_compact_v1_2_system_metrics.json")
+    window_compact = read_json(args.root / "test_compact_v1_2_window_metrics.json")
     summary = read_json(Path("data/processed/reviewed/summary.json"))
     rows = [
         ("Qwen3-14B baseline", baseline),
@@ -34,6 +35,7 @@ def run(args: argparse.Namespace) -> int:
         ("Qwen3-4B + QLoRA + KG prompt", qlora),
         ("Qwen3-4B + compact QLoRA + KG prompt", compact),
         ("Qwen3-4B + v1.2 compact QLoRA + KG prompt", system_compact),
+        ("Qwen3-4B + v1.2 windowed compact QLoRA + KG prompt", window_compact),
     ]
     lines = [
         "# Initial Safety Extraction Experiments",
@@ -93,6 +95,7 @@ def run(args: argparse.Namespace) -> int:
             f"- The v1.2 compact adapter replaced the conflicting full-schema prompt, preserved a 12K default input window, and trained with mean loss `{system_compact_training.get('mean_loss', '-')}`. It produced valid structured outputs on 3/4 jobs; the long English job over-generated entities until the 4K and 8K output budgets were exhausted.",
             f"- On the 3 valid v1.2 jobs, pooled strict entity F1 was {pct(system_compact.get('entity_strict', {}).get('f1'))} and relation F1 was {pct(system_compact.get('relation_strict', {}).get('f1'))}; Chinese entity F1 was {pct(system_compact.get('by_language', {}).get('zh', {}).get('entity_strict', {}).get('f1'))} and Chinese relation F1 was {pct(system_compact.get('by_language', {}).get('zh', {}).get('relation_strict', {}).get('f1'))}. Because one test job failed structurally, these remain engineering diagnostics and are not final manuscript claims.",
             "- The v1.2 long-Chinese diagnostic required an explicit 32K input window but exceeded the 24GB GPU memory budget when a concurrent local model occupied the GPU; its 29-entity/28-relation output was nevertheless recovered from the saved log and evaluated after structural repair.",
+            f"- Tokenizer-budgeted windowing split the long Chinese job into two overlapping windows and produced 3 valid window outputs from 5. After document-level merge, pooled strict entity F1 was {pct(window_compact.get('entity_strict', {}).get('f1'))}, relation F1 was {pct(window_compact.get('relation_strict', {}).get('f1'))}, and Chinese entity F1 was {pct(window_compact.get('by_language', {}).get('zh', {}).get('entity_strict', {}).get('f1'))}; this is a resource/robustness diagnostic over 3 evaluated documents.",
             "",
             ]
         )

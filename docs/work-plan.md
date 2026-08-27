@@ -71,6 +71,7 @@ The paper studies knowledge-graph-constrained, evidence-grounded, low-resource l
 - [x] Train and evaluate a compact-output QLoRA variant; retain the structured-output and relation failures as pilot evidence.
 - [x] Retrain full-schema and compact QLoRA variants on the expanded 59-chunk training split.
 - [x] Diagnose QLoRA generation parsing, EOS truncation, and compact-target prompt mismatch; v1.2 removes the conflicting prompt and adds auditable structural JSON repair.
+- [x] Add tokenizer-budgeted document windows and overlap-aware compact prediction merging for long-document inference.
 - [ ] Evaluate Qwen3-4B and Qwen3-8B zero-shot baselines on the expanded benchmark.
 - [ ] Add vector RAG, KG retrieval, and graph-constrained decoding variants.
 - [ ] Validate cross-architecture behavior with GLM-4-9B.
@@ -93,5 +94,5 @@ The pilot pipeline is executable end to end. Before treating the numbers as manu
 1. Run the remaining 298 representative teacher jobs in cost-controlled batches and review the resulting entities and relations.
 2. Obtain an independent second review for at least 20% of the expanded gold set.
 3. Keep the four pilot test documents frozen and excluded from pseudo-label training.
-4. Stabilize Chinese compact generation with document-level chunk windows, language-balanced targets, and constrained decoding; v1.2 resolves one long-input format failure, but Chinese precision and relation F1 remain insufficient.
+4. Stabilize Chinese compact generation with language-balanced targets and constrained decoding; document windows now control long-input memory, but Chinese precision and relation F1 remain insufficient.
 5. Freeze a cluster-aware expanded split before making cross-language or model-comparison claims.

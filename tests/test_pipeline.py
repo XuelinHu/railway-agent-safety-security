@@ -121,6 +121,42 @@ class PipelineTest(unittest.TestCase):
         inference_system = inference.COMPACT_SYSTEM_INSTRUCTION
         self.assertEqual(inference_system, trainer.COMPACT_SYSTEM_INSTRUCTION)
 
+    def test_window_ranges_preserve_coverage_with_overlap(self):
+        windows = load_script("build_inference_windows.py")
+        ranges = windows.window_ranges(10, lambda start, end: end - start <= 3, overlap=1)
+        self.assertEqual(ranges, [(0, 3), (2, 5), (4, 7), (6, 9), (8, 10)])
+        covered = {index for start, end in ranges for index in range(start, end)}
+        self.assertEqual(covered, set(range(10)))
+
+    def test_window_prediction_merge_deduplicates_entities_and_relations(self):
+        merger = load_script("merge_window_predictions.py")
+        rows = [
+            {
+                "job_id": "D_W001",
+                "parent_job_id": "D",
+                "window_index": 1,
+                "annotation": {
+                    "document_id": "D", "language": "zh",
+                    "entities": [{"id": "E1", "text": "火灾", "type": "EVENT"}, {"id": "E2", "text": "灭火器", "type": "ASSET"}],
+                    "relations": [{"id": "R1", "source_id": "E1", "type": "involves", "target_id": "E2", "claim_status": "explicit"}],
+                },
+            },
+            {
+                "job_id": "D_W002",
+                "parent_job_id": "D",
+                "window_index": 2,
+                "annotation": {
+                    "document_id": "D", "language": "zh",
+                    "entities": [{"id": "E4", "text": "火灾", "type": "EVENT"}, {"id": "E5", "text": "灭火器", "type": "ASSET"}],
+                    "relations": [{"id": "R2", "source_id": "E4", "type": "involves", "target_id": "E5", "claim_status": "explicit"}],
+                },
+            },
+        ]
+        merged = merger.merge_rows(rows)
+        self.assertEqual(len(merged), 1)
+        self.assertEqual(len(merged[0]["annotation"]["entities"]), 2)
+        self.assertEqual(len(merged[0]["annotation"]["relations"]), 1)
+
 
 if __name__ == "__main__":
     unittest.main()
