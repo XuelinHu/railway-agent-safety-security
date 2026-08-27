@@ -48,6 +48,7 @@ Official public reports and open datasets are preferred for experiments. Purchas
 - [x] Freeze ontology 1.0 and an evidence-copy teacher prompt after a three-job A/B quality gate
 - [x] Build 301 representative-chunk jobs for the approved 122-document expansion
 - [x] Merge the manually confirmed v1.1 gate chunks into reviewed gold and rebuild the knowledge graph
+- [x] Retrain QLoRA adapters on the expanded 59-chunk training split and diagnose output-format failures
 - [ ] Implement and evaluate the multi-agent pipeline
 - [ ] Draft the English manuscript
 

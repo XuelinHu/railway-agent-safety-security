@@ -33,3 +33,10 @@
 - The compact target improved entity F1 in this pilot, but relation extraction and Chinese structured output remain unresolved; the next engineering task is constrained decoding with explicit relation-signature repair, followed by regeneration on validation and test splits.
 - Final experiments should add a second reviewer, expand the gold set, and report confidence intervals or paired tests.
 - The teacher-prompt evidence-copy gate reduced normalization findings on three fixed Chinese chunks from 75 to 47 and increased retained relations from 14 to 19. These are pipeline-quality measurements, not test-set extraction-accuracy results; the three accepted chunks are in train and are excluded from the frozen pilot test.
+
+## Updated QLoRA Run
+
+- The reviewed training set now contains 59 chunks from 21 documents. Full-schema and compact-target adapters used Qwen3-4B, NF4, rank 8, one epoch, and 15 optimization steps.
+- Expanded full-schema mean loss: `0.5559417386849721`; compact-target mean loss: `0.57162946164608`.
+- Full-schema generations did not produce usable annotation envelopes on the four pilot test jobs and are recorded as format failures rather than extraction F1.
+- The EOS-preserving compact adapter produced valid annotations on 2/4 pilot test jobs: both English jobs were parseable, while both Chinese jobs were format failures. On the valid English jobs, pooled strict entity F1 was 25.32% and relation F1 was 0%. These are engineering diagnostics, not final cross-language claims.

@@ -41,15 +41,23 @@ def locate(value: str, segments: list[dict[str, Any]], used: dict[str, int]) -> 
 def run(args: argparse.Namespace) -> int:
     jobs = {job["job_id"]: job for job in load_jsonl(args.jobs)}
     args.output.parent.mkdir(parents=True, exist_ok=True)
+    if args.errors:
+        args.errors.parent.mkdir(parents=True, exist_ok=True)
     with args.output.open("w", encoding="utf-8") as stream:
+        error_stream = args.errors.open("w", encoding="utf-8") if args.errors else None
         for row in load_jsonl(args.predictions):
             job_id = row["job_id"]
             compact = row["annotation"]
             job = jobs[job_id]
             used_spans: dict[str, int] = {}
+            expansion_errors: list[str] = []
             entities = []
             for entity in compact.get("entities", []):
-                evidence = locate(entity["text"], job["segments"], used_spans)
+                try:
+                    evidence = locate(entity["text"], job["segments"], used_spans)
+                except ValueError as error:
+                    expansion_errors.append(f"entity {entity.get('id')}: {error}")
+                    continue
                 contracted_entity = {
                     key: entity[key]
                     for key in ("id", "text", "normalized_name", "type")
@@ -70,6 +78,7 @@ def run(args: argparse.Namespace) -> int:
                 source = by_id.get(relation["source_id"])
                 target = by_id.get(relation["target_id"])
                 if not source or not target:
+                    expansion_errors.append(f"relation {relation.get('id')}: source or target entity was rejected")
                     continue
                 evidence = next((s for s in job["segments"] if source["evidence"]["segment_id"] == s["segment_id"] and target["evidence"]["segment_id"] == s["segment_id"]), source["evidence"])
                 if "segment_type" in evidence:
@@ -97,6 +106,10 @@ def run(args: argparse.Namespace) -> int:
                 "review": {"status": "unreviewed", "reviewers": [], "notes": "expanded compact QLoRA output"},
             }
             stream.write(json.dumps({"job_id": job_id, "annotation": annotation}, ensure_ascii=False) + "\n")
+            if error_stream and expansion_errors:
+                error_stream.write(json.dumps({"job_id": job_id, "errors": expansion_errors}, ensure_ascii=False) + "\n")
+        if error_stream:
+            error_stream.close()
     return 0
 
 
@@ -105,6 +118,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--jobs", type=Path, required=True)
     parser.add_argument("--predictions", type=Path, required=True)
     parser.add_argument("--output", type=Path, required=True)
+    parser.add_argument("--errors", type=Path, help="Optional JSONL audit log for spans or relations skipped during expansion")
     return parser.parse_args()
 
 

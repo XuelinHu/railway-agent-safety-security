@@ -157,6 +157,8 @@ This experiment connects the paper to the special issue without claiming full ca
 6. Replace the four-document smoke test with the expanded frozen test set.
 7. Start writing Introduction, corpus governance, ontology, and method sections while annotation continues.
 
+The expanded QLoRA run used 59 training chunks. The full-schema adapter produced no usable test annotation envelopes. The compact adapter produced valid annotations for 2/4 pilot test jobs: both English jobs were parseable, with pooled strict entity F1 of 25.32% and relation F1 of 0%; both Chinese jobs were format failures. These values are engineering diagnostics only, not final cross-language claims.
+
 The representative teacher jobs are in `data/processed/experiments/annotation_pending_sampled_jobs.jsonl`. The serial proxy command is:
 
 ```bash

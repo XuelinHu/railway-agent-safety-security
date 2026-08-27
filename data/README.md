@@ -51,6 +51,8 @@ python3 scripts/prepare_preannotation_jobs.py --pilot-set data/catalog/annotatio
 
 任务使用本体 `1.0.0`、提示 `teacher-preannotation-v1.1.0`，并显式携带合法关系签名。生成候选仍是 `pending`，只有逐条实体关系审核后才能并入 gold。
 
+模型实验输出使用独立目录保存：`qwen3_4b_kg_qlora_v1_1_full`、`qwen3_4b_compact_qlora_v1_1_eos`。推理解析会优先选择完整 annotation，并记录格式失败的原始输出；这些预测不会自动写入 reviewed gold。
+
 ## 预处理命令
 
 ```bash

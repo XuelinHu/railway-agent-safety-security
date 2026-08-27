@@ -23,6 +23,8 @@ def run(args: argparse.Namespace) -> int:
     compact = read_json(args.root / "test_compact_metrics.json")
     training = read_json(args.root / "qwen3_4b_kg_qlora" / "training_metrics.json")
     compact_training = read_json(args.root / "qwen3_4b_compact_qlora" / "training_metrics.json")
+    expanded_full_training = read_json(args.root / "qwen3_4b_kg_qlora_v1_1_full" / "training_metrics.json")
+    expanded_compact_training = read_json(args.root / "qwen3_4b_compact_qlora_v1_1_eos" / "training_metrics.json")
     summary = read_json(Path("data/processed/reviewed/summary.json"))
     rows = [
         ("Qwen3-14B baseline", baseline),
@@ -76,6 +78,18 @@ def run(args: argparse.Namespace) -> int:
             "",
         ]
     )
+    if expanded_full_training or expanded_compact_training:
+        lines.extend(
+            [
+                "## Updated QLoRA Run",
+                "",
+                f"- The reviewed training set now contains {expanded_full_training.get('train_examples', expanded_compact_training.get('train_examples', '-'))} chunks from 21 documents. Full-schema and compact-target adapters used Qwen3-4B, NF4, rank 8, one epoch, and 15 optimization steps.",
+                f"- Expanded full-schema mean loss: `{expanded_full_training.get('mean_loss', '-')}`; compact-target mean loss: `{expanded_compact_training.get('mean_loss', '-')}`.",
+                "- Full-schema generations did not produce usable annotation envelopes on the four pilot test jobs and are recorded as format failures rather than extraction F1.",
+                "- The EOS-preserving compact adapter produced valid annotations on 2/4 pilot test jobs: both English jobs were parseable, while both Chinese jobs were format failures. On the valid English jobs, pooled strict entity F1 was 25.32% and relation F1 was 0%. These are engineering diagnostics, not final cross-language claims.",
+                "",
+            ]
+        )
     args.output.write_text("\n".join(lines), encoding="utf-8")
     print(args.output)
     return 0

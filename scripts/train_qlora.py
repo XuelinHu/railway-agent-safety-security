@@ -10,6 +10,15 @@ from pathlib import Path
 from typing import Any
 
 
+COMPACT_INSTRUCTION = """
+COMPACT OUTPUT MODE: Return only one JSON object with exactly these top-level fields:
+schema_version, document_id, language, entities, relations. Each entity contains only
+id, text, type. Each relation contains only id, source_id, type, target_id, claim_status.
+Do not include evidence, confidence, review, created_by, explanations, markdown, or any
+other fields. Stop immediately after the closing brace of this compact object.
+""".strip()
+
+
 def load_jsonl(path: Path) -> list[dict[str, Any]]:
     return [json.loads(line) for line in path.read_text(encoding="utf-8").splitlines() if line.strip()]
 
@@ -55,7 +64,10 @@ def build_examples(gold: Path, index: Path, jobs: Path, compact_target: bool = F
             target = json.dumps(compact, ensure_ascii=False)
         else:
             target = json.dumps(annotation, ensure_ascii=False)
-        examples.append({"system": job["system_instruction"], "user": user, "target": target})
+        system = job["system_instruction"]
+        if compact_target:
+            system += "\n\n" + COMPACT_INSTRUCTION
+        examples.append({"system": system, "user": user, "target": target})
     return examples
 
 
@@ -101,6 +113,7 @@ def main(args: argparse.Namespace) -> int:
 
     device = torch.device("cuda:0")
     encoded = []
+    truncated_answers = 0
     for example in examples:
         prompt = (
             "<|im_start|>system\n"
@@ -113,7 +126,9 @@ def main(args: argparse.Namespace) -> int:
         prompt_ids = tokenizer(prompt, add_special_tokens=False)["input_ids"]
         answer_ids = tokenizer(example["target"] + "<|im_end|>", add_special_tokens=False)["input_ids"]
         if len(answer_ids) >= args.max_length:
-            answer_ids = answer_ids[: args.max_length - 1]
+            end_ids = tokenizer("<|im_end|>", add_special_tokens=False)["input_ids"]
+            answer_ids = answer_ids[: args.max_length - len(end_ids)] + end_ids
+            truncated_answers += 1
         prompt_budget = args.max_length - len(answer_ids)
         if prompt_budget < 1:
             continue
@@ -126,7 +141,7 @@ def main(args: argparse.Namespace) -> int:
 
     if not encoded:
         raise ValueError("no train examples contain supervised answer tokens")
-    print(json.dumps({"prepared_examples": len(encoded), "max_sequence": max(len(row["input_ids"]) for row in encoded)}, ensure_ascii=False), flush=True)
+    print(json.dumps({"prepared_examples": len(encoded), "max_sequence": max(len(row["input_ids"]) for row in encoded), "truncated_answers": truncated_answers}, ensure_ascii=False), flush=True)
 
     def collate(batch: list[dict[str, list[int]]]) -> dict[str, torch.Tensor]:
         max_len = max(len(row["input_ids"]) for row in batch)
@@ -180,6 +195,7 @@ def main(args: argparse.Namespace) -> int:
         "max_length": args.max_length,
         "lora_rank": args.lora_rank,
         "compact_target": args.compact_target,
+        "truncated_answers_with_eos": truncated_answers,
     }
     (args.output / "training_metrics.json").write_text(json.dumps(metrics, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     print(json.dumps(metrics, ensure_ascii=False, indent=2))

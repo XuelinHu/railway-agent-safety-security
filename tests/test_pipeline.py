@@ -92,6 +92,27 @@ class PipelineTest(unittest.TestCase):
         self.assertEqual(preparer.representative_chunk_indices(2, 3), [0, 1])
         self.assertEqual(preparer.representative_chunk_indices(10, 1), [5])
 
+    def test_qlora_parser_prefers_complete_annotation(self):
+        inference = load_script("run_qlora_inference.py")
+        parsed = inference.parse_json(
+            '{"segment_id":"S1"}\n'
+            '{"entities":[{"id":"E1"}],"relations":[],"document_id":"D1"}'
+        )
+        self.assertIn("entities", parsed)
+        self.assertEqual(parsed["document_id"], "D1")
+        self.assertTrue(inference.complete_annotation_generated(
+            '{"entities": [], "relations": [], "document_id": "D1"}'
+        ))
+        self.assertFalse(inference.complete_annotation_generated('{"entities": ['))
+        self.assertIn("COMPACT OUTPUT MODE", inference.COMPACT_INSTRUCTION)
+        truncated = '{"entities": [], "relations": [{"id": "R1"}'
+        self.assertEqual(inference.parse_json(truncated)["relations"][0]["id"], "R1")
+        self.assertFalse(inference.complete_annotation_generated(truncated))
+        missing_array = '{"entities": [{"id": "E1"}], "relations": [{"id": "R1"}}'
+        self.assertEqual(inference.parse_json(missing_array)["entities"][0]["id"], "E1")
+        trainer = load_script("train_qlora.py")
+        self.assertIn("COMPACT OUTPUT MODE", trainer.COMPACT_INSTRUCTION)
+
 
 if __name__ == "__main__":
     unittest.main()
