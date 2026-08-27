@@ -17,9 +17,9 @@ The paper fits three stated themes: knowledge graphs for risk analysis, high-qua
 | Successfully parsed documents | 1,458 | Sufficient for sampling and weak supervision |
 | Chinese safety documents | 1,229 raw / 1,187 parsed | Broad but template de-duplication is incomplete |
 | RAIB railway reports | 286 raw / 271 parsed | Strong primary-domain pool |
-| Reviewed pilot documents | 28 | Workflow pilot only |
-| Reviewed chunks | 69 | Too small for final model claims |
-| Reviewed entities / relations | 1,545 / 458 | Useful for pilot training |
+| Reviewed documents | 29 | Workflow pilot plus one manually accepted expansion document |
+| Reviewed chunks | 72 | Too small for final model claims |
+| Reviewed entities / relations | 1,611 / 477 | Useful for pilot training |
 | Frozen pilot test documents | 4 | Not sufficient for final statistical comparison |
 
 The current pilot results must be presented as engineering evidence, not as the final main experiment. In particular, relation F1 is currently zero and Chinese structured output is unstable.
@@ -150,7 +150,7 @@ This experiment connects the paper to the special issue without claiming full ca
 ## 8. Immediate next jobs
 
 1. Run the remaining 298 representative teacher jobs in bounded batches; the 122-document selection is approved, but generated entities and relations are not yet human-accepted.
-2. Review and adjudicate all generated entities and relations before gold promotion.
+2. Review and adjudicate all generated entities and relations before gold promotion; the first three v1.1 chunks are already manually accepted.
 3. Assign a second reviewer to at least 30 selected documents.
 4. Implement schema-constrained generation and relation repair before another QLoRA run.
 5. Implement the XLM-RoBERTa extraction baseline.

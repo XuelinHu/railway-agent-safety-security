@@ -19,19 +19,28 @@
 
 当前审核结果与知识图谱输出保存在被 Git 忽略的 `data/processed/reviewed/`：
 
-- `gold/all.jsonl`：69 个文本块的当前 `gold v0.1.0` 标注。
+- `gold/all.jsonl`：72 个文本块、29 份文档的当前 `gold v0.1.0` 标注；其中新增 3 个文本块经过 v1.1 教师预标注后人工确认接受。
 - `gold/train.jsonl`、`gold/validation.jsonl`、`gold/test.jsonl`：按原始文档切分的训练、验证和测试标注。
 - `knowledge_graph/concepts.jsonl`：规范化概念节点。
 - `knowledge_graph/mentions.jsonl`：带文档、文本块、页码和原文证据的实体提及。
 - `knowledge_graph/relations.jsonl`：带来源证据的关系实例。
 - `split_manifest.jsonl`：文档级切分清单。
 - `summary.json`：数量和版本摘要。
+- `jobs.jsonl`：与当前 reviewed gold 一一对应的任务和原文片段清单。
 
 这些文件由以下命令可重复生成：
 
 ```bash
 python3 scripts/promote_reviewed_annotations.py
 ```
+
+将已人工确认的新批次并入当前 reviewed 数据库并重建知识图谱：
+
+```bash
+python3 scripts/merge_reviewed_annotations.py
+```
+
+该命令默认保留原有 69 个文本块和测试 split，将确认批次追加到 train，并同步生成 `jobs.jsonl`。覆盖前应保留本地备份。
 
 生成扩展标注清单和代表性文本块任务（122 份文档共 301 个任务）：
 

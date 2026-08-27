@@ -47,6 +47,7 @@ Official public reports and open datasets are preferred for experiments. Purchas
 - [x] Validate a ten-job serial expansion batch through the local sub2API proxy
 - [x] Freeze ontology 1.0 and an evidence-copy teacher prompt after a three-job A/B quality gate
 - [x] Build 301 representative-chunk jobs for the approved 122-document expansion
+- [x] Merge the manually confirmed v1.1 gate chunks into reviewed gold and rebuild the knowledge graph
 - [ ] Implement and evaluate the multi-agent pipeline
 - [ ] Draft the English manuscript
 

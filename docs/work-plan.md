@@ -52,6 +52,7 @@ The paper studies knowledge-graph-constrained, evidence-grounded, low-resource l
 - [x] Add auditable unique-span and inverse-relation repair without automatically promoting repaired candidates.
 - [x] Reduce the 122-document expansion from 1,056 full-coverage jobs to 301 representative-chunk jobs.
 - [x] Freeze teacher prompt `v1.1.0` after a three-job evidence-copy A/B gate.
+- [x] Manually confirm and merge the three v1.1 gate chunks into reviewed gold and the provenance-bearing graph.
 - [ ] Run two-model pre-annotation and human adjudication.
 - [ ] Double-annotate at least 20% of the gold set.
 
