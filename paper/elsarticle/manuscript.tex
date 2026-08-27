@@ -1,0 +1,167 @@
+\documentclass[preprint,12pt]{elsarticle}
+
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{booktabs}
+\usepackage{multirow}
+\usepackage{lineno}
+\usepackage{url}
+\usepackage[hidelinks]{hyperref}
+
+\journal{Journal of Safety Science and Resilience}
+
+\begin{document}
+
+\begin{frontmatter}
+
+\title{Knowledge-Graph-Augmented and Evidence-Grounded LLM Agents for Risk Information Extraction in Low-Resource Safety Texts: Railway Accident Reports as a Primary Evaluation Scenario}
+
+% JSSR uses double-blind review. Upload title-page.tex separately.
+\author{Anonymous Authors}
+
+\begin{abstract}
+Safety reports contain sparse but consequential evidence about hazards, failures, controls, events, and causal relations. Extracting this evidence with large language models is difficult when reviewed annotations are limited and outputs must remain traceable to source text. This study proposes an evidence-grounded, knowledge-graph-augmented agent framework for low-resource safety risk information extraction. The framework combines deterministic evidence alignment, ontology-aware retrieval, legal relation-signature constraints, and parameter-efficient adaptation. Railway accident investigation reports form the primary evaluation scenario, while Chinese emergency and safety-management documents are used to test cross-language and cross-domain behavior. The final abstract will report results from an expanded, independently reviewed benchmark; the current 28-document pilot is used only to validate the workflow and identify structured-output failure modes.
+\end{abstract}
+
+\begin{keyword}
+safety risk information extraction \sep large language model agents \sep knowledge graph \sep evidence grounding \sep low-resource learning \sep railway accident reports
+\end{keyword}
+
+\end{frontmatter}
+
+\linenumbers
+
+\section{Introduction}
+\label{sec:introduction}
+
+% TODO: Motivate rare and cascading safety risks, the annotation bottleneck,
+% and why unsupported LLM output is unacceptable in safety analysis.
+% End with research questions and a concise contribution list.
+
+\section{Related work}
+\label{sec:related-work}
+
+\subsection{Safety information extraction and accident-report analysis}
+\subsection{Knowledge graphs for risk and emergency intelligence}
+\subsection{Evidence-grounded and constrained large language models}
+\subsection{Low-resource adaptation and agent-based verification}
+
+\section{Problem formulation and corpus}
+\label{sec:problem-corpus}
+
+\subsection{Risk entity, relation, and evidence extraction}
+% Define entity spans, typed relations, claim status, and evidence offsets.
+
+\subsection{Corpus sources and governance}
+% Report the frozen inventory, licenses, duplicate handling, parsing failures,
+% document-level split policy, and prohibition on test pseudo-labeling.
+
+\subsection{Ontology and annotation protocol}
+% Report 15 entity types, 15 relations, legal type signatures, review process,
+% adjudication, and inter-annotator agreement.
+
+\section{Proposed method}
+\label{sec:method}
+
+\subsection{Agent architecture}
+% Define extraction, evidence-verification, and graph-verification roles. State
+% exactly which components are LLM calls and which are deterministic programs.
+
+\subsection{Evidence-grounded candidate generation}
+% Describe segment identifiers, source offsets, quote resolution, and rejection
+% of unsupported or paraphrased evidence.
+
+\subsection{Knowledge-graph augmentation}
+% Describe ontology signatures, training-only concept retrieval, provenance,
+% and leakage-safe graph construction.
+
+\subsection{Constrained structured decoding}
+% Describe JSON-schema constraints, entity-reference integrity, relation repair,
+% and validation before graph insertion.
+
+\subsection{Low-resource parameter-efficient adaptation}
+% Describe compact targets, QLoRA configuration, context limits, optimization,
+% hardware, and deterministic post-processing.
+
+\section{Experimental setup}
+\label{sec:experiments}
+
+\subsection{Research questions}
+\begin{description}
+  \item[RQ1] Does knowledge-graph augmentation improve entity, relation, and risk-substructure extraction under limited reviewed data?
+  \item[RQ2] Do evidence binding and constrained decoding reduce unsupported and structurally invalid outputs?
+  \item[RQ3] How well does the method transfer across English railway reports and Chinese safety documents?
+  \item[RQ4] What accuracy, latency, memory, and annotation-cost trade-offs arise under low-resource budgets?
+\end{description}
+
+\subsection{Data splits and low-resource budgets}
+% Use cluster-aware document splits. Evaluate 10, 25, 50, and 100 reviewed
+% training documents with fixed validation/test sets and at least three seeds.
+
+\subsection{Baselines and model variants}
+% Include a non-LLM multilingual encoder, zero/few-shot LLMs, plain QLoRA,
+% KG prompting, KG retrieval, constrained decoding, and the complete agent.
+
+\subsection{Evaluation metrics}
+% Entity and relation micro/macro F1; evidence exact/overlap scores; relation
+% signature validity; JSON validity; unsupported-claim rate; risk-subgraph edge
+% and motif recovery; latency, throughput, peak VRAM, and API cost.
+
+\subsection{Statistical analysis}
+% Report confidence intervals, paired tests, seed variation, and effect sizes.
+
+\section{Results}
+\label{sec:results}
+
+\subsection{Main extraction results}
+\subsection{Low-resource scaling}
+\subsection{Cross-language and cross-domain transfer}
+\subsection{Risk-substructure recovery}
+\subsection{Trustworthiness and efficiency}
+
+% The present four-document pilot must not be presented as the final main table.
+
+\section{Ablation and error analysis}
+\label{sec:ablation}
+
+\subsection{Contribution of evidence, graph, and agent components}
+\subsection{Structured-output and relation-signature failures}
+\subsection{Chinese and English error categories}
+
+\section{Discussion}
+\label{sec:discussion}
+
+% Interpret safety value, transfer limits, annotation dependence, graph leakage
+% controls, and implications for human-in-the-loop risk analysis.
+
+\section{Limitations, ethics, and data availability}
+\label{sec:limitations}
+
+% Document corpus licensing, privacy screening, model/API provenance, human
+% oversight, reproducibility, and what can or cannot be redistributed.
+
+\section{Conclusions}
+\label{sec:conclusion}
+
+% Answer each research question without extending beyond measured evidence.
+
+\section*{Acknowledgements}
+This work was supported by the Science and Technology Research Project of Henan Province (grant no. 262102211055).
+
+\section*{Funding statement}
+The funder had no role in study design, data collection and analysis, decision to publish, or preparation of the manuscript.
+
+\section*{Declaration of competing interest}
+The authors declare that they have no known competing financial interests or personal relationships that could have appeared to influence the work reported in this paper.
+
+\section*{Data and code availability}
+Code, corpus inventories, annotation schemas, and reproducibility scripts are maintained at \url{https://github.com/XuelinHu/railway-agent-safety-security}. Public release of document text and reviewed annotations will follow source-license and redistribution constraints.
+
+% Complete this declaration immediately before submission based on actual use.
+\section*{Declaration of generative AI and AI-assisted technologies in the writing process}
+To be completed before submission in accordance with the publisher's current policy. The manuscript must distinguish AI models evaluated as research objects from any tools used for language editing or manuscript preparation.
+
+\bibliographystyle{elsarticle-num}
+\bibliography{references}
+
+\end{document}

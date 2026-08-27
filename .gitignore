@@ -27,3 +27,20 @@ tools/*.deb
 *.swp
 Thumbs.db
 Desktop.ini
+
+# LaTeX build products and extracted template documentation
+paper/elsarticle/*
+!paper/elsarticle/elsarticle.cls
+!paper/elsarticle/elsarticle-num.bst
+!paper/elsarticle/manuscript.tex
+!paper/elsarticle/title-page.tex
+!paper/elsarticle/references.bib
+paper/elsarticle/*.aux
+paper/elsarticle/*.bbl
+paper/elsarticle/*.blg
+paper/elsarticle/*.fdb_latexmk
+paper/elsarticle/*.fls
+paper/elsarticle/*.log
+paper/elsarticle/*.out
+paper/elsarticle/*.pdf
+paper/elsarticle/*.synctex.gz

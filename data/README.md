@@ -14,6 +14,8 @@
 - `book_metadata.csv`：推荐电子书的书目信息和正版购买链接。出版社电子书受版权保护，仓库不保存其全文。
 - `corpus_inventory.csv`：本地语料格式、哈希、重复关系和抽取状态，不保存正文。
 - `pilot_set.csv`：首批中英文人工审核候选文档。
+- `annotation_expansion_set.csv`：近重复感知、分层抽样后的 150 份标注扩展清单，其中 28 份为已有 pilot，122 份待审核。
+- `near_duplicate_clusters.csv`：成功解析文档的近重复簇清单。
 
 当前审核结果与知识图谱输出保存在被 Git 忽略的 `data/processed/reviewed/`：
 
@@ -29,6 +31,13 @@
 
 ```bash
 python3 scripts/promote_reviewed_annotations.py
+```
+
+生成扩展标注清单和待审核任务：
+
+```bash
+python3 scripts/build_annotation_expansion.py
+python3 scripts/prepare_preannotation_jobs.py --pilot-set data/catalog/annotation_expansion_set.csv --pending-only --output data/processed/experiments/annotation_pending_jobs.jsonl --teacher-model gpt-5.6-terra
 ```
 
 ## 预处理命令

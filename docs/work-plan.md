@@ -19,7 +19,8 @@ The paper studies knowledge-graph-constrained, evidence-grounded, low-resource l
 - [x] Extract valid PDF, DOCX, and TXT content while preserving segments, pages, and global offsets.
 - [x] Record corrupt, incomplete, unsupported, and tool-blocked files without modifying raw data.
 - [x] Install project-local legacy Word extractors and parse the old `.doc` collection.
-- [ ] Cluster near-duplicate Chinese templates before final train/test splitting.
+- [x] Build a near-duplicate-aware cluster inventory for the annotation expansion sample.
+- [ ] Cluster near-duplicate Chinese templates before the final train/test split.
 
 ### WP2: Ontology and annotation protocol
 
@@ -46,6 +47,8 @@ The paper studies knowledge-graph-constrained, evidence-grounded, low-resource l
 - [x] Configure the OpenAI-compatible `sub2API` endpoint and run the 69-job serial teacher pass.
 - [x] Normalize and validate all 69 teacher outputs with evidence and ontology constraints.
 - [x] Promote the screened annotations to the current `gold v0.1.0` set.
+- [x] Generate a 150-document expansion manifest with 122 pending documents.
+- [x] Verify a ten-job serial sub2API batch through the Chat Completions fallback and preserve candidate-level errors.
 - [ ] Run two-model pre-annotation and human adjudication.
 - [ ] Double-annotate at least 20% of the gold set.
 

@@ -74,24 +74,28 @@ def run_openai(
     if base_url:
         client_kwargs["base_url"] = base_url.rstrip("/")
     client = OpenAI(**client_kwargs)
-    response = client.responses.create(
+    response = client.chat.completions.create(
         model=model,
-        instructions=job["system_instruction"],
-        input=user_payload(job),
-        text={
-            "format": {
-                "type": "json_schema",
+        messages=[
+            {"role": "system", "content": job["system_instruction"]},
+            {"role": "user", "content": user_payload(job)},
+        ],
+        response_format={
+            "type": "json_schema",
+            "json_schema": {
                 "name": "safety_risk_preannotation",
                 "strict": False,
                 "schema": schema,
-            }
+            },
         },
-        reasoning={"effort": "low"},
-        store=False,
-        max_output_tokens=12000,
+        temperature=0,
+        max_tokens=12000,
     )
     usage = response.usage.model_dump() if response.usage else None
-    return response.output_text, usage
+    content = response.choices[0].message.content
+    if not content:
+        raise RuntimeError("chat completion returned empty content")
+    return content, usage
 
 
 def run(args: argparse.Namespace) -> int:

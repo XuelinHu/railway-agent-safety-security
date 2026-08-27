@@ -51,6 +51,8 @@ def prepare(args: argparse.Namespace) -> None:
     ontology = yaml.safe_load(args.ontology.read_text(encoding="utf-8"))
     with args.pilot_set.open(encoding="utf-8-sig", newline="") as stream:
         pilot_rows = list(csv.DictReader(stream))
+    if args.pending_only:
+        pilot_rows = [row for row in pilot_rows if row.get("review_status") == "pending"]
 
     compact_ontology = {
         "entity_types": {key: value["description"] for key, value in ontology["entity_types"].items()},
@@ -91,6 +93,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--output", type=Path, default=Path("data/processed/preannotation/jobs.jsonl"))
     parser.add_argument("--max-characters", type=int, default=12000)
     parser.add_argument("--teacher-model", default="unspecified-teacher")
+    parser.add_argument("--pending-only", action="store_true", help="Skip rows already marked as pilot_accepted")
     return parser.parse_args()
 
 
