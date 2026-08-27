@@ -1,0 +1,230 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Safety Graph Review</title>
+  <style>
+    :root {
+      --ink: #18232f;
+      --muted: #6b7785;
+      --line: #dbe2e8;
+      --soft: #f4f7f9;
+      --paper: #ffffff;
+      --navy: #17324d;
+      --teal: #168b8b;
+      --orange: #d97732;
+      --red: #c74b4b;
+      --green: #2c8c67;
+      --shadow: 0 8px 28px rgba(19, 39, 57, .08);
+      --radius: 8px;
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; color: var(--ink); background: #eef2f5; font: 13px/1.45 Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+    button, input, select, textarea { font: inherit; }
+    button { cursor: pointer; }
+    .app { min-height: 100vh; display: grid; grid-template-rows: 58px 1fr; }
+    .topbar { display: flex; align-items: center; gap: 18px; padding: 0 20px; color: #fff; background: var(--navy); }
+    .brand { display: flex; align-items: center; gap: 10px; min-width: 255px; }
+    .brand-mark { width: 27px; height: 27px; display: grid; place-items: center; border: 1px solid rgba(255,255,255,.45); border-radius: 6px; font-weight: 800; letter-spacing: -1px; }
+    .brand strong { font-size: 15px; letter-spacing: .2px; }
+    .brand span { display: block; color: #b9c8d5; font-size: 11px; }
+    .top-stats { display: flex; align-items: center; gap: 20px; flex: 1; color: #d2dfe8; }
+    .top-stat b { display: block; color: #fff; font-size: 16px; line-height: 1.1; }
+    .top-stat span { font-size: 11px; }
+    .top-actions { display: flex; gap: 8px; }
+    .button { border: 1px solid var(--line); border-radius: 6px; padding: 7px 11px; color: var(--ink); background: #fff; white-space: nowrap; }
+    .button:hover { border-color: #9eb1c0; background: #f9fbfc; }
+    .button.primary { color: #fff; border-color: #2c9c9b; background: var(--teal); }
+    .button.dark { color: #fff; border-color: rgba(255,255,255,.25); background: rgba(255,255,255,.1); }
+    .button.danger { color: #9c3030; border-color: #e9baba; background: #fff7f7; }
+    .workspace { display: grid; grid-template-columns: 270px minmax(420px, 1fr) minmax(390px, 43vw); min-height: 0; }
+    .sidebar, .main, .graph-panel { min-height: 0; overflow: hidden; }
+    .sidebar { padding: 16px 12px; background: #fbfcfd; border-right: 1px solid var(--line); }
+    .main { display: flex; flex-direction: column; background: var(--paper); }
+    .graph-panel { display: flex; flex-direction: column; background: #f7fafb; border-left: 1px solid var(--line); }
+    .section-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 0 4px 10px; }
+    .section-head h2, .panel-title { margin: 0; font-size: 13px; letter-spacing: .2px; }
+    .count { color: var(--muted); font-size: 11px; }
+    .search { width: 100%; border: 1px solid var(--line); border-radius: 6px; padding: 8px 9px; outline: 0; background: #fff; }
+    .search:focus, input:focus, select:focus, textarea:focus { border-color: #75aead; box-shadow: 0 0 0 2px rgba(22,139,139,.1); }
+    .filters { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin: 8px 0 12px; }
+    .filters select { width: 100%; border: 1px solid var(--line); border-radius: 5px; padding: 6px; background: #fff; color: var(--ink); }
+    .doc-list { height: calc(100vh - 168px); overflow: auto; padding-right: 2px; }
+    .doc-item { width: 100%; display: block; text-align: left; border: 1px solid transparent; border-radius: 6px; padding: 10px; margin-bottom: 5px; color: var(--ink); background: transparent; }
+    .doc-item:hover { background: #f1f6f7; }
+    .doc-item.active { border-color: #b1d9d8; background: #eaf5f5; }
+    .doc-title { display: block; overflow: hidden; font-weight: 650; text-overflow: ellipsis; white-space: nowrap; }
+    .doc-meta { display: flex; justify-content: space-between; gap: 8px; margin-top: 4px; color: var(--muted); font-size: 11px; }
+    .pill { display: inline-flex; align-items: center; border-radius: 99px; padding: 2px 7px; color: #536270; background: #e9eef2; font-size: 10px; line-height: 1.2; }
+    .pill.en { color: #315a86; background: #e7f0fb; } .pill.zh { color: #8a5d25; background: #fff1da; }
+    .pill.pending { color: #8b5d19; background: #fff0c8; } .pill.accepted { color: #267050; background: #ddf3e8; }
+    .pill.modified { color: #355d87; background: #e2effc; } .pill.rejected { color: #963b3b; background: #fae1e1; }
+    .main-head { padding: 17px 20px 12px; border-bottom: 1px solid var(--line); }
+    .breadcrumb { color: var(--muted); font-size: 11px; }
+    .main-title { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; margin-top: 5px; }
+    .main-title h1 { max-width: 700px; margin: 0; font-size: 18px; line-height: 1.25; }
+    .main-title p { margin: 4px 0 0; color: var(--muted); }
+    .review-state { text-align: right; white-space: nowrap; }
+    .review-state b { display: block; font-size: 18px; color: var(--teal); }
+    .review-state span { color: var(--muted); font-size: 11px; }
+    .toolbar { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 10px 20px; border-bottom: 1px solid var(--line); background: #fcfdfd; }
+    .tabs { display: flex; gap: 3px; }
+    .tab { border: 0; border-bottom: 2px solid transparent; padding: 6px 9px; color: var(--muted); background: transparent; }
+    .tab.active { color: var(--navy); border-bottom-color: var(--teal); font-weight: 700; }
+    .toolbar-actions { display: flex; align-items: center; gap: 6px; }
+    .toolbar-actions select { border: 1px solid var(--line); border-radius: 5px; padding: 6px; background: #fff; }
+    .review-scroll { overflow: auto; padding: 16px 20px 30px; }
+    .empty { display: grid; place-items: center; min-height: 250px; color: var(--muted); text-align: center; border: 1px dashed #c8d2da; border-radius: var(--radius); background: #fafcfd; }
+    .review-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 12px; }
+    .review-card { border: 1px solid var(--line); border-radius: var(--radius); background: #fff; box-shadow: 0 2px 7px rgba(22, 43, 60, .03); }
+    .review-card.focused { border-color: #76b8b7; box-shadow: 0 0 0 2px rgba(22,139,139,.1); }
+    .card-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 10px 11px; border-bottom: 1px solid #edf1f4; }
+    .card-id { color: var(--muted); font-size: 11px; font-weight: 700; }
+    .card-body { padding: 11px; }
+    .entity-text { margin: 0 0 8px; font-size: 14px; font-weight: 700; white-space: pre-wrap; word-break: break-word; }
+    .relation-line { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 6px; margin-bottom: 9px; }
+    .node-label { min-width: 0; padding: 7px 8px; border: 1px solid #d8e1e7; border-radius: 5px; background: #f7fafb; }
+    .node-label b { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .node-label span { color: var(--muted); font-size: 10px; }
+    .relation-arrow { color: var(--orange); font-size: 17px; }
+    .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 7px; margin: 8px 0; }
+    .field label { display: block; margin-bottom: 3px; color: var(--muted); font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .35px; }
+    .field input, .field select, .field textarea { width: 100%; border: 1px solid var(--line); border-radius: 5px; padding: 6px 7px; color: var(--ink); background: #fff; }
+    .field textarea { min-height: 58px; resize: vertical; }
+    .evidence { margin-top: 9px; padding: 8px; border-left: 3px solid #d7e3e8; color: #4e5c68; background: #f7fafb; white-space: pre-wrap; word-break: break-word; }
+    .evidence small { display: block; margin-bottom: 4px; color: var(--muted); font-size: 10px; }
+    .card-actions { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 10px; }
+    .mini { border: 1px solid var(--line); border-radius: 5px; padding: 5px 8px; color: #526270; background: #fff; font-size: 11px; }
+    .mini:hover { background: #f4f7f9; } .mini.accept { color: #247453; border-color: #a8d9c1; background: #f2fcf6; } .mini.reject { color: #a33e3e; border-color: #ecc1c1; background: #fff7f7; }
+    .graph-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 13px 15px 9px; }
+    .graph-controls { display: flex; gap: 4px; }
+    .icon-button { width: 29px; height: 29px; display: grid; place-items: center; border: 1px solid var(--line); border-radius: 5px; color: var(--ink); background: #fff; }
+    .graph-legend { display: flex; flex-wrap: wrap; gap: 5px; padding: 0 15px 9px; }
+    .legend { display: inline-flex; align-items: center; gap: 4px; color: var(--muted); font-size: 10px; }
+    .legend i { width: 9px; height: 9px; display: inline-block; border-radius: 50%; }
+    .graph-wrap { position: relative; flex: 1; min-height: 340px; margin: 0 10px 10px; overflow: hidden; border: 1px solid var(--line); border-radius: var(--radius); background-color: #fff; background-image: linear-gradient(#f2f5f7 1px, transparent 1px), linear-gradient(90deg, #f2f5f7 1px, transparent 1px); background-size: 24px 24px; }
+    #graph { width: 100%; height: 100%; min-height: 400px; user-select: none; }
+    .graph-empty { position: absolute; inset: 0; display: grid; place-items: center; color: var(--muted); pointer-events: none; }
+    .graph-footer { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; padding: 0 15px 15px; }
+    .stat-box { padding: 8px 10px; border: 1px solid var(--line); border-radius: 6px; background: #fff; }
+    .stat-box b { display: block; font-size: 16px; } .stat-box span { color: var(--muted); font-size: 10px; }
+    .modal-backdrop { position: fixed; inset: 0; z-index: 10; display: none; place-items: center; padding: 20px; background: rgba(13, 29, 43, .42); }
+    .modal-backdrop.open { display: grid; }
+    .modal { width: min(680px, 100%); max-height: 90vh; overflow: auto; border-radius: 9px; background: #fff; box-shadow: 0 24px 70px rgba(0,0,0,.25); }
+    .modal-head, .modal-foot { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 14px 16px; border-bottom: 1px solid var(--line); }
+    .modal-foot { justify-content: flex-end; border-top: 1px solid var(--line); border-bottom: 0; }
+    .modal-body { padding: 16px; } .modal h3 { margin: 0; font-size: 15px; }
+    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; } .form-grid .full { grid-column: 1 / -1; }
+    .file-label { display: inline-flex; align-items: center; gap: 7px; }
+    @media (max-width: 1100px) { .workspace { grid-template-columns: 230px minmax(390px, 1fr); } .graph-panel { grid-column: 1 / -1; height: 560px; border-top: 1px solid var(--line); border-left: 0; } }
+    @media (max-width: 720px) { .app { grid-template-rows: auto 1fr; } .topbar { flex-wrap: wrap; padding: 10px 12px; } .brand { min-width: 0; } .top-stats { order: 3; width: 100%; } .top-actions { margin-left: auto; } .workspace { display: block; } .sidebar { height: 270px; border-right: 0; border-bottom: 1px solid var(--line); } .doc-list { height: 180px; } .main { min-height: 720px; } .graph-panel { height: 520px; } .main-title { display: block; } .review-state { margin-top: 10px; text-align: left; } .toolbar { align-items: flex-start; flex-direction: column; } }
+  </style>
+</head>
+<body>
+<div class="app">
+  <header class="topbar">
+    <div class="brand"><div class="brand-mark">KG</div><div><strong>Safety Graph Review</strong><span>evidence-grounded annotation workbench</span></div></div>
+    <div class="top-stats">
+      <div class="top-stat"><b id="statDocs">0</b><span>文档</span></div>
+      <div class="top-stat"><b id="statEntities">0</b><span>实体</span></div>
+      <div class="top-stat"><b id="statRelations">0</b><span>关系</span></div>
+      <div class="top-stat"><b id="statProgress">0%</b><span>审核完成</span></div>
+    </div>
+    <div class="top-actions">
+      <button class="button dark" id="importBtn">导入数据</button>
+      <button class="button primary" id="exportBtn">导出审核结果</button>
+    </div>
+  </header>
+  <main class="workspace">
+    <aside class="sidebar">
+      <div class="section-head"><h2>文档队列</h2><span class="count" id="docCount">0</span></div>
+      <input class="search" id="docSearch" placeholder="搜索文件名、类别或 ID">
+      <div class="filters"><select id="languageFilter"><option value="all">全部语言</option><option value="en">英文</option><option value="zh">中文</option></select><select id="docReviewFilter"><option value="all">全部状态</option><option value="pending">待审核</option><option value="done">已完成</option></select></div>
+      <div class="doc-list" id="docList"></div>
+    </aside>
+    <section class="main">
+      <div class="main-head"><div class="breadcrumb" id="docBreadcrumb">未加载数据</div><div class="main-title"><div><h1 id="docTitle">请选择文档</h1><p id="docMeta">导入归一化标注 JSONL 和预标注任务 JSONL 后开始审核</p></div><div class="review-state"><b id="currentProgress">0%</b><span>当前文档完成度</span></div></div></div>
+      <div class="toolbar"><div class="tabs"><button class="tab active" data-tab="entities">实体 <span id="entityTabCount">0</span></button><button class="tab" data-tab="relations">关系 <span id="relationTabCount">0</span></button><button class="tab" data-tab="source">原文证据</button></div><div class="toolbar-actions"><select id="itemFilter"><option value="all">全部候选</option><option value="pending">待审核</option><option value="accepted">已接受</option><option value="modified">已修改</option><option value="rejected">已拒绝</option></select><button class="button" id="addRelationBtn">+ 添加关系</button></div></div>
+      <div class="review-scroll" id="reviewScroll"></div>
+    </section>
+    <aside class="graph-panel">
+      <div class="graph-head"><div><div class="panel-title">关系图谱</div><span class="count" id="graphMeta">当前文档</span></div><div class="graph-controls"><button class="icon-button" id="fitGraph" title="适应画布">⌗</button><button class="icon-button" id="zoomOut" title="缩小">−</button><button class="icon-button" id="zoomIn" title="放大">+</button><button class="icon-button" id="importGraphBtn" title="导入外部图谱">↥</button></div></div>
+      <div class="graph-legend" id="graphLegend"></div>
+      <div class="graph-wrap" id="graphWrap"><svg id="graph" viewBox="0 0 900 620" role="img" aria-label="知识图谱关系图"></svg><div class="graph-empty" id="graphEmpty">当前文档暂无可渲染关系</div></div>
+      <div class="graph-footer"><div class="stat-box"><b id="graphNodeCount">0</b><span>图谱节点</span></div><div class="stat-box"><b id="graphEdgeCount">0</b><span>图谱关系</span></div></div>
+    </aside>
+  </main>
+</div>
+
+<div class="modal-backdrop" id="importModal"><div class="modal"><div class="modal-head"><h3>导入审核数据</h3><button class="icon-button" data-close="importModal">×</button></div><div class="modal-body"><p style="margin-top:0;color:var(--muted)">可导入本项目生成的 JSONL 文件。页面默认会尝试自动加载相对路径数据。</p><div class="form-grid"><div class="field"><label>归一化标注 JSONL</label><input type="file" id="annotationFile" accept=".jsonl,.json"></div><div class="field"><label>预标注任务 JSONL</label><input type="file" id="jobsFile" accept=".jsonl,.json"></div><div class="field"><label>候选映射 JSONL（推荐）</label><input type="file" id="candidateFile" accept=".jsonl,.json"></div><div class="field full"><label>外部图谱 JSON / JSONL</label><input type="file" id="graphFile" accept=".jsonl,.json"></div></div></div><div class="modal-foot"><button class="button" data-close="importModal">取消</button><button class="button primary" id="loadFilesBtn">加载文件</button></div></div></div>
+<div class="modal-backdrop" id="relationModal"><div class="modal"><div class="modal-head"><h3>添加关系</h3><button class="icon-button" data-close="relationModal">×</button></div><div class="modal-body"><div class="form-grid"><div class="field"><label>起点实体</label><select id="newSource"></select></div><div class="field"><label>终点实体</label><select id="newTarget"></select></div><div class="field"><label>关系类型</label><select id="newType"></select></div><div class="field"><label>主张状态</label><select id="newClaim"><option value="explicit">明确</option><option value="inferred">推断</option><option value="normative">规范性</option><option value="uncertain">不确定</option></select></div><div class="field full"><label>证据所在段落</label><select id="newSegment"></select></div><div class="field full"><label>证据文本</label><textarea id="newEvidence" placeholder="粘贴所选段落中的连续原文"></textarea></div></div></div><div class="modal-foot"><button class="button" data-close="relationModal">取消</button><button class="button primary" id="saveRelationBtn">添加到当前文档</button></div></div></div>
+<input type="file" id="hiddenGraphInput" accept=".jsonl,.json" hidden>
+
+<script>
+(() => {
+  const TYPES = ['EVENT','HAZARD','ASSET','ACTOR','OPERATION','FAILURE','HUMAN_FACTOR','ORGANIZATIONAL_FACTOR','ENVIRONMENT','BARRIER','CONSEQUENCE','MITIGATION','LOCATION','TIME','REGULATION'];
+  const RELATIONS = ['causes','contributes_to','precedes','results_in','occurs_at','involves','affects','performed_by','fails_during','protected_by','violates','mitigated_by','recommended_for','part_of','same_as'];
+  const TYPE_COLORS = { EVENT:'#ca44a5', HAZARD:'#d97732', ASSET:'#3c77c7', ACTOR:'#227b8b', OPERATION:'#8a63b7', FAILURE:'#c74b4b', HUMAN_FACTOR:'#bd7a31', ORGANIZATIONAL_FACTOR:'#996d38', ENVIRONMENT:'#399570', BARRIER:'#2c8c67', CONSEQUENCE:'#b84a5d', MITIGATION:'#2d7b95', LOCATION:'#6877a7', TIME:'#697681', REGULATION:'#4f6170' };
+  const RELATION_LABELS = {causes:'直接导致', contributes_to:'促成', precedes:'先于', results_in:'导致后果', occurs_at:'发生于', involves:'涉及', affects:'影响', performed_by:'由…执行', fails_during:'在…中失效', protected_by:'受…保护', violates:'违反', mitigated_by:'由…缓解', recommended_for:'建议用于', part_of:'属于', same_as:'同义'};
+  const state = { annotations: [], jobs: [], docs: [], current: null, tab: 'entities', itemFilter: 'all', external: {nodes:[], edges:[]}, graph: {nodes:[], edges:[], positions:{}, scale:1, x:0, y:0, dragging:null, pan:null}, storageKey: 'safety-graph-review-v1' };
+  const $ = id => document.getElementById(id);
+  const esc = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  const short = (value, n=90) => { const s = String(value || '').replace(/\s+/g,' ').trim(); return s.length > n ? s.slice(0,n - 1) + '…' : s; };
+  const parseJsonLines = text => { const trimmed = text.trim(); if (!trimmed) return []; if (trimmed.startsWith('[')) return JSON.parse(trimmed); return trimmed.split(/\r?\n/).filter(Boolean).map(JSON.parse); };
+  const uid = prefix => prefix + Math.random().toString(36).slice(2, 8);
+  const currentAnnotation = () => state.annotations.find(a => a._review_key === state.current) || null;
+  const currentJob = () => { const a = currentAnnotation(); return state.jobs.find(j => j.job_id === a?._job_id) || null; };
+  const reviewStatus = item => item.review_status || 'pending';
+  const allItems = a => a ? [...a.entities, ...a.relations] : [];
+  const done = item => ['accepted','modified','rejected'].includes(reviewStatus(item));
+
+  function saveLocal() { if (!state.annotations.length) return; localStorage.setItem(state.storageKey, JSON.stringify(state.annotations)); }
+  function restoreLocal() { try { const saved = JSON.parse(localStorage.getItem(state.storageKey) || 'null'); if (Array.isArray(saved) && saved.length) { const byId = new Map(saved.map(x => [x._review_key || x.document_id, x])); state.annotations = state.annotations.map(a => byId.get(a._review_key) || a); } } catch (_) {} }
+  function alignRecords(rows, jobs, candidates=[]) { return rows.map((a, i) => { const jobId = candidates[i]?.job_id || jobs[i]?.job_id || `${a.document_id}#${i + 1}`; return {...a, _job_id: jobId, _review_key: jobId}; }); }
+  function buildDocs() {
+    state.docs = state.annotations.map(a => { const job = state.jobs.find(j => j.job_id === a._job_id) || {}; const items = allItems(a); return { id:a._review_key, title: job.source_path || a.document_id, category: job.category || 'unknown', language:a.language, total:items.length, reviewed:items.filter(done).length }; });
+    $('statDocs').textContent = state.docs.length; $('statEntities').textContent = state.annotations.reduce((n,a)=>n+a.entities.length,0); $('statRelations').textContent = state.annotations.reduce((n,a)=>n+a.relations.length,0);
+    updateGlobalProgress(); renderDocs();
+  }
+  function updateGlobalProgress() { const all = state.annotations.flatMap(allItems); const reviewed = all.filter(done).length; $('statProgress').textContent = all.length ? Math.round(reviewed / all.length * 100) + '%' : '0%'; }
+  function renderDocs() {
+    const q = $('docSearch').value.toLowerCase(); const lang = $('languageFilter').value; const rf = $('docReviewFilter').value;
+    const list = state.docs.filter(d => (!q || `${d.id} ${d.title} ${d.category}`.toLowerCase().includes(q)) && (lang==='all'||d.language===lang) && (rf==='all'||(rf==='done'?d.reviewed===d.total:d.reviewed<d.total)));
+    $('docCount').textContent = `${list.length}/${state.docs.length}`; $('docList').innerHTML = list.map(d => `<button class="doc-item ${d.id===state.current?'active':''}" data-doc="${esc(d.id)}"><span class="doc-title" title="${esc(d.title)}">${esc(d.title.split('/').pop())}</span><span class="doc-meta"><span>${esc(d.category)} · <span class="pill ${d.language}">${d.language}</span></span><span>${d.reviewed}/${d.total}</span></span></button>`).join('') || '<div class="empty" style="min-height:160px">没有匹配文档</div>';
+    document.querySelectorAll('[data-doc]').forEach(el => el.addEventListener('click', () => { state.current = el.dataset.doc; state.tab='entities'; state.itemFilter='all'; $('itemFilter').value='all'; renderAll(); }));
+  }
+  function renderAll() { renderDocs(); renderHeader(); renderToolbar(); renderReview(); renderGraph(); }
+  function renderHeader() { const a=currentAnnotation(), j=currentJob(); if (!a) { $('docTitle').textContent='请选择文档'; $('docMeta').textContent='导入归一化标注 JSONL 和预标注任务 JSONL 后开始审核'; return; } const items=allItems(a); const reviewed=items.filter(done).length; $('docBreadcrumb').textContent=`${a.language.toUpperCase()} / ${j?.category || 'unknown'} / ${a.document_id} · ${a._job_id}`; $('docTitle').textContent=j?.source_path || a.document_id; $('docMeta').textContent=`${j?.source_path || ''} · ${a.entities.length} 实体 · ${a.relations.length} 关系`; $('currentProgress').textContent=items.length ? Math.round(reviewed/items.length*100)+'%' : '0%'; }
+  function renderToolbar() { const a=currentAnnotation(); $('entityTabCount').textContent=a?.entities.length||0; $('relationTabCount').textContent=a?.relations.length||0; document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('active',t.dataset.tab===state.tab)); $('addRelationBtn').style.display=state.tab==='relations'?'inline-block':'none'; }
+  function filtered(items) { return items.filter(item => state.itemFilter==='all'||reviewStatus(item)===state.itemFilter); }
+  function statusButtons(item) { return `<div class="card-actions"><button class="mini accept" data-action="status" data-id="${esc(item.id)}" data-status="accepted">✓ 接受</button><button class="mini" data-action="status" data-id="${esc(item.id)}" data-status="modified">✎ 标记已修改</button><button class="mini reject" data-action="status" data-id="${esc(item.id)}" data-status="rejected">× 拒绝</button><button class="mini" data-action="focus" data-id="${esc(item.id)}">在图谱中定位</button></div>`; }
+  function evidenceHtml(list) { return (list || []).map(e => `<div class="evidence"><small>${esc(e.segment_id)} · 第 ${esc(e.page || '-')} 页 · ${esc(e.start)}-${esc(e.end)}</small>${esc(e.text)}</div>`).join(''); }
+  function entityCard(entity) { return `<article class="review-card" data-card="${esc(entity.id)}"><div class="card-head"><span class="card-id">${esc(entity.id)} · 实体</span><span class="pill ${reviewStatus(entity)}">${esc(reviewStatus(entity))}</span></div><div class="card-body"><p class="entity-text">${esc(entity.text)}</p><div class="field-row"><div class="field"><label>实体类型</label><select data-edit="type" data-id="${esc(entity.id)}">${TYPES.map(t=>`<option ${t===entity.type?'selected':''}>${t}</option>`).join('')}</select></div><div class="field"><label>置信度</label><input type="number" min="0" max="1" step=".01" value="${entity.confidence ?? ''}" data-edit="confidence" data-id="${esc(entity.id)}"></div></div><div class="field"><label>规范名称 / 别名</label><input value="${esc(entity.normalized_name || '')}" placeholder="可选" data-edit="normalized_name" data-id="${esc(entity.id)}"></div>${evidenceHtml([entity.evidence])}${statusButtons(entity)}</div></article>`; }
+  function relationCard(rel, a) { const byId=Object.fromEntries(a.entities.map(e=>[e.id,e])); const s=byId[rel.source_id]||{}, t=byId[rel.target_id]||{}; return `<article class="review-card" data-card="${esc(rel.id)}"><div class="card-head"><span class="card-id">${esc(rel.id)} · 关系</span><span class="pill ${reviewStatus(rel)}">${esc(reviewStatus(rel))}</span></div><div class="card-body"><div class="relation-line"><div class="node-label"><b>${esc(short(s.text,38))}</b><span>${esc(s.type||rel.source_id)} · ${esc(rel.source_id)}</span></div><div class="relation-arrow">→</div><div class="node-label"><b>${esc(short(t.text,38))}</b><span>${esc(t.type||rel.target_id)} · ${esc(rel.target_id)}</span></div></div><div class="field-row"><div class="field"><label>关系类型</label><select data-edit="type" data-id="${esc(rel.id)}">${RELATIONS.map(x=>`<option value="${x}" ${x===rel.type?'selected':''}>${x} · ${RELATION_LABELS[x]}</option>`).join('')}</select></div><div class="field"><label>主张状态</label><select data-edit="claim_status" data-id="${esc(rel.id)}">${['explicit','inferred','normative','uncertain'].map(x=>`<option ${x===rel.claim_status?'selected':''}>${x}</option>`).join('')}</select></div></div><div class="field"><label>置信度</label><input type="number" min="0" max="1" step=".01" value="${rel.confidence ?? ''}" data-edit="confidence" data-id="${esc(rel.id)}"></div>${evidenceHtml(rel.evidence)}${statusButtons(rel)}</div></article>`; }
+  function renderReview() { const wrap=$('reviewScroll'), a=currentAnnotation(); if (!a) { wrap.innerHTML='<div class="empty">请从左侧选择文档</div>'; return; } if (state.tab==='source') { renderSource(wrap); return; } const items=filtered(state.tab==='entities'?a.entities:a.relations); if (!items.length) { wrap.innerHTML='<div class="empty">当前筛选下没有候选</div>'; return; } wrap.innerHTML=`<div class="review-grid">${items.map(item=>state.tab==='entities'?entityCard(item):relationCard(item,a)).join('')}</div>`; bindReviewEvents(); }
+  function renderSource(wrap) { const job=currentJob(); const a=currentAnnotation(); if (!job) { wrap.innerHTML='<div class="empty">没有找到对应原文任务</div>'; return; } const ids=new Set(allItems(a).flatMap(x=>(Array.isArray(x.evidence)?x.evidence:[x.evidence]).map(e=>e.segment_id))); const segments=job.segments.filter(s=>ids.has(s.segment_id)); wrap.innerHTML=`<div style="display:grid;gap:12px">${segments.map(s=>`<article class="review-card"><div class="card-head"><span class="card-id">${esc(s.segment_id)} · 第 ${esc(s.page||'-')} 页</span><span class="count">${esc(s.start)}-${esc(s.end)}</span></div><div class="card-body" style="white-space:pre-wrap">${esc(s.text)}</div></article>`).join('')}</div>`; }
+  function bindReviewEvents() { document.querySelectorAll('[data-action="status"]').forEach(b=>b.addEventListener('click',()=>setStatus(b.dataset.id,b.dataset.status))); document.querySelectorAll('[data-action="focus"]').forEach(b=>b.addEventListener('click',()=>focusGraph(b.dataset.id))); document.querySelectorAll('[data-edit]').forEach(el=>el.addEventListener('change',()=>editItem(el.dataset.id,el.dataset.edit,el.value))); }
+  function findItem(id) { const a=currentAnnotation(); return a && [...a.entities,...a.relations].find(x=>x.id===id); }
+  function setStatus(id,status) { const item=findItem(id); if(!item)return; item.review_status=status; if(status!=='pending') { const a=currentAnnotation(); a.review.status='single_reviewed'; a.review.reviewers=a.review.reviewers||[]; } saveLocal(); buildDocs(); renderAll(); }
+  function editItem(id,key,value) { const item=findItem(id); if(!item)return; item[key]=key==='confidence'?Math.max(0,Math.min(1,Number(value))):value; if(item.review_status==='pending')item.review_status='modified'; saveLocal(); updateGlobalProgress(); renderHeader(); renderGraph(); }
+  function focusGraph(id) { const node=state.graph.nodes.find(n=>n.id===id); if(!node)return; state.graph.x=450-node.x; state.graph.y=310-node.y; renderGraph(); document.querySelector(`[data-card="${CSS.escape(id)}"]`)?.classList.add('focused'); setTimeout(()=>document.querySelector(`[data-card="${CSS.escape(id)}"]`)?.classList.remove('focused'),1200); }
+  function graphData() { const a=currentAnnotation(); if(!a)return {nodes:[],edges:[]}; const visible = new Set(a.entities.filter(e=>state.itemFilter==='all'||state.itemFilter===reviewStatus(e)).map(e=>e.id)); const nodes=a.entities.filter(e=>visible.has(e.id)).map((e,i)=>{const old=state.graph.positions[e.id]||{};return {id:e.id,label:e.text,type:e.type,status:reviewStatus(e),x:old.x ?? 120+(i%5)*155,y:old.y ?? 100+Math.floor(i/5)*105};}); const edges=a.relations.filter(r=>visible.has(r.source_id)&&visible.has(r.target_id)&&(state.itemFilter==='all'||state.itemFilter===reviewStatus(r))).map(r=>({...r})); return {nodes,edges}; }
+  function renderLegend() { $('graphLegend').innerHTML=TYPES.slice(0,10).map(t=>`<span class="legend"><i style="background:${TYPE_COLORS[t]}"></i>${t}</span>`).join(''); }
+  function renderGraph() { const local=graphData(); const nodes=[...local.nodes,...state.external.nodes.map((n,i)=>{const old=state.graph.positions[n.id]||{};return {...n,external:true,x:old.x ?? 650+(i%4)*130,y:old.y ?? 130+Math.floor(i/4)*100};})]; const edges=[...local.edges,...state.external.edges.map(e=>({...e,external:true}))]; state.graph.nodes=nodes; state.graph.edges=edges; nodes.forEach(n=>{state.graph.positions[n.id]={x:n.x,y:n.y};}); const svg=$('graph'); svg.innerHTML=''; const g=document.createElementNS('http://www.w3.org/2000/svg','g'); g.setAttribute('transform',`translate(${state.graph.x} ${state.graph.y}) scale(${state.graph.scale})`); const byId=Object.fromEntries(nodes.map(n=>[n.id,n])); edges.forEach((e,i)=>{const s=byId[e.source_id||e.source],t=byId[e.target_id||e.target];if(!s||!t)return; const line=document.createElementNS('http://www.w3.org/2000/svg','line'); line.setAttribute('x1',s.x);line.setAttribute('y1',s.y);line.setAttribute('x2',t.x);line.setAttribute('y2',t.y);line.setAttribute('stroke',e.external?'#9aa7b2':'#d58b54');line.setAttribute('stroke-width',e.external?'1.5':'2');line.setAttribute('marker-end','url(#arrow)');line.setAttribute('opacity',.75);line.addEventListener('click',()=>{state.tab='relations';state.itemFilter='all';$('itemFilter').value='all';renderAll();});g.appendChild(line); const text=document.createElementNS('http://www.w3.org/2000/svg','text');text.setAttribute('x',(s.x+t.x)/2);text.setAttribute('y',(s.y+t.y)/2-5);text.setAttribute('fill','#77838d');text.setAttribute('font-size','10');text.setAttribute('text-anchor','middle');text.textContent=RELATION_LABELS[e.type]||e.type||'';g.appendChild(text);}); nodes.forEach(n=>{const group=document.createElementNS('http://www.w3.org/2000/svg','g');group.setAttribute('transform',`translate(${n.x} ${n.y})`);group.style.cursor='grab'; const circle=document.createElementNS('http://www.w3.org/2000/svg','circle');circle.setAttribute('r',n.external?12:15);circle.setAttribute('fill',n.external?'#7f8d98':TYPE_COLORS[n.type]||'#607080');circle.setAttribute('stroke','#fff');circle.setAttribute('stroke-width','2');group.appendChild(circle); const label=document.createElementNS('http://www.w3.org/2000/svg','text');label.setAttribute('y','30');label.setAttribute('text-anchor','middle');label.setAttribute('fill','#34424e');label.setAttribute('font-size','11');label.textContent=short(n.label||n.id,20);group.appendChild(label); const type=document.createElementNS('http://www.w3.org/2000/svg','text');type.setAttribute('y','43');type.setAttribute('text-anchor','middle');type.setAttribute('fill','#87939d');type.setAttribute('font-size','9');type.textContent=n.type||'';group.appendChild(type); group.addEventListener('mousedown',ev=>{ev.stopPropagation();state.graph.dragging={node:n,startX:ev.clientX,startY:ev.clientY,ox:n.x,oy:n.y};group.style.cursor='grabbing';});group.addEventListener('click',()=>focusGraph(n.id));g.appendChild(group);}); const defs=document.createElementNS('http://www.w3.org/2000/svg','defs');defs.innerHTML='<marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#d58b54"></path></marker>';svg.appendChild(defs);svg.appendChild(g); $('graphEmpty').style.display=edges.length||nodes.length?'none':'grid'; $('graphMeta').textContent=`${aLabel()} · ${state.external.nodes.length?'含外部图谱':''}`; $('graphNodeCount').textContent=nodes.length; $('graphEdgeCount').textContent=edges.length; renderLegend(); }
+  function aLabel(){const j=currentJob(); return j?.category||'当前文档';}
+  function graphPointerEvents() { const svg=$('graph'); svg.addEventListener('mousedown',e=>{if(e.target===svg){state.graph.pan={x:e.clientX,y:e.clientY,ox:state.graph.x,oy:state.graph.y};}}); window.addEventListener('mousemove',e=>{if(state.graph.dragging){const d=state.graph.dragging;d.node.x=d.ox+(e.clientX-d.startX)/state.graph.scale;d.node.y=d.oy+(e.clientY-d.startY)/state.graph.scale;state.graph.positions[d.node.id]={x:d.node.x,y:d.node.y};renderGraph();}else if(state.graph.pan){state.graph.x=state.graph.pan.ox+e.clientX-state.graph.pan.x;state.graph.y=state.graph.pan.oy+e.clientY-state.graph.pan.y;renderGraph();}}); window.addEventListener('mouseup',()=>{state.graph.dragging=null;state.graph.pan=null;}); $('graphWrap').addEventListener('wheel',e=>{e.preventDefault();state.graph.scale=Math.max(.45,Math.min(2.2,state.graph.scale*(e.deltaY<0?1.1:.9)));renderGraph();},{passive:false}); }
+  function fitGraph(){const ns=state.graph.nodes;if(!ns.length)return;const xs=ns.map(n=>n.x),ys=ns.map(n=>n.y);state.graph.scale=Math.min(1.3,Math.max(.65,Math.min(780/(Math.max(...xs)-Math.min(...xs)+180),520/(Math.max(...ys)-Math.min(...ys)+150))));state.graph.x=450-(Math.min(...xs)+Math.max(...xs))/2*state.graph.scale;state.graph.y=310-(Math.min(...ys)+Math.max(...ys))/2*state.graph.scale;renderGraph();}
+  function openModal(id){$(id).classList.add('open');} function closeModal(id){$(id).classList.remove('open');}
+  function populateRelationForm(){const a=currentAnnotation(),j=currentJob();if(!a)return;$('newSource').innerHTML=a.entities.map(e=>`<option value="${e.id}">${e.id} · ${esc(short(e.text,50))}</option>`).join('');$('newTarget').innerHTML=a.entities.map(e=>`<option value="${e.id}">${e.id} · ${esc(short(e.text,50))}</option>`).join('');$('newType').innerHTML=RELATIONS.map(x=>`<option value="${x}">${x} · ${RELATION_LABELS[x]}</option>`).join('');$('newSegment').innerHTML=(j?.segments||[]).map(s=>`<option value="${s.segment_id}">${s.segment_id} · 第 ${s.page||'-'} 页 · ${esc(short(s.text,80))}</option>`).join('');}
+  function addRelation(){const a=currentAnnotation(),j=currentJob();if(!a||!j)return;const evidence=$('newEvidence').value.trim(),segment=j.segments.find(s=>s.segment_id===$('newSegment').value);if(!evidence){alert('请填写原文证据');return;}if(!segment){alert('请选择证据段落');return;}const localStart=segment.text.indexOf(evidence);if(localStart<0){alert('证据文本必须是所选段落中的连续原文');return;}const rel={id:'R'+(Math.max(0,...a.relations.map(r=>Number(String(r.id).replace(/\D/g,''))))+1),source_id:$('newSource').value,target_id:$('newTarget').value,type:$('newType').value,claim_status:$('newClaim').value,evidence:[{text:evidence,segment_id:segment.segment_id,page:segment.page||null,start:segment.start+localStart,end:segment.start+localStart+evidence.length}],confidence:1,review_status:'modified',created_by:'human'};a.relations.push(rel);a.review.status='single_reviewed';saveLocal();closeModal('relationModal');state.tab='relations';renderAll();}
+  function exportResults(){const clean=state.annotations.map(a=>{const copy={...a};delete copy._job_id;delete copy._review_key;return copy;});const blob=new Blob([clean.map(a=>JSON.stringify(a)).join('\n')+'\n'],{type:'application/jsonl'});const url=URL.createObjectURL(blob);const el=document.createElement('a');el.href=url;el.download='reviewed_annotations.jsonl';el.click();URL.revokeObjectURL(url);}
+  function parseExternal(value){const rows=Array.isArray(value)?value:[value];if(rows.length===1&&rows[0].nodes)return {nodes:rows[0].nodes.map(n=>({id:String(n.id),label:n.label||n.name||n.id,type:n.type||'EXTERNAL'})),edges:(rows[0].edges||rows[0].relations||[]).map(e=>({source_id:String(e.source_id||e.source),target_id:String(e.target_id||e.target),type:e.type||e.label||'related_to'}))};const nodes=[],edges=[];rows.forEach(r=>{const ents=r.entities||r.nodes||[],rels=r.relations||r.edges||[];ents.forEach(e=>nodes.push({id:String(e.id),label:e.text||e.label||e.name||e.id,type:e.type||'EXTERNAL'}));rels.forEach(e=>edges.push({source_id:String(e.source_id||e.source),target_id:String(e.target_id||e.target),type:e.type||e.label||'related_to'}));});return {nodes,edges};}
+  async function loadDefaults(){try{const [gold,normalized,j,c]=await Promise.all([fetch('../data/processed/reviewed/gold/all.jsonl'),fetch('../data/processed/preannotation/sub2api_terra_normalized.jsonl'),fetch('../data/processed/preannotation/jobs.jsonl'),fetch('../data/processed/preannotation/sub2api_terra_candidates.jsonl')]);if(!j.ok)throw new Error('default files unavailable');const source=gold.ok?gold:normalized;if(!source.ok)throw new Error('annotation files unavailable');const rows=parseJsonLines(await source.text());state.jobs=parseJsonLines(await j.text());const candidates=c.ok?parseJsonLines(await c.text()):[];state.annotations=alignRecords(rows,state.jobs,candidates);restoreLocal();state.current=state.annotations[0]?._review_key||null;buildDocs();renderAll();}catch(e){$('reviewScroll').innerHTML='<div class="empty"><div><b>等待导入数据</b><br><span>当前页面未能自动读取相对路径数据，请点击右上角“导入数据”。</span></div></div>';}}
+  async function loadFiles(){const af=$('annotationFile').files[0],jf=$('jobsFile').files[0],cf=$('candidateFile').files[0],gf=$('graphFile').files[0];try{if(af)state.annotations=parseJsonLines(await af.text());if(jf)state.jobs=parseJsonLines(await jf.text());const candidates=cf?parseJsonLines(await cf.text()):[];state.annotations=alignRecords(state.annotations,state.jobs,candidates);if(gf)state.external=parseExternal(parseJsonLines(await gf.text()));if(!state.annotations.length)throw new Error('缺少标注文件');restoreLocal();state.current=state.annotations[0]?._review_key||null;buildDocs();renderAll();closeModal('importModal');}catch(e){alert('导入失败：'+e.message);}}
+  document.addEventListener('click',e=>{const close=e.target.closest('[data-close]');if(close)closeModal(close.dataset.close);const tab=e.target.closest('.tab');if(tab){state.tab=tab.dataset.tab;renderAll();}});
+  $('docSearch').addEventListener('input',renderDocs);$('languageFilter').addEventListener('change',renderDocs);$('docReviewFilter').addEventListener('change',renderDocs);$('itemFilter').addEventListener('change',e=>{state.itemFilter=e.target.value;renderReview();renderGraph();});$('importBtn').addEventListener('click',()=>openModal('importModal'));$('loadFilesBtn').addEventListener('click',loadFiles);$('exportBtn').addEventListener('click',exportResults);$('addRelationBtn').addEventListener('click',()=>{populateRelationForm();openModal('relationModal');});$('saveRelationBtn').addEventListener('click',addRelation);$('fitGraph').addEventListener('click',fitGraph);$('zoomIn').addEventListener('click',()=>{state.graph.scale=Math.min(2.2,state.graph.scale*1.15);renderGraph();});$('zoomOut').addEventListener('click',()=>{state.graph.scale=Math.max(.45,state.graph.scale*.87);renderGraph();});$('importGraphBtn').addEventListener('click',()=>$('hiddenGraphInput').click());$('hiddenGraphInput').addEventListener('change',async e=>{const file=e.target.files[0];if(!file)return;try{state.external=parseExternal(parseJsonLines(await file.text()));renderGraph();}catch(err){alert('外部图谱导入失败：'+err.message);}});graphPointerEvents();loadDefaults();
+})();
+</script>
+</body>
+</html>

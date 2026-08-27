@@ -1,0 +1,4 @@
+pypdf>=6.0,<7
+PyYAML>=6.0,<7
+jsonschema>=4.20,<5
+openai>=2.0,<3

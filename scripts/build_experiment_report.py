@@ -1,0 +1,90 @@
+#!/usr/bin/env python3
+"""Compile available experiment metrics into a reproducible Markdown report."""
+
+from __future__ import annotations
+
+import argparse
+import json
+from pathlib import Path
+
+
+def read_json(path: Path) -> dict:
+    return json.loads(path.read_text(encoding="utf-8")) if path.exists() else {}
+
+
+def pct(value: float | None) -> str:
+    return "-" if value is None else f"{value * 100:.2f}%"
+
+
+def run(args: argparse.Namespace) -> int:
+    baseline = read_json(args.root / "test_baseline_metrics.json")
+    kg = read_json(args.root / "test_kg_metrics.json")
+    qlora = read_json(args.root / "test_qlora_metrics.json")
+    compact = read_json(args.root / "test_compact_metrics.json")
+    training = read_json(args.root / "qwen3_4b_kg_qlora" / "training_metrics.json")
+    compact_training = read_json(args.root / "qwen3_4b_compact_qlora" / "training_metrics.json")
+    summary = read_json(Path("data/processed/reviewed/summary.json"))
+    rows = [
+        ("Qwen3-14B baseline", baseline),
+        ("Qwen3-14B + KG prompt", kg),
+        ("Qwen3-4B + QLoRA + KG prompt", qlora),
+        ("Qwen3-4B + compact QLoRA + KG prompt", compact),
+    ]
+    lines = [
+        "# Initial Safety Extraction Experiments",
+        "",
+        "> This is an initial pilot report. The frozen test split contains four documents and is too small for final manuscript claims.",
+        "",
+        "## Data",
+        "",
+        f"- Gold version: `{summary.get('schema_version', 'unknown')}`; review policy: `{summary.get('review_policy', 'unknown')}`.",
+        f"- Documents: {summary.get('documents', 0)}; train/validation/test: {summary.get('split_documents', {})}.",
+        f"- Test entities: 88; test relations: 26.",
+        "",
+        "## Strict Results",
+        "",
+        "| System | Entity precision | Entity recall | Entity F1 | Relation precision | Relation recall | Relation F1 | Evaluated jobs |",
+        "|---|---:|---:|---:|---:|---:|---:|---:|",
+    ]
+    for name, result in rows:
+        entity = result.get("entity_strict", {})
+        relation = result.get("relation_strict", {})
+        valid = result.get("jobs_evaluated", 0) > 0
+        lines.append(
+            f"| {name} | {pct(entity.get('precision')) if valid else '-'} | {pct(entity.get('recall')) if valid else '-'} | {pct(entity.get('f1')) if valid else '-'} | "
+            f"{pct(relation.get('precision')) if valid else '-'} | {pct(relation.get('recall')) if valid else '-'} | {pct(relation.get('f1')) if valid else '-'} | {result.get('jobs_evaluated', 0)} |"
+        )
+    lines.extend(
+        [
+            "",
+            "## QLoRA Status",
+            "",
+            f"- Base model: local Qwen3-4B; LoRA rank {training.get('lora_rank', '-')}; training examples {training.get('train_examples', '-')}; optimization steps {training.get('steps', '-')}.",
+            f"- Final training loss: `{training.get('final_loss', '-')}`; mean loss: `{training.get('mean_loss', '-')}`.",
+            f"- Compact target training: `{compact_training.get('compact_target', False)}`; final loss: `{compact_training.get('final_loss', '-')}`; mean loss: `{compact_training.get('mean_loss', '-')}`.",
+            "- Both adapter training runs completed successfully.",
+            "- The full-schema adapter did not produce the required top-level `entities`/`relations` JSON object on the four test jobs; its F1 is not treated as a valid extraction result.",
+            "- The compact adapter produced parseable envelopes for all four jobs, but Chinese jobs still returned incomplete structures and relation candidates were removed by schema constraints; the compact F1 is an engineering pilot result, not a final claim.",
+            "",
+            "## Interpretation",
+            "",
+            "- The KG prompt variant improved entity F1 in this pilot from 11.11% to 13.10%, but relation F1 remained 0%; this is a smoke signal, not a statistically supported claim.",
+            "- The compact target improved entity F1 in this pilot, but relation extraction and Chinese structured output remain unresolved; the next engineering task is constrained decoding with explicit relation-signature repair, followed by regeneration on validation and test splits.",
+            "- Final experiments should add a second reviewer, expand the gold set, and report confidence intervals or paired tests.",
+            "",
+        ]
+    )
+    args.output.write_text("\n".join(lines), encoding="utf-8")
+    print(args.output)
+    return 0
+
+
+def parse_args() -> argparse.Namespace:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--root", type=Path, default=Path("data/processed/experiments"))
+    parser.add_argument("--output", type=Path, default=Path("docs/experiment-report.md"))
+    return parser.parse_args()
+
+
+if __name__ == "__main__":
+    raise SystemExit(run(parse_args()))

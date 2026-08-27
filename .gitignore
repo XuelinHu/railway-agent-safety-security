@@ -8,6 +8,9 @@ data/raw/
 data/processed/
 models/
 outputs/
+tools/antiword/
+tools/catdoc/
+tools/*.deb
 *.parquet
 *.pkl
 *.pt

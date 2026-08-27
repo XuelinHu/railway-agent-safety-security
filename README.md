@@ -32,7 +32,20 @@ Official public reports and open datasets are preferred for experiments. Purchas
 - [x] Define the initial research problem
 - [x] Identify domestic and international corpus sources
 - [x] Create the local Git repository
-- [ ] Build the source inventory
-- [ ] Implement corpus preprocessing and annotation
+- [x] Build the source inventory
+- [x] Implement evidence-preserving PDF/DOCX/TXT preprocessing
+- [x] Parse legacy `.doc` files with project-local `antiword`/`catdoc` tools
+- [x] Define the safety-risk ontology and annotation schemas
+- [x] Prepare a 28-document bilingual pilot set
+- [x] Run and validate 69 serial teacher pre-annotation jobs through the local OpenAI-compatible proxy
+- [x] Screen and bulk-accept the 28-document pilot annotations
+- [x] Build the first provenance-bearing safety knowledge graph snapshot
+- [x] Create document-level train/validation/test splits
+- [x] Run initial Qwen3 KG-prompt and local QLoRA pilot experiments
+- [x] Generate the initial strict evaluation report with compact-output failure analysis
 - [ ] Implement and evaluate the multi-agent pipeline
 - [ ] Draft the English manuscript
+
+Current research and implementation tasks are tracked in [`docs/work-plan.md`](docs/work-plan.md). The annotation ontology and output contract are defined in [`configs/risk_ontology.yaml`](configs/risk_ontology.yaml), [`schemas/preannotation_candidate.schema.json`](schemas/preannotation_candidate.schema.json), and [`schemas/risk_annotation.schema.json`](schemas/risk_annotation.schema.json).
+
+The reproducible experiment entry points are [`scripts/build_experiment_jobs.py`](scripts/build_experiment_jobs.py), [`scripts/evaluate_annotations.py`](scripts/evaluate_annotations.py), [`scripts/train_qlora.py`](scripts/train_qlora.py), and [`scripts/run_qlora_inference.py`](scripts/run_qlora_inference.py). Current pilot numbers and limitations are recorded in [`docs/experiment-report.md`](docs/experiment-report.md).

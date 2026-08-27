@@ -1,0 +1,135 @@
+version: "0.1.0"
+name: safety_risk_ontology
+scope: Cross-domain safety risk extraction with railway accident reports as the primary case study.
+
+entity_types:
+  EVENT:
+    description: An accident, incident, near miss, or abnormal occurrence.
+    examples: [derailment, collision, fire]
+  HAZARD:
+    description: A condition or source with the potential to cause harm.
+    examples: [track obstruction, flammable material]
+  ASSET:
+    description: Equipment, vehicle, infrastructure, or safety facility.
+    examples: [switch, signal, fire extinguisher]
+  ACTOR:
+    description: A person, role, team, or organization participating in the situation.
+    examples: [driver, signaller, maintenance team]
+  OPERATION:
+    description: An operational, maintenance, inspection, or emergency activity.
+    examples: [shunting, inspection, hot work]
+  FAILURE:
+    description: A technical, functional, or procedural failure.
+    examples: [brake failure, communication loss]
+  HUMAN_FACTOR:
+    description: A human performance condition or action affecting safety.
+    examples: [fatigue, incorrect decision]
+  ORGANIZATIONAL_FACTOR:
+    description: A management, supervision, training, or safety-culture factor.
+    examples: [inadequate training, weak supervision]
+  ENVIRONMENT:
+    description: A weather, terrain, visibility, or other environmental condition.
+    examples: [heavy rain, poor visibility]
+  BARRIER:
+    description: A preventive, protective, detection, or recovery control.
+    examples: [interlocking, inspection, alarm system]
+  CONSEQUENCE:
+    description: Harm, damage, interruption, or other outcome.
+    examples: [injury, service disruption]
+  MITIGATION:
+    description: A corrective, preventive, recovery, or recommended measure.
+    examples: [replace equipment, improve training]
+  LOCATION:
+    description: A geographic, infrastructure, or work-site location.
+    examples: [station, junction, work site]
+  TIME:
+    description: A date, time, duration, or relative temporal expression.
+    examples: [23:15, two hours earlier]
+  REGULATION:
+    description: A regulation, standard, procedure, rule, or identifiable provision.
+    examples: [operating rule, emergency procedure]
+
+relation_types:
+  causes:
+    description: The source is presented as a direct cause of the target.
+  contributes_to:
+    description: The source is a contributing or underlying factor for the target.
+  precedes:
+    description: The source occurs before the target.
+  results_in:
+    description: The source produces the target consequence.
+  occurs_at:
+    description: The event or operation occurs at the target location or time.
+  involves:
+    description: The source event or operation involves the target.
+  affects:
+    description: The source has an effect on the target asset, actor, or operation.
+  performed_by:
+    description: The source operation is performed by the target actor.
+  fails_during:
+    description: The source asset, barrier, or process fails during the target event or operation.
+  protected_by:
+    description: The source is protected or controlled by the target barrier.
+  violates:
+    description: The source action or condition conflicts with the target regulation.
+  mitigated_by:
+    description: The source hazard, failure, or consequence is addressed by the target measure.
+  recommended_for:
+    description: The source mitigation is recommended for the target risk or failure.
+  part_of:
+    description: The source is a component or sub-process of the target.
+  same_as:
+    description: The source and target are coreferential or synonymous.
+
+claim_statuses:
+  explicit: Directly stated by the source document.
+  inferred: Inferred from multiple source statements and requiring review.
+  normative: Required or recommended by a regulation, standard, or plan.
+  uncertain: Insufficient or conflicting evidence.
+
+allowed_relation_signatures:
+  causes:
+    source: [FAILURE, HUMAN_FACTOR, ORGANIZATIONAL_FACTOR, ENVIRONMENT, HAZARD, EVENT]
+    target: [EVENT, FAILURE, CONSEQUENCE]
+  contributes_to:
+    source: [FAILURE, HUMAN_FACTOR, ORGANIZATIONAL_FACTOR, ENVIRONMENT, HAZARD]
+    target: [EVENT, FAILURE, CONSEQUENCE]
+  precedes:
+    source: [EVENT, OPERATION, FAILURE, TIME]
+    target: [EVENT, OPERATION, FAILURE]
+  results_in:
+    source: [EVENT, FAILURE, HAZARD]
+    target: [CONSEQUENCE, EVENT, FAILURE]
+  occurs_at:
+    source: [EVENT, OPERATION, FAILURE]
+    target: [LOCATION, TIME]
+  involves:
+    source: [EVENT, OPERATION]
+    target: [ACTOR, ASSET, EVENT, OPERATION, HAZARD, LOCATION]
+  affects:
+    source: [EVENT, HAZARD, FAILURE, ENVIRONMENT, HUMAN_FACTOR, ORGANIZATIONAL_FACTOR]
+    target: [ACTOR, ASSET, OPERATION, EVENT, CONSEQUENCE, BARRIER]
+  performed_by:
+    source: [OPERATION]
+    target: [ACTOR]
+  fails_during:
+    source: [ASSET, BARRIER, OPERATION]
+    target: [EVENT, OPERATION]
+  protected_by:
+    source: [ASSET, OPERATION, EVENT, HAZARD]
+    target: [BARRIER]
+  violates:
+    source: [OPERATION, ACTOR, FAILURE, ORGANIZATIONAL_FACTOR]
+    target: [REGULATION]
+  mitigated_by:
+    source: [HAZARD, FAILURE, EVENT, CONSEQUENCE]
+    target: [MITIGATION, BARRIER]
+  recommended_for:
+    source: [MITIGATION]
+    target: [HAZARD, FAILURE, EVENT, ORGANIZATIONAL_FACTOR]
+  part_of:
+    source: [EVENT, HAZARD, ASSET, ACTOR, OPERATION, FAILURE, HUMAN_FACTOR, ORGANIZATIONAL_FACTOR, ENVIRONMENT, BARRIER, CONSEQUENCE, MITIGATION, LOCATION, TIME, REGULATION]
+    target: [EVENT, HAZARD, ASSET, ACTOR, OPERATION, FAILURE, HUMAN_FACTOR, ORGANIZATIONAL_FACTOR, ENVIRONMENT, BARRIER, CONSEQUENCE, MITIGATION, LOCATION, TIME, REGULATION]
+  same_as:
+    source: [EVENT, HAZARD, ASSET, ACTOR, OPERATION, FAILURE, HUMAN_FACTOR, ORGANIZATIONAL_FACTOR, ENVIRONMENT, BARRIER, CONSEQUENCE, MITIGATION, LOCATION, TIME, REGULATION]
+    target: [EVENT, HAZARD, ASSET, ACTOR, OPERATION, FAILURE, HUMAN_FACTOR, ORGANIZATIONAL_FACTOR, ENVIRONMENT, BARRIER, CONSEQUENCE, MITIGATION, LOCATION, TIME, REGULATION]
