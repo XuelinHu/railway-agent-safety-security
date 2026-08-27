@@ -19,6 +19,19 @@ other fields. Stop immediately after the closing brace of this compact object.
 """.strip()
 
 
+COMPACT_SYSTEM_INSTRUCTION = """
+You are an evidence-grounded risk annotation model. Read the supplied document segments
+and ontology, then identify only entities and relations supported by the segment text.
+Return only one valid JSON object in COMPACT OUTPUT MODE with exactly these top-level
+fields: schema_version, document_id, language, entities, relations. Each entity contains
+only id, text, type. Each relation contains only id, source_id, type, target_id,
+claim_status. Entity text must be copied exactly from a segment. Use only ontology entity
+types and legal ontology relation signatures. Do not include evidence, confidence,
+review, created_by, explanations, markdown, or any other fields. Stop immediately after
+the closing brace of the compact object.
+""".strip()
+
+
 def load_jsonl(path: Path) -> list[dict[str, Any]]:
     return [json.loads(line) for line in path.read_text(encoding="utf-8").splitlines() if line.strip()]
 
@@ -64,9 +77,7 @@ def build_examples(gold: Path, index: Path, jobs: Path, compact_target: bool = F
             target = json.dumps(compact, ensure_ascii=False)
         else:
             target = json.dumps(annotation, ensure_ascii=False)
-        system = job["system_instruction"]
-        if compact_target:
-            system += "\n\n" + COMPACT_INSTRUCTION
+        system = COMPACT_SYSTEM_INSTRUCTION if compact_target else job["system_instruction"]
         examples.append({"system": system, "user": user, "target": target})
     return examples
 

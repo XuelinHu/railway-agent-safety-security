@@ -45,6 +45,9 @@ def parse_json(text: str) -> dict[str, Any]:
 
 def repair_unclosed_json(text: str) -> str | None:
     """Close only unclosed JSON containers; do not alter parsed content."""
+    # Small causal decoders sometimes omit the closing bracket of the first
+    # top-level array immediately before emitting the next top-level key.
+    text = re.sub(r'}\s*,\s*("relations"\s*:)', r'}], \1', text, count=1)
     stack: list[str] = []
     repaired_chars: list[str] = []
     in_string = False
@@ -123,6 +126,19 @@ other fields. Stop immediately after the closing brace of this compact object.
 """.strip()
 
 
+COMPACT_SYSTEM_INSTRUCTION = """
+You are an evidence-grounded risk annotation model. Read the supplied document segments
+and ontology, then identify only entities and relations supported by the segment text.
+Return only one valid JSON object in COMPACT OUTPUT MODE with exactly these top-level
+fields: schema_version, document_id, language, entities, relations. Each entity contains
+only id, text, type. Each relation contains only id, source_id, type, target_id,
+claim_status. Entity text must be copied exactly from a segment. Use only ontology entity
+types and legal ontology relation signatures. Do not include evidence, confidence,
+review, created_by, explanations, markdown, or any other fields. Stop immediately after
+the closing brace of the compact object.
+""".strip()
+
+
 def main(args: argparse.Namespace) -> int:
     import torch
     from peft import PeftModel
@@ -169,8 +185,7 @@ def main(args: argparse.Namespace) -> int:
             messages = [
                 {
                     "role": "system",
-                    "content": job["system_instruction"]
-                    + ("\n\n" + COMPACT_INSTRUCTION if args.compact_target else ""),
+                    "content": COMPACT_SYSTEM_INSTRUCTION if args.compact_target else job["system_instruction"],
                 },
                 {"role": "user", "content": payload(job)},
             ]

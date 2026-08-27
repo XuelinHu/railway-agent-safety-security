@@ -25,12 +25,15 @@ def run(args: argparse.Namespace) -> int:
     compact_training = read_json(args.root / "qwen3_4b_compact_qlora" / "training_metrics.json")
     expanded_full_training = read_json(args.root / "qwen3_4b_kg_qlora_v1_1_full" / "training_metrics.json")
     expanded_compact_training = read_json(args.root / "qwen3_4b_compact_qlora_v1_1_eos" / "training_metrics.json")
+    system_compact_training = read_json(args.root / "qwen3_4b_compact_qlora_v1_2_system" / "training_metrics.json")
+    system_compact = read_json(args.root / "test_compact_v1_2_system_metrics.json")
     summary = read_json(Path("data/processed/reviewed/summary.json"))
     rows = [
         ("Qwen3-14B baseline", baseline),
         ("Qwen3-14B + KG prompt", kg),
         ("Qwen3-4B + QLoRA + KG prompt", qlora),
         ("Qwen3-4B + compact QLoRA + KG prompt", compact),
+        ("Qwen3-4B + v1.2 compact QLoRA + KG prompt", system_compact),
     ]
     lines = [
         "# Initial Safety Extraction Experiments",
@@ -84,10 +87,13 @@ def run(args: argparse.Namespace) -> int:
                 "## Updated QLoRA Run",
                 "",
                 f"- The reviewed training set now contains {expanded_full_training.get('train_examples', expanded_compact_training.get('train_examples', '-'))} chunks from 21 documents. Full-schema and compact-target adapters used Qwen3-4B, NF4, rank 8, one epoch, and 15 optimization steps.",
-                f"- Expanded full-schema mean loss: `{expanded_full_training.get('mean_loss', '-')}`; compact-target mean loss: `{expanded_compact_training.get('mean_loss', '-')}`.",
-                "- Full-schema generations did not produce usable annotation envelopes on the four pilot test jobs and are recorded as format failures rather than extraction F1.",
-                "- The EOS-preserving compact adapter produced valid annotations on 2/4 pilot test jobs: both English jobs were parseable, while both Chinese jobs were format failures. On the valid English jobs, pooled strict entity F1 was 25.32% and relation F1 was 0%. These are engineering diagnostics, not final cross-language claims.",
-                "",
+            f"- Expanded full-schema mean loss: `{expanded_full_training.get('mean_loss', '-')}`; compact-target mean loss: `{expanded_compact_training.get('mean_loss', '-')}`.",
+            "- Full-schema generations did not produce usable annotation envelopes on the four pilot test jobs and are recorded as format failures rather than extraction F1.",
+            "- The EOS-preserving compact adapter produced valid annotations on 2/4 pilot test jobs: both English jobs were parseable, while both Chinese jobs were format failures. On the valid English jobs, pooled strict entity F1 was 25.32% and relation F1 was 0%. These are engineering diagnostics, not final cross-language claims.",
+            f"- The v1.2 compact adapter replaced the conflicting full-schema prompt, preserved a 12K default input window, and trained with mean loss `{system_compact_training.get('mean_loss', '-')}`. It produced valid structured outputs on 3/4 jobs; the long English job over-generated entities until the 4K and 8K output budgets were exhausted.",
+            f"- On the 3 valid v1.2 jobs, pooled strict entity F1 was {pct(system_compact.get('entity_strict', {}).get('f1'))} and relation F1 was {pct(system_compact.get('relation_strict', {}).get('f1'))}; Chinese entity F1 was {pct(system_compact.get('by_language', {}).get('zh', {}).get('entity_strict', {}).get('f1'))} and Chinese relation F1 was {pct(system_compact.get('by_language', {}).get('zh', {}).get('relation_strict', {}).get('f1'))}. Because one test job failed structurally, these remain engineering diagnostics and are not final manuscript claims.",
+            "- The v1.2 long-Chinese diagnostic required an explicit 32K input window but exceeded the 24GB GPU memory budget when a concurrent local model occupied the GPU; its 29-entity/28-relation output was nevertheless recovered from the saved log and evaluated after structural repair.",
+            "",
             ]
         )
     args.output.write_text("\n".join(lines), encoding="utf-8")

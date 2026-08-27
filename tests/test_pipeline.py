@@ -110,8 +110,16 @@ class PipelineTest(unittest.TestCase):
         self.assertFalse(inference.complete_annotation_generated(truncated))
         missing_array = '{"entities": [{"id": "E1"}], "relations": [{"id": "R1"}}'
         self.assertEqual(inference.parse_json(missing_array)["entities"][0]["id"], "E1")
+        missing_entities_array = '{"entities": [{"id": "E1"}, "relations": []}'
+        repaired = inference.parse_json(missing_entities_array)
+        self.assertEqual(repaired["entities"][0]["id"], "E1")
+        self.assertEqual(repaired["relations"], [])
         trainer = load_script("train_qlora.py")
         self.assertIn("COMPACT OUTPUT MODE", trainer.COMPACT_INSTRUCTION)
+        self.assertIn("COMPACT OUTPUT MODE", trainer.COMPACT_SYSTEM_INSTRUCTION)
+        self.assertNotIn("preannotation_candidate", trainer.COMPACT_SYSTEM_INSTRUCTION)
+        inference_system = inference.COMPACT_SYSTEM_INSTRUCTION
+        self.assertEqual(inference_system, trainer.COMPACT_SYSTEM_INSTRUCTION)
 
 
 if __name__ == "__main__":
