@@ -1,0 +1,47 @@
+pipeline_id: kg-v3-v1-v2-reject-option-1.0
+status: frozen-validation-checkpoint
+selection_split: validation
+locked_at: '2026-08-30'
+path_base: repository_root
+
+ontology:
+  path: configs/risk_ontology.yaml
+  sha256: af6df8179a97156c513046427b16ca271b72c5c7ca88b4d0345ee56b635c4c10
+
+inputs:
+  v1_predictions:
+    path: data/processed/experiments/formal/validation_v3_kg_predictions_expanded.jsonl
+    sha256: b0ee6431778f698da0b65f4cdef2ef0187f48e50930102d8c45fefc3b43dbb3d
+  v2_predictions:
+    path: data/processed/experiments/formal/windowed_validation_v2/kg_v2_predictions_expanded_complete.jsonl
+    sha256: d81a98279ad203bea96ba699c289e6d21054fdf6155ba9931edd298aedfb145f
+  jobs:
+    path: data/processed/experiments/formal/windowed_validation_v2/kg_v2_jobs.jsonl
+    sha256: f52cfe69a22b8d68f345081be273e7df4c2e1734caedd485ac0a56b8a7ba6b1c
+
+pipeline:
+  relation_verifier:
+    require_local_cooccurrence: true
+  entity_gate:
+    relation_mode: verified
+    acceptance_any_of:
+      - v1_v2_exact_agreement
+      - source_gated_anchor_type_match
+      - verified_relation_endpoint
+
+outputs:
+  v2_verified_predictions: data/processed/experiments/formal/windowed_validation_v2/kg_v3_frozen/v2_verified_predictions.jsonl
+  relation_verifier_audit: data/processed/experiments/formal/windowed_validation_v2/kg_v3_frozen/relation_verifier_audit.jsonl
+  final_predictions: data/processed/experiments/formal/windowed_validation_v2/kg_v3_frozen/final_predictions.jsonl
+  entity_gate_audit: data/processed/experiments/formal/windowed_validation_v2/kg_v3_frozen/entity_gate_audit.jsonl
+  run_manifest: data/processed/experiments/formal/windowed_validation_v2/kg_v3_frozen/run_manifest.json
+
+selection_record:
+  jobs: 434
+  documents: 20
+  entity_strict_f1: 0.1327
+  relation_strict_f1: 0.0439
+  formal_test_used_for_selection: false
+  excluded_negative_ablations:
+    no_kg_pair_classifier_best_relation_f1: 0.0092
+    textual_kg_pair_classifier_best_relation_f1: 0.0085

@@ -1,0 +1,228 @@
+protocol_id: low-resource-provenance-study-v1
+status: frozen-pre-training
+locked_at: '2026-08-30'
+selection_split: validation
+formal_test_status: sealed
+
+paper:
+  working_title: Provenance-Preserving Evidence-Gated Knowledge-Graph Augmentation for Low-Resource Safety Information Extraction
+  positioning: safety-oriented provenance-preserving evidence-gated KG extraction with conservative abstention
+
+data:
+  train_annotations: data/processed/reviewed/formal_split/train.jsonl
+  train_index: data/processed/reviewed/formal_split/train_index.jsonl
+  train_windows: data/processed/experiments/formal/windowed_train_v2
+  validation_windows: data/processed/experiments/formal/windowed_validation_v2
+  ontology: configs/risk_ontology.yaml
+  low_resource_manifests: data/processed/experiments/formal/low_resource_manifests_v1
+  budgets_documents: [10, 25, 50, 100]
+  nested: true
+  duplicate_cluster_closed: true
+  selection_uses_validation: false
+
+seeds: [20260830, 20260831, 20260901]
+
+systems:
+  trainable:
+    - id: baseline
+      description: compact QLoRA without KG prompt context
+      use_job_instruction: false
+    - id: kg_v1
+      description: compact QLoRA with conservative exact-match KG hints
+      use_job_instruction: true
+    - id: kg_v2
+      description: compact QLoRA with evidence-gated high-recall KG context
+      use_job_instruction: true
+  derived:
+    - id: kg_v2_verified
+      source: kg_v2
+    - id: kg_v3_raw
+      sources: [kg_v1, kg_v2, kg_v2_verified]
+    - id: kg_v3_final
+      sources: [kg_v1, kg_v2, kg_v2_verified]
+
+model:
+  family: Qwen3-4B
+  local_snapshot: /ds2/xuelin/cache/huggingface/hub/models--Qwen--Qwen3-4B/snapshots/1cfa9a7208912126459214e8b04321603b3df60c
+  snapshot_revision: 1cfa9a7208912126459214e8b04321603b3df60c
+  local_files_only: true
+
+training:
+  trainer: scripts/train_qlora.py
+  executor: scripts/run_low_resource_training.py
+  python: /home/xuelin/miniconda3/envs/rc-llm-comet/bin/python
+  environment:
+    python: 3.11.15
+    torch: 2.11.0+cu130
+    transformers: 4.57.6
+    peft: 0.18.1
+    accelerate: 1.13.0
+    bitsandbytes: 0.49.2
+    cuda: '13.0'
+  epochs: 1
+  batch_size: 1
+  gradient_accumulation: 4
+  learning_rate: 0.0002
+  max_length: 5120
+  lora_rank: 8
+  lora_alpha: 16
+  lora_dropout: 0.05
+  quantization: nf4-double-quant
+  compute_dtype: bfloat16
+  target_modules: [q_proj, k_proj, v_proj, o_proj, up_proj, down_proj, gate_proj]
+  compact_target: true
+  bucket_by_length: true
+  length_bucket_size: 32
+  skip_overlength: true
+
+kg_v1:
+  builder: scripts/build_low_resource_assets.py
+  concept_limit: 20
+  balanced_concepts: true
+  exact_source_match: true
+  leave_current_document_out: true
+
+kg_v2:
+  builder: scripts/build_kg_v2_jobs.py
+  semantic_model: /ds2/xuelin/cache/huggingface/hub/models--BAAI--bge-m3/snapshots/5617a9f61b028005a4858fdac845db406aefb181
+  semantic_model_revision: 5617a9f61b028005a4858fdac845db406aefb181
+  semantic_threshold: 0.72
+  semantic_limit: 4
+  anchor_limit: 12
+  anchor_per_type: 2
+  edge_limit: 6
+  min_type_purity: 0.8
+  min_en_chars: 4
+  min_zh_chars: 2
+  leave_current_document_out: true
+
+inference:
+  runner: scripts/run_qlora_inference.py
+  decoding: greedy
+  max_input_tokens: 12288
+  max_new_tokens: 4096
+  max_seconds_per_job: 180
+  max_repeated_entity: 6
+  stop_on_complete_json: true
+  failed_or_missing_job: empty_prediction
+  mechanical_retry:
+    allowed: true
+    attempts: 1
+    condition: infrastructure failure before any model output is recorded
+    generation_parameters_may_change: false
+
+v3:
+  frozen_reference: configs/kg_v3_frozen_validation.yaml
+  relation_verifier:
+    script: scripts/verify_relations.py
+    require_local_cooccurrence: true
+  entity_gate:
+    script: scripts/fuse_kg_v1_v2_predictions.py
+    relation_mode: verified
+    acceptance_any_of:
+      - v1_v2_exact_agreement
+      - source_gated_anchor_type_match
+      - verified_relation_endpoint
+
+evaluation:
+  primary:
+    metric: strict-global-character-span-one-to-one
+    script: scripts/evaluate_span_aware.py
+    aggregation: prediction-level-micro
+  secondary:
+    - metric: relation-with-claim-status
+      script: scripts/evaluate_span_aware.py
+    - metric: evidence-and-signature-safety
+      script: scripts/evaluate_evidence_graph.py
+  language_reporting: separate-English-and-Chinese-micro
+  missing_prediction_policy: empty_prediction
+  empty_jobs_in_evidence_micro: do_not_add_zero_objects
+
+statistics:
+  unit: document
+  bootstrap_resamples: 20000
+  bootstrap_seed: 20260830
+  confidence_interval: percentile-95
+  paired_script: scripts/bootstrap_span_compare.py
+  main_comparisons:
+    - kg_v2-vs-kg_v1
+    - kg_v3_raw-vs-kg_v2
+    - kg_v3_final-vs-kg_v2
+  seed_summary: mean-standard_deviation-and-all-seed-values
+
+telemetry:
+  sample_interval_seconds: 2
+  cost_assumption:
+    scope: electricity-only-excludes-hardware-amortization-and-labor
+    electricity_cny_per_kwh: 0.60
+    usd_per_cny: 0.14
+    frozen_at: '2026-08-30'
+  required:
+    - wall_clock_training_seconds
+    - wall_clock_inference_seconds
+    - examples_or_jobs_per_second
+    - peak_allocated_vram_mib
+    - peak_reserved_vram_mib
+    - input_tokens
+    - output_tokens
+    - generation_success_and_failure_counts
+    - estimated_gpu_or_api_cost
+
+outputs:
+  root: data/processed/experiments/formal/low_resource_v1
+  run_directory_template: d{budget:03d}/seed{seed}/{system}
+  required_files:
+    - run_manifest.json
+    - training_metrics.json
+    - training.log
+    - inference.log
+    - predictions_compact.jsonl
+    - predictions_expanded.jsonl
+    - expansion_errors.jsonl
+    - span_metrics.json
+    - evidence_graph_metrics.json
+    - telemetry.json
+  immutable_hash_manifest: true
+
+execution:
+  trainable_runs: 36
+  budget_order: [100, 10, 25, 50]
+  first_gate: all 100-document seeds and trainable systems
+  derived_after_trainable_pair_complete: true
+  formal_test_requires_explicit_user_confirmation: true
+
+implementation_hash_maintenance:
+  updated_at: '2026-09-04'
+  reason: current smoke gate follows the resumable inference and malformed-output audit fixes
+  previous_sha256:
+    scripts/run_qlora_inference.py: 44a573ec5037e22c137937beb0af31bf58c95f5e4e4afa97f6874dcb4841c486
+    scripts/expand_compact_predictions.py: e094d77dc47873645392818467df86729a06dd5886fb27c1338d028f1b9e8ad1
+  current_sha256:
+    scripts/run_qlora_inference.py: 53dcfdf9d3521cb986d593de248ee1522478a3204e44454203b1c5bc18d275b0
+    scripts/expand_compact_predictions.py: 964c0a303a56aadc64e02a9a5d5b9cbd89e84de476f32eeca42800825026c2eb
+  provenance_rule: prior artifacts remain attributable only through their own run manifests and source hashes
+
+implementation_sha256:
+  scripts/build_low_resource_manifests.py: 5f34dfc41732da38eca6ee1945a2756a86d9c08d163f0f3d87adccf585a07b85
+  scripts/build_low_resource_assets.py: b71b5f922b8b14c36191e415e66ca3535c1c9178f4d71efed0d022a7ef21ef57
+  scripts/build_annotation_agreement_manifest.py: 862adbb82571ff8c41e9852acad31db3e8648e9045cfc10b19b4dd7db90d0759
+  scripts/evaluate_annotation_agreement.py: 98f236c38b97556d3600b2f7a46a3244db72012fff1c5674b5134b2b3c7ca6e3
+  scripts/build_kg_v2_jobs.py: b2da5a4084e4eb0bc3947691ed4bc89794842198b92ae3f004c055dcbd0fdfe9
+  scripts/train_qlora.py: 82a491e96feb007291d399a30958cb37fcae93d49b135aafb2cb761ef844a435
+  scripts/run_low_resource_training.py: 01de0131ed912925c79198fd120a65409a2cd06bac9534744ec9aa672827b8a6
+  scripts/run_qlora_inference.py: 53dcfdf9d3521cb986d593de248ee1522478a3204e44454203b1c5bc18d275b0
+  scripts/expand_compact_predictions.py: 964c0a303a56aadc64e02a9a5d5b9cbd89e84de476f32eeca42800825026c2eb
+  scripts/verify_relations.py: f5dd5a138d365b4592d1b9fb87ca4f2073c5d3dec4e63fc1ecb9faef6915588b
+  scripts/fuse_kg_v1_v2_predictions.py: b3f5ff78dcc76ad34e4e764c7e38bacb682888cc67a842c6a7c7dfbff3be2cf6
+  scripts/run_frozen_kg_v3.py: 6347b6b41c10e3633725d7feb11ab80332ebbb7656f35f7158f1e4b83e25872a
+  scripts/evaluate_span_aware.py: edc0805c273f177c92d5bf700a3a3ad92e0ded69f2c8c5c41b6e537f3a08fe0c
+  scripts/evaluate_evidence_graph.py: b502bba94d4230411ed1209aac47f550720806c2d9e5efdd16aa63c7eee56538
+  scripts/bootstrap_span_compare.py: 6b119bb2b28759ee206c993917e698658412336e642ea11b28fd9578d81a0740
+  configs/risk_ontology.yaml: af6df8179a97156c513046427b16ca271b72c5c7ca88b4d0345ee56b635c4c10
+  configs/kg_v3_frozen_validation.yaml: 2e950ba0d901b0d01b699060811fb9ae3f77a442b596752e8cc3d4020b56870c
+
+stop_rules:
+  - do not tune any threshold or hyperparameter on formal validation
+  - do not silently discard failed runs or examples
+  - do not promote negative BIO, CRF, span, BGE-pair, textual-KG-pair, or sampled-verifier ablations
+  - stop before formal test until Phases A-E pass and the user explicitly unseals it

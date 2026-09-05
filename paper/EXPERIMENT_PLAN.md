@@ -1,5 +1,9 @@
 # JSSR special-issue experiment plan
 
+> Status: broad reference plan. The frozen next execution phases, completed
+> negative ablations, and current metric definitions are maintained in
+> `docs/NEXT_SESSION_HANDOFF_2026-08-30.md`.
+
 ## 1. Submission target
 
 - Journal: *Journal of Safety Science and Resilience*
@@ -17,10 +21,12 @@ The paper fits three stated themes: knowledge graphs for risk analysis, high-qua
 | Successfully parsed documents | 1,458 | Sufficient for sampling and weak supervision |
 | Chinese safety documents | 1,229 raw / 1,187 parsed | Broad but template de-duplication is incomplete |
 | RAIB railway reports | 286 raw / 271 parsed | Strong primary-domain pool |
-| Reviewed documents | 29 | Workflow pilot plus one manually accepted expansion document |
-| Reviewed chunks | 72 | Too small for final model claims |
-| Reviewed entities / relations | 1,611 / 477 | Useful for pilot training |
+| Reviewed documents | 150 | Pilot plus the full representative expansion selection |
+| Reviewed chunks | 370 | Main benchmark candidate; 75 formal test chunks have independent second review |
+| Reviewed entities / relations | 6,570 / 2,247 | Expanded benchmark candidate |
 | Frozen pilot test documents | 4 | Not sufficient for final statistical comparison |
+| Formal cluster-isolated split | 100 / 20 / 30 documents | Frozen; zero cross-split clusters |
+| Formal second-review queue | 30 documents / 75 chunks | Completed; 180 high-risk relation flags reviewed |
 
 The current pilot results must be presented as engineering evidence, not as the final main experiment. In particular, relation F1 is currently zero and Chinese structured output is unstable.
 
@@ -32,7 +38,7 @@ All gates below are required before the main results are frozen.
 2. Cluster exact and near-duplicate Chinese templates before any new split.
 3. Expand to at least 120 reviewed documents; target 150 documents.
 4. Use a cluster-aware, document-level split. Recommended target: 100 train, 20 validation, and 30 test documents, with railway reports intentionally prominent in the test set.
-5. Independently double-review at least 20% of the expanded benchmark and adjudicate disagreements.
+5. Independently double-review at least 20% of the expanded benchmark and adjudicate disagreements. **Completed for 30 formal test documents on 28 August 2026.**
 6. Keep all validation/test text, mentions, concepts, and relations out of training-time KG retrieval and pseudo-labeling.
 7. Require the proposed method to outperform the strongest comparable baseline with confidence intervals and a paired significance test; do not select a fixed favorable seed.
 8. Report failed generations and invalid outputs in denominators rather than silently dropping them.
@@ -152,13 +158,15 @@ This experiment connects the paper to the special issue without claiming full ca
 
 ## 8. Immediate next jobs
 
-1. Run the remaining 298 representative teacher jobs in bounded batches; the 122-document selection is approved, but generated entities and relations are not yet human-accepted.
-2. Review and adjudicate all generated entities and relations before gold promotion; the first three v1.1 chunks are already manually accepted.
-3. Assign a second reviewer to at least 30 selected documents.
-4. Implement schema-constrained generation and relation repair before another QLoRA run.
-5. Implement the XLM-RoBERTa extraction baseline.
-6. Replace the four-document smoke test with the expanded frozen test set.
-7. Start writing Introduction, corpus governance, ontology, and method sections while annotation continues.
+1. Keep the completed validation-selected V3 checkpoint frozen as V2 recall generation followed by the gold-independent V1-style entity gate and deterministic evidence/signature verifier; do not tune this rule on formal test.
+2. Keep the BGE-M3 local-pair classifier and textual KG-feature variant as negative validation ablations; do not promote either to the main system or test it as a favorable checkpoint.
+3. The repaired token head, learned CRF, and one frozen span-boundary candidate are complete validation ablations. The span model raised typed endpoint reachability to 25/491 (5.09%) but over-generated 8,115 spans and reached only 6.28% strict span F1, below hard BIO's 8.51%; its pooled difference was -2.23 points (95% CI -5.26 to +0.36; p=0.08395). Do not tune this candidate further on validation and do not add its relation classifier because the joint strict-F1/endpoint promotion gate failed.
+4. Freeze the primary comparison, evaluation code, seeds, failure handling, and statistical test; then perform one formal test run for the selected method and baselines.
+5. Add the 10/25/50/100-document scaling curve and at least three independent seeds for trainable systems that pass their first frozen candidate gate. Span-head latency/throughput/VRAM is now recorded; complete the same efficiency table for promoted systems.
+6. Complete span-aware one-to-one evaluation and report annotation agreement/adjudication, since the current normalized-text evaluator collapses repeated mentions. Keep language results micro-aggregated within language and evidence rates micro-aggregated over predictions; retain job-macro values only as explicitly labeled diagnostics.
+7. Replace manuscript placeholders and empty bibliography with the reproducible corpus, ontology, method, ablation, limitations, and verified literature sections.
+
+The current diagnostic checkpoint is recorded in `docs/experiment-report.md` and `paper/RESULTS_DRAFT.md`. The low F1 is attributed to sparse relation candidate space, endpoint/boundary/type alignment, document heterogeneity, and incomplete KG aliases rather than a simple class-imbalance or parentheses-only problem. The sampled weighted-negative verifier did not produce a validation gain, so it must not be promoted to a full test claim.
 
 The expanded QLoRA run used 59 training chunks. The full-schema adapter produced no usable test annotation envelopes. The compact adapter produced valid annotations for 2/4 pilot test jobs: both English jobs were parseable, with pooled strict entity F1 of 25.32% and relation F1 of 0%; both Chinese jobs were format failures. These values are engineering diagnostics only, not final cross-language claims.
 

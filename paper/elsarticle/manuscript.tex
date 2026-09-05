@@ -2,11 +2,25 @@
 
 \usepackage{amsmath}
 \usepackage{amssymb}
+\usepackage{array}
 \usepackage{booktabs}
-\usepackage{multirow}
+\usepackage{graphicx}
 \usepackage{lineno}
-\usepackage{url}
-\usepackage[hidelinks]{hyperref}
+\usepackage{multirow}
+\usepackage{tabularx}
+\usepackage{xurl}
+\usepackage{hyperref}
+\hypersetup{
+  colorlinks=true,
+  linkcolor=blue,
+  citecolor=blue,
+  urlcolor=blue
+}
+\biboptions{sort&compress}
+
+\newcolumntype{Y}{>{\raggedright\arraybackslash}X}
+\newcolumntype{Z}{>{\centering\arraybackslash}X}
+\setlength{\emergencystretch}{3em}
 
 \journal{Journal of Safety Science and Resilience}
 
@@ -14,17 +28,44 @@
 
 \begin{frontmatter}
 
-\title{Knowledge-Graph-Augmented and Evidence-Grounded LLM Agents for Risk Information Extraction in Low-Resource Safety Texts: Railway Accident Reports as a Primary Evaluation Scenario}
+\title{Provenance-Preserving Evidence-Gated Knowledge-Graph Augmentation for Low-Resource Safety Information Extraction}
 
 % JSSR uses double-blind review. Upload title-page.tex separately.
 \author{Anonymous Authors}
 
 \begin{abstract}
-Safety reports contain sparse but consequential evidence about hazards, failures, controls, events, and causal relations. Extracting this evidence with large language models is difficult when reviewed annotations are limited and outputs must remain traceable to source text. This study proposes an evidence-grounded, knowledge-graph-augmented agent framework for low-resource safety risk information extraction. The framework combines deterministic evidence alignment, ontology-aware retrieval, legal relation-signature constraints, and parameter-efficient adaptation. Railway accident investigation reports form the primary evaluation scenario, while Chinese emergency and safety-management documents are used to test cross-language and cross-domain behavior. The final abstract will report results from an expanded, independently reviewed benchmark; the current 28-document pilot is used only to validate the workflow and identify structured-output failure modes.
+Safety reports contain critical evidence about hazards, failures, controls,
+events, and causal relations. Low-resource bilingual extraction, however, is
+vulnerable to split leakage, uncontrolled graph priors, unsupported relations,
+and untraceable outputs.
+
+This study proposes a provenance-preserving, evidence-gated knowledge-graph
+augmentation framework. A graph built only from permitted training data
+supplies candidate priors, while the current report remains authoritative. The
+framework combines compact 4-bit quantized low-rank adaptation,
+evidence-preserving windows, provenance-isolated context that excludes
+candidates supported only by the current document, deterministic span
+reconstruction, conservative entity selection, and relation verification.
+
+On the frozen validation split under duplicate-cluster-isolated document-level
+partitioning, graph augmentation expands candidate coverage, entity selection
+suppresses over-generation, and verification filters relations that fail local
+evidence or ontology rules. Staged generation, evidence binding, and selection
+improve the precision--recall balance, traceability, and auditability of the
+resulting risk graph.
+
+By treating graph knowledge as an evidence-constrained prior, the framework
+offers controlled augmentation, traceable outputs, and auditable decisions. It
+is designed for auditable low-resource bilingual workflows, including settings
+with only a small reviewed corpus, and can assist analysts with risk-element
+identification, relation screening, evidence tracing, risk-graph construction,
+and human-review prioritization.
 \end{abstract}
 
 \begin{keyword}
-safety risk information extraction \sep large language model agents \sep knowledge graph \sep evidence grounding \sep low-resource learning \sep railway accident reports
+safety information extraction \sep knowledge graph \sep evidence grounding
+\sep provenance \sep selective prediction \sep low-resource learning
+\sep railway accident reports
 \end{keyword}
 
 \end{frontmatter}
@@ -34,132 +75,983 @@ safety risk information extraction \sep large language model agents \sep knowled
 \section{Introduction}
 \label{sec:introduction}
 
-% TODO: Motivate rare and cascading safety risks, the annotation bottleneck,
-% and why unsupported LLM output is unacceptable in safety analysis.
-% End with research questions and a concise contribution list.
+Accident investigation reports and safety-management documents record how
+hazards, technical failures, human and organizational factors, barriers, and
+consequences interact. Converting these reports into typed risk graphs can
+support retrieval, trend analysis, and expert review. The task is more
+demanding than ordinary named-entity recognition: a useful output must preserve
+mention boundaries, relation direction, claim status, and the exact evidence
+from which each assertion was derived. Errors are also asymmetric. Missing a
+candidate reduces recall, whereas inserting an unsupported causal edge may
+distort a later safety analysis.
+
+Three practical constraints make this problem difficult. First, expert review
+is costly, so the amount of trusted domain annotation is small relative to the
+linguistic and operational variety of safety reports. Second, the corpus is
+heterogeneous. English railway investigations use detailed narrative evidence,
+whereas Chinese emergency and safety-management documents often follow
+recurrent administrative templates. Third, generative models can return fluent
+but unsupported claims or structurally invalid output, a known concern in
+natural-language generation~\cite{ji2023hallucination}. Conventional entity or
+relation F1 alone does not reveal whether an extracted edge has source evidence
+or satisfies the domain ontology.
+
+Knowledge graphs (KGs) offer structured priors over entity types and
+relations~\cite{hogan2021kg}, and retrieval-augmented generation can expose
+relevant external context to a language model~\cite{lewis2020rag}. However,
+generic KG
+augmentation is unsafe for the present setting. A graph may leak information
+across evaluation splits, reproduce a label from the document currently being
+used for training, or encourage a plausible edge that the source does not
+state. The central design question is therefore not simply whether a KG is
+available, but how graph context can be used without displacing source evidence
+as the authority.
+
+We therefore propose a staged, provenance-preserving and evidence-gated
+knowledge-graph augmentation framework for bilingual safety extraction. Its
+design is motivated not only by limited annotation, but also by uneven
+computing availability across organizations, regions, and countries. In many
+safety-analysis settings, large-scale training infrastructure and repeated
+model tuning are impractical. We therefore examine how bounded graph context,
+compact adaptation, and deterministic gates can improve the usefulness and
+auditability of extraction under constrained data and hardware resources.
+
+The contributions of this study are as follows:
+
+\begin{itemize}
+  \item We develop a resource-aware bilingual safety-extraction framework that
+  governs the combination of multilingual representation and compact
+  adaptation. XLM-R supplies general cross-lingual modeling and QLoRA makes
+  local fine-tuning feasible~\cite{conneau2020xlmr,dettmers2023qlora}, but
+  neither alone specifies how graph priors, source evidence, and constrained
+  hardware should be jointly governed in a safety workflow.
+  \item We introduce provenance-isolated KG context and hierarchical evidence
+  gates. Whereas generic KGs and retrieval augmentation can supply candidate
+  context~\cite{hogan2021kg,lewis2020rag}, our design excludes candidates
+  supported only by the current document, keeps source evidence authoritative,
+  and applies separate entity-acceptance and relation-compliance gates before
+  retaining graph objects.
+  \item We provide document-level de-duplicated validation across D10, D25,
+  and completed D100 runs, comparing SOE, EAE, HRGE, EVGE, CFE, and PGE with
+  additional encoder and classifier baselines. This design addresses repeated
+  voting from overlapping windows, a known concern in span-based extraction
+  evaluation~\cite{li2022ner}; in matched D100 validation, PGE has the highest
+  relation F1 and ties CFE for the highest entity F1.
+\end{itemize}
+
+The contribution of this work lies in the governed composition of these
+components for low-resource bilingual safety extraction: graph knowledge is
+restricted to a traceable candidate prior, source evidence remains decisive,
+and every retained graph object has an auditable acceptance path. The resulting
+design improves the quality of the retained graph while preserving an explicit
+boundary between automated extraction and expert safety judgement.
 
 \section{Related work}
 \label{sec:related-work}
 
-\subsection{Safety information extraction and accident-report analysis}
-\subsection{Knowledge graphs for risk and emergency intelligence}
-\subsection{Evidence-grounded and constrained large language models}
-\subsection{Low-resource adaptation and agent-based verification}
+\subsection{Safety information extraction}
+
+Information extraction commonly decomposes text into entity recognition and
+relation classification. Neural approaches have improved multilingual named
+entity recognition, but boundary errors, repeated mentions, and domain shift
+remain important evaluation issues~\cite{li2022ner}. Safety reports add a
+strong provenance requirement: an entity or relation is useful only when an
+analyst can inspect the source span and distinguish an explicit observation
+from an inferred, uncertain, or normative statement. Much accident-report
+analysis focuses on event categories, causes, or recommendations, whereas the
+present task requires a single typed representation spanning events, hazards,
+failures, actors, assets, barriers, mitigations, and their evidence.
+
+Prompt-driven graph construction has also been explored directly in accident
+reports. Liu and Luo~\cite{liu2025llmaccidentkg} combine a revised Accimap
+ontology with chained prompts, chain-of-thought prompting, and
+self-consistency to construct a causal graph from 282 fall-from-height reports.
+Their best reported scores are 0.94 entity F1 and 0.90 relation precision;
+however, relation recall and relation F1 are not reported, and the evaluation
+uses a narrow eight-entity-class, six-relation schema. We therefore treat this
+work as a relevant workflow precedent rather than a directly comparable
+accuracy baseline.
+
+\subsection{Knowledge graphs and retrieval augmentation}
+
+Knowledge graphs provide explicit entities, relations, and constraints that
+can complement distributional language models~\cite{hogan2021kg}. Retrieval
+augmentation can reduce the need to encode all domain knowledge in model
+parameters and can expose provenance-bearing context at generation time
+~\cite{lewis2020rag}. Yet a retrieved graph edge is not evidence that the edge
+holds in the current report. Our work therefore distinguishes a \emph{graph
+prior} from \emph{source authority}: graph context may nominate a type or
+relation, but acceptance is conditioned on text-local evidence and a frozen
+ontology.
+
+This distinction is consistent with evidence-integration practice in other
+high-stakes scientific domains. KnetMiner organizes heterogeneous evidence for
+gene discovery and complex-trait analysis~\cite{hassanipak2021knetminer}, while
+crop knowledge-graph systems have used typed multi-source structure for
+polyphenotype gene mining~\cite{zhang2024croppolyphenotypekg}. More recently,
+cross-residual KG learning has been studied for robust multi-trait gene--trait
+prioritization in rice~\cite{wang2026crossresidual}. These studies motivate
+domain-specific graph representation and evidence tracing, but their prediction
+target is biological prioritization rather than source-grounded safety
+information extraction. We use them as application precedents, not as direct
+accuracy baselines.
+
+\subsection{Grounded generation and selective verification}
+
+Hallucination research shows that well-formed generated text can remain
+inconsistent with its source~\cite{ji2023hallucination}. Schema-constrained
+generation reduces malformed structures but does not by itself guarantee
+factual support. GenIE~\cite{josifoski2022genie}, for example, couples an
+autoregressive encoder--decoder with global triplet-structure constraints and
+entity/relation prefix tries. It reaches 91.48 micro-F1 on the small Wiki-NRE
+evaluation schema, but 68.93 micro-F1 and 30.46 macro-F1 on the much larger
+REBEL schema, illustrating how candidate-space size and class imbalance affect
+apparently high headline results. Its grounding is to a predefined KB
+catalogue; our additional requirement is that every retained item be anchored
+to evidence in the current report. Selective prediction offers a complementary principle: a
+system may abstain when evidence is insufficient. We instantiate this
+principle through a gold-independent gate and deterministic verification. This
+design trades output coverage for a smaller graph whose structural and
+evidence conditions can be audited.
+
+\subsection{Low-resource multilingual adaptation}
+
+Multilingual encoders such as XLM-RoBERTa (XLM-R) provide a strong
+general-purpose basis for cross-lingual sequence
+labeling~\cite{conneau2020xlmr}. Quantized low-rank
+adaptation makes local fine-tuning of generative models feasible on limited
+hardware~\cite{dettmers2023qlora}. The present study uses XLM-R in the
+Multilingual BIO Encoder (MBE) comparison system and uses
+Qwen3~\cite{qwen2025qwen3} in the trainable generative systems. The focus is the
+interaction among reviewed-document budget, graph context, evidence
+verification, and abstention rather than a new encoder or fine-tuning
+algorithm.
 
 \section{Problem formulation and corpus}
 \label{sec:problem-corpus}
 
-\subsection{Risk entity, relation, and evidence extraction}
-% Define entity spans, typed relations, claim status, and evidence offsets.
+\subsection{Evidence-grounded risk extraction}
+
+Let a document $d$ contain source segments $S_d$ with stable segment
+identifiers and global character offsets. An entity mention is defined in
+Equation~\eqref{eq:entity-mention}:
+\begin{equation}
+e_i=(b_i,u_i,y_i,q_i),
+\label{eq:entity-mention}
+\end{equation}
+where $[b_i,u_i)$ is the global character span, $y_i$ is an ontology type, and
+$q_i$ is source evidence containing the mention. Repeated textual mentions are
+distinct whenever their spans differ. A relation is defined in
+Equation~\eqref{eq:relation-object}:
+\begin{equation}
+r_j=(e_s,e_t,z_j,c_j,Q_j),
+\label{eq:relation-object}
+\end{equation}
+where $e_s$ and $e_t$ are directed endpoints, $z_j$ is a relation type, $c_j$
+is a claim status, and $Q_j$ is one or more evidence spans. The extraction
+function returns a graph $G_d=(E_d,R_d)$ together with provenance, rather than
+an ungrounded set of normalized names.
+
+The ontology defines a set $\Sigma_z$ of legal source--target type signatures
+for each relation $z$. The structural-admissibility condition is
+\begin{equation}
+(y_s,y_t)\in\Sigma_z.
+\label{eq:signature-admissibility}
+\end{equation}
+Equation~\eqref{eq:signature-admissibility} is necessary but not
+sufficient for semantic correctness. Consequently, we evaluate both extraction
+accuracy against reviewed annotations and operational safety properties of the
+predicted graph.
 
 \subsection{Corpus sources and governance}
-% Report the frozen inventory, licenses, duplicate handling, parsing failures,
-% document-level split policy, and prohibition on test pseudo-labeling.
+
+The source corpus comprises 1,458 successfully parsed public safety documents:
+271 English reports from the UK Rail Accident Investigation Branch and 1,187
+Chinese safety, emergency-management, and regulatory documents. A
+near-duplicate-aware selection produced 150 reviewed documents and 370
+reviewed text blocks. Table~\ref{tab:corpus}
+summarizes the current benchmark inventory. Source text is retained or
+redistributed only when its license permits; otherwise the release will contain
+metadata, source links, hashes, processing code, and redistributable
+annotations.
+
+\begin{table}[htbp]
+\centering
+\caption{Corpus and benchmark inventory. The reviewed benchmark contains 81
+English and 69 Chinese documents.}
+\label{tab:corpus}
+\small
+\begin{tabularx}{\textwidth}{Yrr}
+\toprule
+Item & Documents & Records or annotations \\
+\midrule
+Source corpus & 1,458 & -- \\
+English railway reports & 271 & -- \\
+Chinese safety, emergency-management, and regulatory documents & 1,187 & -- \\
+Reviewed benchmark & 150 & 370 text blocks \\
+Training split & 100 & 244 text blocks \\
+Validation split & 20 & 51 text blocks \\
+Sealed test split & 30 & 75 text blocks \\
+Reviewed entities & -- & 6,570 \\
+Reviewed relations & -- & 2,247 \\
+English/Chinese composition & \multicolumn{2}{c}{81/69 documents} \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+Documents were assigned to train, validation, and test sets at the document
+level after exact and near-duplicate clustering. The resulting 100/20/30 split
+contains zero cross-split clusters. All windows from a document remain in the
+same split. The formal test namespace is sealed during method selection,
+low-resource training, and validation analysis. Missing model generations will
+be scored as empty predictions rather than removed from a denominator.
 
 \subsection{Ontology and annotation protocol}
-% Report 15 entity types, 15 relations, legal type signatures, review process,
-% adjudication, and inter-annotator agreement.
+
+Ontology version 1.0 defines 15 entity types: event, hazard, asset, actor,
+operation, failure, human factor, organizational factor, environment, barrier,
+consequence, mitigation, location, time, and regulation. It also defines 15
+directed relation types, legal endpoint signatures, and four claim statuses:
+explicit, inferred, normative, and uncertain. Annotators select the shortest
+complete mention, preserve repeated mentions, attach segment identifiers and
+character offsets, and add a relation only when at least one source span
+supports it.
+
+Model suggestions are pre-annotations rather than ground truth. Human review
+accepts, rejects, or edits every candidate. A stratified 20-document,
+training-only subset has been prepared for two independent human reviews. The
+independent agreement study is outside the present experimental snapshot and
+is not reported as a completed result. Its frozen protocol covers exact entity
+span, conditional entity type, conditional relation, evidence, claim status,
+and adjudication statistics. No teacher model is treated as the final judge.
 
 \section{Proposed method}
 \label{sec:method}
 
-\subsection{Agent architecture}
-% Define extraction, evidence-verification, and graph-verification roles. State
-% exactly which components are LLM calls and which are deterministic programs.
+\subsection{Framework overview}
 
-\subsection{Evidence-grounded candidate generation}
-% Describe segment identifiers, source offsets, quote resolution, and rejection
-% of unsupported or paraphrased evidence.
+Figures~\ref{fig:pipeline}--\ref{fig:representation-flow} use complementary views
+of the same implemented pipeline. To avoid repeated semantics,
+Figure~\ref{fig:pipeline} is limited to system-level control flow,
+Figure~\ref{fig:innovations} isolates acceptance and verification logic,
+Figure~\ref{fig:kg-construction} isolates prompt-context construction, and
+Figure~\ref{fig:representation-flow} isolates graph and embedding data
+transformations. Together, these views show how provenance, source evidence,
+and deterministic gates constrain the path from candidate generation to
+retained risk-graph output. The subset KG is a train-only prompt prior, and the
+current report remains the only source of evidence for retained output.
 
-\subsection{Knowledge-graph augmentation}
-% Describe ontology signatures, training-only concept retrieval, provenance,
-% and leakage-safe graph construction.
+Figure~\ref{fig:pipeline} gives the complete experimental architecture. To make
+each system identifiable by function rather than by an arbitrary version
+number, we use the names and abbreviations defined in Table~\ref{tab:systems}.
+Phase A freezes reviewed documents, document-level splits, nested training
+budgets, evidence-preserving windows, and ontology policy. Phase B constructs
+three prompt conditions: Source-Only Extraction (SOE) receives no KG
+instruction, Exact-Anchor Extraction (EAE) receives conservative exact hints,
+and High-Recall Graph Extraction (HRGE) receives bounded high-recall graph
+context. These generators are trained separately but use the same Qwen3-4B
+snapshot, QLoRA configuration, compact target, and deterministic
+source-expansion code in Phase C.
 
-\subsection{Constrained structured decoding}
-% Describe JSON-schema constraints, entity-reference integrity, relation repair,
-% and validation before graph insertion.
+Phase D derives Evidence-Verified Graph Extraction (EVGE) by filtering HRGE
+relations and applies the same conservative entity gate to HRGE candidates.
+Conservative-Fusion Extraction (CFE) pairs the gated entities with raw HRGE
+relations whose endpoints survive, whereas Provenance-Gated Extraction (PGE)
+pairs the same entities with verified EVGE relations whose endpoints survive.
+Figure~\ref{fig:pipeline} therefore corresponds to the six QLoRA-based rows in
+Table~\ref{tab:systems}. The separately trained Multilingual BIO Encoder (MBE)
+comparison is not part of this graph-augmentation architecture. EVGE, CFE, and
+PGE are deterministic filters or compositions, not additional trained
+generators.
 
-\subsection{Low-resource parameter-efficient adaptation}
-% Describe compact targets, QLoRA configuration, context limits, optimization,
-% hardware, and deterministic post-processing.
+Figure~\ref{fig:innovations} expands the conservative fusion and verification
+portion of the architecture. HRGE and deterministic source expansion produce
+entity candidates $E_{\mathrm{HRGE}}$ and relation candidates
+$R_{\mathrm{HRGE}}$. A relation enters $R_{\mathrm{EVGE}}$ only if all
+reference, non-self, ontology-signature, claim-status, evidence-format, and
+local endpoint-co-occurrence checks pass. Independently, an HRGE entity enters
+$E_{\mathrm{CFE}}$ when at least one of three gold-independent signals fires:
+exact normalized text-and-type agreement with EAE, a same-type source-gated
+HRGE anchor, or participation in an EVGE relation. Duplicate normalized
+text--type candidates are collapsed. CFE combines $E_{\mathrm{CFE}}$ with
+endpoint-filtered $R_{\mathrm{HRGE}}$; PGE combines the same entity set with
+endpoint-filtered $R_{\mathrm{EVGE}}$. Failed checks and abstentions are
+recorded rather than silently discarded.
+
+Figure~\ref{fig:kg-construction} details only the KG context supplied to the EAE
+and HRGE prompts; it is not a second extraction pipeline. For an example from
+document $d$, Phase A constructs the provenance-bearing graph from reviewed
+documents allowed by the current training budget and removes support whose only
+provenance is $d$. Phase B matches the current source window and performs frozen
+BGE-M3 retrieval. Phase C produces balanced exact hints for EAE and, for HRGE,
+source-matched anchors with type purity at least 0.8, typed edge priors observed
+outside $d$ whose endpoints occur in the source, and semantic relation patterns
+with similarity at least 0.72. Phase D applies the frozen HRGE caps of 12
+anchors (at most two per type), six edge priors, and four semantic patterns.
+The EAE and HRGE contexts are used in separate QLoRA runs and are explicitly
+presented as hints, not facts.
+
+Figure~\ref{fig:representation-flow} makes the graph data structure and its
+representation transformations explicit. Each training-subset record is a
+directed typed triple with claim status, document and segment identifiers, and
+supporting source spans. Let $\mathbf{H}\in\mathbb{R}^{m\times d}$ contain the
+$\ell_2$-normalized BGE-M3 embeddings of $m$ eligible relation-pattern records,
+and let $\mathbf{q}\in\mathbb{R}^{d}$ be the normalized embedding of the current
+source window. Similarity scoring and bounded retrieval are defined in
+Equation~\eqref{eq:embedding-retrieval}:
+\begin{equation}
+\mathbf{s}=\mathbf{H}\mathbf{q},\qquad
+\mathcal{I}_k=\operatorname{TopK}(\mathbf{s};k).
+\label{eq:embedding-retrieval}
+\end{equation}
+The selected indices identify candidate relation patterns rather than accepted
+facts. The source and evidence gate retains only bounded prompt items that meet
+the implemented anchor, endpoint, provenance, and local-source conditions.
+PGE then emits a directed risk graph whose entities and verified relations
+retain their evidence identifiers and claim status.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\textwidth]{../figures/system_architecture.pdf}
+\caption{Experimental architecture and function-named extraction systems.
+Budgeted source windows and the frozen ontology enter a governed training-input
+and subset-KG hub, which then supplies SOE, EAE, and HRGE; the three systems are
+trained separately with otherwise shared QLoRA settings and compact targets. All direct predictions
+undergo the same deterministic source expansion. EVGE filters HRGE relations;
+the conservative gate accepts HRGE entities using EAE agreement, source
+anchors, or verified endpoints. CFE pairs accepted entities with
+endpoint-filtered raw relations, whereas PGE pairs them with verified
+relations. Every verification and gate decision is auditable.}
+\label{fig:pipeline}
+\end{figure}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\textwidth]{../figures/model_innovation.pdf}
+\caption{Entity-acceptance and relation-compliance gates. Expanded HRGE
+predictions provide $E_{\mathrm{HRGE}}$ and $R_{\mathrm{HRGE}}$. The relation
+compliance gate retains $R_{\mathrm{EVGE}}$ only if all structural and local
+evidence checks pass; failures are rejected with their reason recorded. The
+entity-acceptance gate retains a deduplicated HRGE entity when EAE agrees, a
+source-gated HRGE anchor supports it, or it is an EVGE endpoint. CFE uses
+endpoint-filtered $R_{\mathrm{HRGE}}$; PGE combines both passed gate outputs.}
+\label{fig:innovations}
+\end{figure}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\textwidth]{../figures/kg_construction_process.pdf}
+\caption{Leakage-controlled EAE and HRGE prompt-context construction. The
+provenance-isolation gate uses only reviewed documents allowed by the current
+training budget and excludes candidates supported only by the current document.
+Exact source matching produces
+EAE hints and HRGE anchors or co-occurrence-gated edges; frozen BGE-M3 retrieval
+produces HRGE semantic relation patterns. Fixed thresholds and the 12/6/4
+context caps bound HRGE prompts. Both contexts are candidate priors used in
+separate runs; only the current report supplies evidence.}
+\label{fig:kg-construction}
+\end{figure}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\textwidth]{../figures/representation_flow.pdf}
+\caption{Directed graph structure and representation flow. A
+provenance-bearing subset KG stores typed directed triples together with claim
+status and source identifiers. Frozen BGE-M3 encoding maps eligible graph
+records to the row matrix $\mathbf{H}$ and maps the current source window to
+the query vector $\mathbf{q}$. Equation~\eqref{eq:embedding-retrieval} scores
+and ranks the relation patterns; Top-$k$ patterns pass through source and
+evidence gates before entering the bounded HRGE context. PGE combines gated
+entities with verified relations and returns a directed, evidence-linked risk
+graph rather than an ungrounded embedding output.}
+\label{fig:representation-flow}
+\end{figure}
+
+\subsection{Evidence-preserving semantic windowing}
+
+Long and structurally noisy reports cannot be safely truncated at an arbitrary
+token boundary. We construct windows preferentially at sentence, paragraph,
+line, or whitespace boundaries, using an 800-character segment cap and
+160-character overlap. Entity spans and relation evidence quotes are protected
+from splitting. When the endpoints and evidence of a relation cannot co-occur
+in an ordinary sequential window, a minimal relation-rescue window retains the
+required source regions and records their noncontiguous provenance.
+
+The window builder preserves entity spans and relation-evidence coverage while
+bounding prompt length. Window counts, rescue-window statistics, and execution
+checks are recorded in the released artifacts. The validation construction
+covers all reviewed entity and relation objects used for evaluation.
+
+\subsection{Leakage-controlled knowledge-graph context}
+
+The subset KG is built exclusively from reviewed documents permitted by the
+current training budget. Every concept, mention, relation, and source record
+retains provenance. For a training example from document $d$, candidates whose
+only supporting provenance is $d$ are excluded. This provenance-isolation rule
+prevents document-only candidates from being supplied back to the prompt;
+aggregate support statistics for candidates retained from other documents
+remain those stored in the frozen subset graph.
+
+Two graph contexts are studied. EAE receives a conservative set of balanced,
+exactly matched concept hints. HRGE receives three bounded context types:
+
+\begin{enumerate}
+  \item source-matched entity anchors whose empirical type purity is at least
+  0.8;
+  \item typed edge priors observed outside the current document and whose
+  endpoints co-occur in the current source; and
+  \item semantically retrieved relation patterns from a frozen multilingual
+  BGE-M3 encoder~\cite{chen2024bgem3}.
+\end{enumerate}
+
+HRGE is limited to 12 anchors, two anchors per type, six edge priors, and four
+semantic patterns above a frozen similarity threshold of 0.72. The prompt
+states that these items are hints rather than facts and that unsupported
+entities or relations must not be emitted.
+
+\subsection{Compact candidate generation}
+
+The trainable variants share the same Qwen3-4B base snapshot, reviewed windows,
+compact structured target, optimizer, and token limit. SOE sees no KG
+instruction. EAE and HRGE differ only in their frozen context construction.
+QLoRA uses rank 8, alpha 16, dropout 0.05, 4-bit NormalFloat (NF4) double
+quantization, bfloat16 compute, one epoch, batch size 1, gradient accumulation
+4, and learning rate $2\times10^{-4}$. AdamW uses the PyTorch defaults
+($\beta_1=0.9$, $\beta_2=0.999$, $\epsilon=10^{-8}$, and weight decay 0.01)
+without warm-up or a learning-rate scheduler. Prompt tokens are masked from the
+loss, so supervision is applied only to the assistant-side compact target.
+Gradient checkpointing and length-bucketed batching reduce memory use. The
+adapted modules are the attention projections and the feed-forward up, down,
+and gate projections.
+
+The compact target reduces output overhead. It encodes document metadata,
+entity identifiers, source-copied entity strings and types, and relation
+identifiers, endpoint references, types, and claim status; it does not ask the
+generator to emit evidence objects or offsets. Deterministic expansion binds
+the copied entity strings to supplied source segments and reconstructs global
+offsets. Repeated occurrences are assigned in source order, whereas absent
+strings and incomplete endpoint references are logged and omitted. Relation
+evidence is initialized from a common source segment when both reconstructed
+endpoints occur there and is subsequently checked by the verifier.
+
+\subsection{Deterministic relation verification}
+
+For every generated relation, the verifier checks: (i) both entity identifiers
+exist and are different; (ii) the relation type is known; (iii) endpoint types
+satisfy the ontology signature; (iv) claim status is known; (v) entity and
+relation evidence are well formed; and (vi) both endpoint strings occur in at
+least one local relation-evidence span. Rejected relations and all rejection
+reasons are written to an immutable audit record.
+
+Let $V(r)\in\{0,1\}$ denote this conjunction of checks. The EVGE relation set is
+defined in Equation~\eqref{eq:verified-relations}:
+\begin{equation}
+R_{\mathrm{EVGE}}=\{r\in R_{\mathrm{HRGE}}:V(r)=1\}.
+\label{eq:verified-relations}
+\end{equation}
+This operation guarantees the implemented structural and local-evidence
+conditions only. It neither changes the generator nor guarantees that a causal
+interpretation is substantively correct.
+
+\subsection{Conservative entity abstention}
+
+HRGE is recall oriented and can over-generate entities. The conservative gate
+retains an HRGE entity $e$ when at least one gold-independent condition in
+Equation~\eqref{eq:entity-gate} holds:
+\begin{equation}
+A(e)=A_{\mathrm{agree}}(e)\lor A_{\mathrm{anchor}}(e)
+\lor A_{\mathrm{endpoint}}(e),
+\label{eq:entity-gate}
+\end{equation}
+where the signals indicate exact normalized text-and-type agreement between EAE
+and HRGE, a type-matched source-gated HRGE anchor, or participation in an EVGE
+relation, respectively. Duplicate normalized text--type candidates are merged
+within a window while global offsets preserve distinct source mentions during
+evaluation. A verified relation is retained only when both endpoints survive
+the entity gate. Each decision records the conditions that fired.
+
+This composition exploits recall--abstention complementarity: HRGE supplies a
+broad candidate set, while independent agreement, source anchors, and verified
+relation endpoints define a conservative acceptance region. No validation gold
+is read by the gate.
 
 \section{Experimental setup}
 \label{sec:experiments}
 
 \subsection{Research questions}
+
 \begin{description}
-  \item[RQ1] Does knowledge-graph augmentation improve entity, relation, and risk-substructure extraction under limited reviewed data?
-  \item[RQ2] Do evidence binding and constrained decoding reduce unsupported and structurally invalid outputs?
-  \item[RQ3] How well does the method transfer across English railway reports and Chinese safety documents?
-  \item[RQ4] What accuracy, latency, memory, and annotation-cost trade-offs arise under low-resource budgets?
+  \item[RQ1 -- Effectiveness.] Under strict global-character-span matching,
+  how do SOE, EAE, HRGE, EVGE, CFE, and PGE compare?
+  \item[RQ2 -- Constraint compliance.] How do evidence gating, deterministic
+  verification, and abstention affect unsupported claims, illegal signatures,
+  evidence correctness, and output failures?
+  \item[RQ3 -- Bilingual behavior.] How stable are effectiveness and safety
+  results across English railway reports and Chinese safety documents?
+  \item[RQ4 -- Efficiency.] How do extraction and resource use
+  change at 10, 25, 50, and 100 reviewed training documents?
 \end{description}
 
-\subsection{Data splits and low-resource budgets}
-% Use cluster-aware document splits. Evaluate 10, 25, 50, and 100 reviewed
-% training documents with fixed validation/test sets and at least three seeds.
+\subsection{Low-resource protocol}
 
-\subsection{Baselines and model variants}
-% Include a non-LLM multilingual encoder, zero/few-shot LLMs, plain QLoRA,
-% KG prompting, KG retrieval, constrained decoding, and the complete agent.
+The document budgets are nested exactly as
+$D_{10}\subset D_{25}\subset D_{50}\subset D_{100}$. Document and duplicate
+clusters are indivisible, and selection balances language and source strata
+without using validation performance. Each trainable system is run with seeds
+20260830, 20260831, and 20260901, yielding 36 training runs. Derived verification
+and gating require no additional fitting. Every output directory is immutable
+and records input hashes, implementation hashes, environment versions, failure
+state, and telemetry.
+
+\begin{table}[htbp]
+\centering
+\caption{Pre-registered system variants.}
+\label{tab:systems}
+\begin{tabularx}{\textwidth}{YYY}
+\toprule
+System & Candidate generation & Selection/verification \\
+\midrule
+Source-Only Extraction (SOE) & Compact QLoRA, no KG & None \\
+Exact-Anchor Extraction (EAE) & Exact conservative KG hints & None \\
+High-Recall Graph Extraction (HRGE) & Evidence-gated high-recall KG context & None \\
+Evidence-Verified Graph Extraction (EVGE) & HRGE predictions & Relation verifier \\
+Conservative-Fusion Extraction (CFE) & EAE/HRGE predictions & Entity reject-option gate \\
+Provenance-Gated Extraction (PGE) & EAE/HRGE predictions & Entity gate + relation verifier \\
+Multilingual BIO Encoder (MBE) & XLM-R multilingual encoder & Hard begin--inside--outside decoding \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+The six QLoRA systems are the primary, protocol-matched comparison: they share
+the same reviewed split, document-level evaluator, Qwen3 snapshot, compact
+target, and training budgets, while varying graph context and deterministic
+selection. MBE provides an independently trained XLM-R encoder-family
+comparison. CRF and frozen span-boundary entity models, together with BGE-M3
+local-pair and KG-feature relation classifiers, are additional diagnostic
+baselines. Their recorded legacy window protocol uses a different gold asset,
+so their numerical results are reported separately rather than pooled with the
+document-level primary table.
 
 \subsection{Evaluation metrics}
-% Entity and relation micro/macro F1; evidence exact/overlap scores; relation
-% signature validity; JSON validity; unsupported-claim rate; risk-subgraph edge
-% and motif recovery; latency, throughput, peak VRAM, and API cost.
 
-\subsection{Statistical analysis}
-% Report confidence intervals, paired tests, seed variation, and effect sizes.
+The primary evaluator first resolves every window prediction to global
+character offsets and merges all overlapping and rescue-window predictions by
+document. Entities are de-duplicated by document, span, and type; relations are
+de-duplicated by document, typed directed endpoints, and relation type. It then
+performs one-to-one matching against the 1,001 unique validation entities and
+343 unique validation relations. A secondary relation score additionally
+requires claim status.
+Micro-averaged precision, recall, and F1 are defined in
+Equation~\eqref{eq:prf-metrics}:
+\begin{equation}
+P=\frac{TP}{TP+FP},\qquad
+R=\frac{TP}{TP+FN},\qquad
+F_1=\frac{2PR}{P+R}.
+\label{eq:prf-metrics}
+\end{equation}
+English and Chinese results are separately micro-aggregated. Each distinct
+global source span remains a separate mention, whereas repeated appearances of
+that same span in overlapping windows receive only one vote. Normalized-text
+and window-level metrics are diagnostic only because they can collapse
+repeated mentions or overweight source regions covered by multiple windows.
+
+Constraint-compliance metrics include entity and relation evidence correctness,
+unsupported-relation rate, illegal-signature rate, valid entity-reference rate,
+JSON success, and verifier acceptance/rejection counts. Rates are aggregated
+over predicted objects. Empty jobs do not create artificial zero-valued
+evidence objects, but missing or failed jobs remain empty predictions in
+effectiveness scoring.
+
+\subsection{Statistical analysis and efficiency}
+
+For a budget with three completed seeds, we report the mean and sample standard
+deviation; a single completed seed is labeled $n=1$ and receives no dispersion
+estimate. Documents, not windows, are the resampling unit. Within-seed frozen
+comparisons use 20,000 paired document bootstrap resamples for HRGE versus EAE,
+CFE versus HRGE, and PGE versus HRGE. Cross-seed paired differences are reported
+descriptively because three seeds do not support a reliable distributional
+test. A budget is never completed by selecting a favorable seed or imputing a
+running pipeline.
+
+Reported training telemetry includes wall-clock time, examples per second,
+prompt and target tokens, peak allocated and reserved GPU memory, and peak
+whole-GPU use. Electricity-only cost integrates GPU power at two-second
+intervals using CNY 0.60/kWh; hardware amortization and labor are excluded.
 
 \section{Results}
 \label{sec:results}
 
-\subsection{Main extraction results}
-\subsection{Low-resource scaling}
-\subsection{Cross-language and cross-domain transfer}
-\subsection{Risk-substructure recovery}
-\subsection{Trustworthiness and efficiency}
+All effectiveness results in this section come from the frozen validation
+split and are not formal-test claims. At the analysis snapshot, all 36 QLoRA
+training runs had completed, including D50, whereas a complete validation
+pipeline was available for D10/seed 20260830, D25/seed 20260830, and all three
+D100 seeds. A run entered the tables only when its directory contained the
+frozen \texttt{pipeline\_complete.json} gate and all six system metrics. D50
+validation was still running and is therefore excluded rather than imputed.
+The sealed formal-test namespace was not read.
 
-% The present four-document pilot must not be presented as the final main table.
+\subsection{D100 three-seed validation comparison}
+\label{sec:validation-results}
+
+Table~\ref{tab:validation-main} reports the mean and sample standard deviation
+over the three completed D100 seeds. HRGE has the highest candidate entity
+recall (25.74\%), while conservative fusion raises entity precision from
+7.33\% to 10.72\%. Relation verification raises mean relation F1 from 2.06\%
+for HRGE to 3.42\% for EVGE. PGE ties CFE for the highest mean entity F1
+(13.71\%) and achieves the highest mean relation F1 (3.45\%).
+
+\begin{table}[htbp]
+\centering
+\caption{D100 validation results after document-level merging and strict
+global-character-span one-to-one matching (micro \%, mean $\pm$ sample SD over
+three seeds). These are validation results, not formal-test scores.}
+\label{tab:validation-main}
+\scriptsize
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{lrrrrrr}
+\toprule
+& \multicolumn{3}{c}{Entity} & \multicolumn{3}{c}{Relation} \\
+\cmidrule(lr){2-4}\cmidrule(lr){5-7}
+System & P & R & F1 & P & R & F1 \\
+\midrule
+SOE  & $8.05\pm1.05$  & $24.68\pm4.84$ & $12.09\pm1.59$ & $1.81\pm0.51$ & $4.76\pm1.60$ & $2.60\pm0.71$ \\
+EAE  & $7.01\pm0.94$  & $24.57\pm3.91$ & $10.82\pm1.01$ & $1.23\pm0.21$ & $5.54\pm1.77$ & $1.96\pm0.27$ \\
+HRGE & $7.33\pm1.79$  & $25.74\pm3.75$ & $11.23\pm1.95$ & $1.30\pm0.30$ & $5.05\pm2.07$ & $2.06\pm0.55$ \\
+EVGE & $7.33\pm1.79$  & $25.74\pm3.75$ & $11.23\pm1.95$ & $2.99\pm0.79$ & $4.18\pm1.61$ & $3.42\pm1.03$ \\
+CFE  & $10.72\pm1.70$ & $19.41\pm1.35$ & $13.71\pm1.27$ & $2.30\pm0.47$ & $4.76\pm2.07$ & $3.06\pm0.85$ \\
+PGE  & $10.72\pm1.70$ & $19.41\pm1.35$ & $13.71\pm1.27$ & $3.03\pm0.78$ & $4.18\pm1.61$ & $3.45\pm1.03$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Across the matched D100 seeds, HRGE improves relation F1 over EAE by
+$0.10\pm0.31$ percentage points. The PGE-minus-HRGE gain is
+$2.49\pm0.73$ points for entity F1 and $1.39\pm0.48$ points for relation F1;
+both differences are positive in every D100 seed. Claim-status-aware relation
+F1 is $3.35\pm1.14$\% for PGE and $1.96\pm0.67$\% for HRGE. These paired
+seed summaries quantify reproducibility but, with only three seeds, are not
+used as stand-alone significance tests.
+
+\subsection{Constraint-compliance effects}
+
+HRGE entity evidence is almost always resolvable to the source, but its raw
+relations expose the central safety problem: $46.03\pm4.19$\% are unsupported
+by the implemented local-evidence check and $62.59\pm6.17$\% fail at least one
+entity-reference, ontology-signature, claim-status, or evidence rule. The
+deterministic verifier rejects those relations. Consequently, all relations
+retained by PGE satisfy the implemented conditions (Table~\ref{tab:trust} and
+Figure~\ref{fig:constraint-compliance}). This is a guarantee about the stated checks,
+not a claim of semantic truth.
+
+\begin{table}[htbp]
+\centering
+\caption{D100 prediction-level validation constraint-compliance metrics (\%, mean
+$\pm$ sample SD over three seeds).}
+\label{tab:trust}
+\small
+\begin{tabularx}{\textwidth}{YZZZZ}
+\toprule
+System & \shortstack{Entity\\evidence} & \shortstack{Relation\\evidence} & Unsupported & Invalid \\
+\midrule
+HRGE & $99.99\pm0.02$ & $53.97\pm4.19$ & $46.03\pm4.19$ & $62.59\pm6.17$ \\
+PGE retained & $100.00\pm0.00$ & $100.00\pm0.00$ & $0.00\pm0.00$ & $0.00\pm0.00$ \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.88\textwidth]{../figures/constraint_compliance_effects.pdf}
+\caption{Effect of provenance gating on D100 relation constraint compliance. Bars
+show three-seed means and error bars show sample SD. ``Rule-invalid'' denotes
+failure of any entity-reference, ontology-signature, claim-status, or evidence
+check. PGE's zero rates follow from deterministic filtering and do not imply
+zero semantic error.}
+\label{fig:constraint-compliance}
+\end{figure}
+
+\subsection{Bilingual behavior}
+
+On D100 validation, PGE obtains English entity/relation F1 of
+$17.78\pm1.39$\%/$4.58\pm1.32$\% and Chinese entity/relation F1 of
+$10.69\pm0.77$\%/$2.06\pm1.19$\%, each aggregated within language and then
+summarized over three seeds. The gap is consistent with differences in report
+genre, training support, and template structure, but the experiment does not
+isolate those factors.
+
+\subsection{Low-resource scaling and final comparison}
+
+Table~\ref{tab:low-resource} and Figure~\ref{fig:low-resource} report every
+validation group that passed the completion gate at the snapshot. D10 and D25
+contain one completed seed each and are reported without a dispersion estimate;
+D100 contains all three seeds. D50 is absent because no D50 validation pipeline
+had completed, even though all D50 training runs had completed.
+
+\begin{table}[htbp]
+\centering
+\caption{Available low-resource validation results under strict matching
+(\%). Single values are one completed seed; D100 values are mean $\pm$ sample
+SD over three seeds. D50 validation is excluded because its pipeline was still
+running.}
+\label{tab:low-resource}
+\small
+\begin{tabular}{rlccc}
+\toprule
+Documents & System & Entity F1 & Relation F1 & Unsupported rate \\
+\midrule
+10 & SOE  & 7.74 & 1.13 & 49.05 \\
+10 & HRGE & 5.26 & 1.13 & 52.63 \\
+10 & PGE  & 6.68 & 0.00 & 0.00 \\
+25 & SOE  & 11.04 & 1.34 & 40.27 \\
+25 & HRGE & 7.65 & 0.60 & 46.70 \\
+25 & PGE  & 9.53 & 0.93 & 0.00 \\
+100 & SOE  & $12.09\pm1.59$ & $2.60\pm0.71$ & $46.57\pm11.10$ \\
+100 & HRGE & $11.23\pm1.95$ & $2.06\pm0.55$ & $46.03\pm4.19$ \\
+100 & PGE  & $13.71\pm1.27$ & $3.45\pm1.03$ & $0.00\pm0.00$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\textwidth]{../figures/low_resource_scaling.pdf}
+\caption{Available low-resource validation scaling for SOE, HRGE, and PGE.
+D10 and D25 are single-seed observations; D100 markers show the three-seed
+mean with sample-SD error bars. The break at D50 records missing completed
+validation output rather than an interpolated result.}
+\label{fig:low-resource}
+\end{figure}
+
+At D10, PGE removes all relations that fail the frozen checks, but no strictly
+correct relation remains, yielding 0.00\% relation F1. At D25, PGE reaches
+0.93\% relation F1 and removes unsupported retained relations. At D100, PGE
+outperforms both SOE and HRGE on mean entity and relation F1. The D10/D25
+observations are single-seed checks of deterministic abstention and entity
+selection; they do not establish cold-start effectiveness, and additional
+seeds are required before a stability claim is warranted.
+
+\subsection{Training behavior and efficiency}
+
+All 36 QLoRA training runs completed with zero prompt truncations, zero answer
+truncations, and zero skipped overlength examples. Figure~\ref{fig:training-loss}
+uses all 1,053 loss observations recorded in the logs. The lower-budget curves
+contain fewer checkpoints, whereas D100 contains 317 optimization steps and 63
+logged checkpoints per run. Across systems, the mean logged loss declines from
+approximately 0.245--0.253 at D10 to 0.169--0.171 at D100.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\textwidth]{../figures/training_loss.pdf}
+\caption{Training-loss trajectories for the three trainable generators at all
+four budgets. Faint markers are three-seed means of the loss values recorded
+every five optimization steps; shaded regions are sample SD; lines are
+five-checkpoint centered moving means used only to expose the trend. D50 is
+included here because its training runs completed, although its validation
+pipeline had not completed.}
+\label{fig:training-loss}
+\end{figure}
+
+Table~\ref{tab:training-efficiency} reports training efficiency on the RTX
+3090. SOE is consistently fastest and uses the least whole-device memory,
+while graph-conditioned prompts increase sequence length and resource use.
+The reported energy integrates sampled GPU power only and excludes hardware
+amortization and labor.
+
+\begin{table}[htbp]
+\centering
+\caption{Three-seed QLoRA training statistics (mean $\pm$ sample SD). Loss is
+the mean logged training loss; time and energy are per run; memory is peak
+whole-device use.}
+\label{tab:training-efficiency}
+\scriptsize
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{rrcccc}
+\toprule
+Documents & System & Mean loss & Time (h) & Peak GPU (GiB) & Energy (kWh) \\
+\midrule
+10  & SOE  & $0.245\pm0.009$ & $0.16\pm0.01$ & $14.81\pm0.72$ & $0.058\pm0.001$ \\
+10  & EAE  & $0.252\pm0.016$ & $0.22\pm0.00$ & $17.35\pm0.06$ & $0.078\pm0.000$ \\
+10  & HRGE & $0.253\pm0.007$ & $0.19\pm0.00$ & $16.05\pm0.05$ & $0.066\pm0.000$ \\
+25  & SOE  & $0.211\pm0.006$ & $0.36\pm0.00$ & $14.78\pm0.60$ & $0.131\pm0.000$ \\
+25  & EAE  & $0.209\pm0.005$ & $0.50\pm0.00$ & $17.40\pm0.13$ & $0.178\pm0.000$ \\
+25  & HRGE & $0.216\pm0.007$ & $0.43\pm0.00$ & $16.68\pm0.31$ & $0.153\pm0.000$ \\
+50  & SOE  & $0.184\pm0.003$ & $0.75\pm0.00$ & $14.91\pm0.10$ & $0.273\pm0.000$ \\
+50  & EAE  & $0.183\pm0.004$ & $1.04\pm0.00$ & $17.79\pm0.05$ & $0.376\pm0.000$ \\
+50  & HRGE & $0.183\pm0.003$ & $0.91\pm0.00$ & $17.36\pm0.10$ & $0.328\pm0.000$ \\
+100 & SOE  & $0.170\pm0.003$ & $1.47\pm0.00$ & $14.65\pm0.13$ & $0.533\pm0.001$ \\
+100 & EAE  & $0.169\pm0.002$ & $2.06\pm0.00$ & $18.20\pm0.13$ & $0.745\pm0.000$ \\
+100 & HRGE & $0.171\pm0.003$ & $1.84\pm0.03$ & $17.76\pm0.19$ & $0.666\pm0.010$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Negative ablations}
+\label{sec:negative}
+
+Negative results were retained to avoid post-hoc method selection. MBE, the
+XLM-R hard-BIO comparison system, reached 8.51\% strict entity F1. A learned conditional random
+field (CRF) reached only
+2.86\% and left both strict typed endpoints reachable for 2 of 491 gold
+relations. A frozen span-boundary model increased endpoint reachability to
+25/491 but emitted 8,115 validation spans and reached only 6.28\% strict entity
+F1; its difference from hard BIO was $-2.23$ points (95\% CI $-5.26$ to
+$+0.36$, $p=0.08395$). The promotion gate failed, so no relation head was
+trained for that model.
+
+The BGE-M3 local-pair relation classifier reached at most 0.92\% validation
+relation F1. Adding textual KG features reached 0.85\%, with no significant
+gain over the no-KG variant ($p=0.7181$). A sampled character-TF--IDF logistic
+verifier also failed to produce a meaningful improvement. These findings show
+that relation extraction is limited by mention boundaries, typed endpoint
+reachability, sparse positive pairs, and heterogeneous evidence, rather than by
+a single decoder or class-weight choice.
 
 \section{Ablation and error analysis}
 \label{sec:ablation}
 
-\subsection{Contribution of evidence, graph, and agent components}
-\subsection{Structured-output and relation-signature failures}
-\subsection{Chinese and English error categories}
+\subsection{Contribution of graph context and selection}
+
+The EAE--HRGE comparison tests a context-strategy transition rather than graph
+presence alone: HRGE changes anchors, edge priors, semantic patterns, and
+evidence instructions. At D100 it increases mean entity and relation recall,
+but also over-generates. The HRGE--CFE and HRGE--PGE comparisons isolate the
+frozen gold-independent selection pipeline more directly. PGE improves entity
+F1 by 2.06--3.33 points and relation F1 by 1.08--1.94 points over HRGE in the
+three D100 seeds. At D10, however, the verifier abstains from every relation
+that could receive strict credit. The supported conclusion is therefore that
+the staged design improves D100 retained-graph precision and auditability and
+enforces the stated safety checks at smaller budgets, not that every KG
+component independently improves extraction in every regime.
+
+\subsection{Observed failure modes}
+
+The primary errors are wrong entity boundaries, wrong entity types, missing
+typed relation endpoints, unsupported generated relations, illegal endpoint
+signatures, and cross-language/domain confusion. Long source passages create a
+second failure class when relevant endpoints occur far apart; relation-rescue
+windows address coverage but can remove broader discourse context. Chinese
+administrative templates also generate repeated generic anchors that may have
+high corpus support but weak instance specificity.
+
+The current audit stratifies failures by entity type, relation type, language,
+source domain, evidence distance, rescue-window status, and verifier rejection
+reason. The large HRGE invalid-relation rate shows that endpoint, status, and
+evidence failures coexist; it should not be interpreted as an
+ontology-signature error rate alone. Representative source quotations are not
+reproduced here because redistribution and privacy review remains source
+specific.
 
 \section{Discussion}
 \label{sec:discussion}
 
-% Interpret safety value, transfer limits, annotation dependence, graph leakage
-% controls, and implications for human-in-the-loop risk analysis.
+\subsection{What problem the framework solves}
+
+The framework addresses a narrow but important gap between extracting many
+plausible risk statements and constructing a risk graph that an analyst can
+audit. A standard generator may improve recall by exploiting domain context,
+yet its output can mix source facts with graph priors. Our design preserves the
+distinction: the KG proposes candidates, provenance rules prevent training and
+evaluation leakage, and evidence/signature checks determine whether a relation
+may enter the retained graph. The result is not a complete solution to safety
+reasoning, but a reproducible way to reduce unsupported graph edges while
+retaining explicit evidence for human review.
+
+\subsection{Interpretation of current evidence}
+
+Validation results support three bounded observations. First, richer KG
+context recovers more D100 candidate entities and relations, with HRGE reaching
+the highest mean candidate recall. Second, conservative selection is most
+useful for the retained graph: PGE improves D100 entity and relation F1 over
+HRGE in every seed while reducing the measured unsupported and rule-invalid
+rates to zero by construction. Third, the English/Chinese gap and the D10
+relation abstentions show that a human-review workflow remains necessary. The
+framework is therefore suited to prioritizing and organizing review rather
+than unattended causal or regulatory decisions.
+
+\subsection{Implications for low-resource safety analysis}
+
+In low-resource settings, a small reviewed corpus serves two roles: it adapts
+the extractor and supplies graph priors. Without provenance controls, those
+roles can create hidden leakage. Recorded training loss decreases across
+optimization at all four budgets, and the available D10/D25 validation groups
+show that the deterministic gate continues to enforce zero measured
+unsupported retained relations in those single-seed runs. These observations
+do not establish cold-start effectiveness, whereas the D100 three-seed result
+provides the stronger evidence that graph conditioning plus provenance gating
+can assist risk-element identification, relation screening, evidence tracing,
+and review prioritization.
 
 \section{Limitations, ethics, and data availability}
 \label{sec:limitations}
 
-% Document corpus licensing, privacy screening, model/API provenance, human
-% oversight, reproducibility, and what can or cannot be redistributed.
+The benchmark is modest and combines languages, report genres, and regulatory
+contexts. Its ontology simplifies contested causal interpretations into a
+finite set of typed edges. Independent human agreement has not yet been
+reported, and teacher-assisted pre-annotation may introduce anchoring bias even
+when humans make final decisions. D10 and D25 currently have one completed
+validation seed, D50 validation is not included, and the formal test remains
+sealed; current validation findings may therefore not generalize. A single 4B
+model family and one local GPU also limit architectural and hardware
+conclusions.
+
+Deterministic verification has an intentionally narrow guarantee. Local
+co-occurrence and a legal type signature do not prove causality, compliance, or
+truth. Conversely, a valid cross-sentence relation may be rejected when both
+endpoints do not occur in the permitted evidence span. Abstention therefore
+reduces graph coverage and cannot replace expert adjudication.
+
+The corpus uses public safety documents, but public availability does not imply
+unrestricted redistribution. Before release, each source will be checked for
+license, privacy, and sensitive personal information. Where full text cannot
+be redistributed, the project will release lawful metadata, hashes, source
+links, schemas, split manifests, evaluation code, and annotations to the extent
+permitted. Model/API provenance, prompt versions, human-review status, and
+generation failures are recorded. The system must not be used to assign
+individual blame or automate safety-critical decisions.
 
 \section{Conclusions}
 \label{sec:conclusion}
 
-% Answer each research question without extending beyond measured evidence.
+This study develops a provenance-preserving, evidence-gated KG framework for
+low-resource safety information extraction by composing leakage-controlled
+graph priors, evidence-preserving windows, high-recall candidate generation,
+conservative abstention, and deterministic relation verification. Across the
+three completed D100 seeds, PGE ties CFE for the highest mean entity F1 and
+achieves the highest mean relation F1 among the reported systems, and every retained relation satisfies the
+implemented provenance, endpoint, ontology, claim-status, and local-evidence
+checks. The available low-budget results and the complete 36-run training
+record document its observed behavior across training budgets. These
+properties make it suitable as an auditable assistant
+for risk-element identification, relation screening, evidence tracing,
+risk-graph construction, and human-review prioritization in low-resource
+bilingual safety analysis.
 
 \section*{Acknowledgements}
-This work was supported by the Science and Technology Research Project of Henan Province (grant no. 262102211055).
+Withheld from the anonymous manuscript for double-blind review and supplied on
+the separate title page.
 
 \section*{Funding statement}
-The funder had no role in study design, data collection and analysis, decision to publish, or preparation of the manuscript.
+Funding information and the role of the funder are supplied on the separate
+title page and withheld here for double-blind review.
 
 \section*{Declaration of competing interest}
-The authors declare that they have no known competing financial interests or personal relationships that could have appeared to influence the work reported in this paper.
+The authors declare that they have no known competing financial interests or
+personal relationships that could have appeared to influence the work reported
+in this paper.
 
 \section*{Data and code availability}
-Code, corpus inventories, annotation schemas, and reproducibility scripts are maintained at \url{https://github.com/XuelinHu/railway-agent-safety-security}. Public release of document text and reviewed annotations will follow source-license and redistribution constraints.
+An anonymized code and artifact package will be supplied for review. The public
+repository URL will be restored after double-blind review. Release of source
+text and reviewed annotations remains subject to source-license,
+redistribution, privacy, and ethics review.
 
-% Complete this declaration immediately before submission based on actual use.
 \section*{Declaration of generative AI and AI-assisted technologies in the writing process}
-To be completed before submission in accordance with the publisher's current policy. The manuscript must distinguish AI models evaluated as research objects from any tools used for language editing or manuscript preparation.
+During preparation of this work, the authors used OpenAI Codex for language
+editing, code review, and assistance with figure and manuscript preparation.
+The authors reviewed and edited all resulting material and take full
+responsibility for the content of the publication. Models used as research
+objects or for pre-annotation are reported separately in the Methods and are
+not represented by this writing-process declaration.
 
 \bibliographystyle{elsarticle-num}
 \bibliography{references}

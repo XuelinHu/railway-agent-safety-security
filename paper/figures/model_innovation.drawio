@@ -1,0 +1,136 @@
+<?xml version='1.0' encoding='utf-8'?>
+<mxfile host="app.diagrams.net" modified="2026-09-01T02:20:00.000Z" agent="Codex" version="24.7.17">
+  <diagram id="model-innovation" name="Conservative Fusion and Verification">
+    <mxGraphModel dx="2200" dy="1350" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="2200" pageHeight="1350" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="canvas" value="" style="whiteSpace=wrap;html=1;fontFamily=Arial;fontSize=22;fontColor=#17324d;fillColor=#ffffff;strokeColor=#ffffff;strokeWidth=0;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="0" y="0" width="2200" height="1350" as="geometry" />
+        </mxCell>
+        <mxCell id="window" value="&lt;b&gt;EVIDENCE-PRESERVING SOURCE WINDOW&lt;/b&gt;&lt;br&gt;source evidence + stable segment identifiers" style="whiteSpace=wrap;html=1;fontFamily=Arial;fontSize=22;fontColor=#17324d;fillColor=#f7fafc;strokeColor=#9fb3c8;strokeWidth=2;align=center;verticalAlign=middle;rounded=1;arcSize=12;" vertex="1" parent="1">
+          <mxGeometry x="250" y="35" width="1700" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="generator" value="&lt;b&gt;HRGE CANDIDATE GENERATOR&lt;/b&gt;&lt;br&gt;Qwen3-4B + QLoRA" style="whiteSpace=wrap;html=1;fontFamily=Arial;fontSize=22;fontColor=#17324d;fillColor=#fff4d6;strokeColor=#b7791f;strokeWidth=3;align=center;verticalAlign=middle;shape=hexagon;perimeter=hexagonPerimeter2;fixedSize=1;" vertex="1" parent="1">
+          <mxGeometry x="650" y="225" width="900" height="145" as="geometry" />
+        </mxCell>
+        <mxCell id="raw" value="&lt;b&gt;HRGE CANDIDATES&lt;/b&gt;&lt;br&gt;E_HRGE entities  |  R_HRGE relations" style="whiteSpace=wrap;html=1;fontFamily=Arial;fontSize=22;fontColor=#7a4e00;fillColor=#fff4d6;strokeColor=#b7791f;strokeWidth=2;align=center;verticalAlign=middle;rounded=1;arcSize=12;" vertex="1" parent="1">
+          <mxGeometry x="300" y="455" width="1600" height="125" as="geometry" />
+        </mxCell>
+        <mxCell id="entity_panel" value="" style="whiteSpace=wrap;html=1;fontFamily=Arial;fontSize=22;fontColor=#17324d;fillColor=#eaf6ef;strokeColor=#2f7d5b;strokeWidth=2;align=center;verticalAlign=middle;rounded=1;arcSize=12;" vertex="1" parent="1">
+          <mxGeometry x="40" y="665" width="1030" height="480" as="geometry" />
+        </mxCell>
+        <mxCell id="entity_title" value="ENTITY ACCEPTANCE GATE  A(e)" style="whiteSpace=wrap;html=1;fontFamily=Arial;fontSize=22;fontColor=#ffffff;fillColor=#2f7d5b;strokeColor=#2f7d5b;strokeWidth=2;align=center;verticalAlign=middle;rounded=1;arcSize=12;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="75" y="690" width="960" height="65" as="geometry" />
+        </mxCell>
+        <mxCell id="sig_agree" value="&lt;b&gt;EAE / HRGE AGREEMENT&lt;/b&gt;&lt;br&gt;same normalized text + type" style="whiteSpace=wrap;html=1;fontFamily=Arial;fontSize=22;fontColor=#17324d;fillColor=#ffffff;strokeColor=#2f6f9f;strokeWidth=2;align=center;verticalAlign=middle;rounded=1;arcSize=12;" vertex="1" parent="1">
+          <mxGeometry x="80" y="795" width="285" height="130" as="geometry" />
+        </mxCell>
+        <mxCell id="sig_anchor" value="&lt;b&gt;SOURCE ANCHOR&lt;/b&gt;&lt;br&gt;same source text + type" style="whiteSpace=wrap;html=1;fontFamily=Arial;fontSize=22;fontColor=#216244;fillColor=#ffffff;strokeColor=#2f7d5b;strokeWidth=2;align=center;verticalAlign=middle;rounded=1;arcSize=12;" vertex="1" parent="1">
+          <mxGeometry x="395" y="795" width="285" height="130" as="geometry" />
+        </mxCell>
+        <mxCell id="sig_endpoint" value="&lt;b&gt;VERIFIED ENDPOINT&lt;/b&gt;&lt;br&gt;entity occurs in R_EVGE" style="whiteSpace=wrap;html=1;fontFamily=Arial;fontSize=22;fontColor=#513c7a;fillColor=#ffffff;strokeColor=#7257a6;strokeWidth=2;align=center;verticalAlign=middle;rounded=1;arcSize=12;" vertex="1" parent="1">
+          <mxGeometry x="710" y="795" width="285" height="130" as="geometry" />
+        </mxCell>
+        <mxCell id="any_signal" value="PASS: ANY SIGNAL" style="whiteSpace=wrap;html=1;fontFamily=Arial;fontSize=22;fontColor=#216244;fillColor=#ffffff;strokeColor=#2f7d5b;strokeWidth=2;align=center;verticalAlign=middle;shape=hexagon;perimeter=hexagonPerimeter2;fixedSize=1;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="400" y="970" width="280" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="e_fusion" value="&lt;b&gt;PASS: E_CFE&lt;/b&gt;&lt;br&gt;accepted, deduplicated HRGE entities" style="whiteSpace=wrap;html=1;fontFamily=Arial;fontSize=22;fontColor=#513c7a;fillColor=#f1ecfa;strokeColor=#7257a6;strokeWidth=2;align=center;verticalAlign=middle;rounded=1;arcSize=12;" vertex="1" parent="1">
+          <mxGeometry x="225" y="1060" width="630" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="relation_panel" value="" style="whiteSpace=wrap;html=1;fontFamily=Arial;fontSize=22;fontColor=#17324d;fillColor=#fcecef;strokeColor=#b84c6a;strokeWidth=2;align=center;verticalAlign=middle;rounded=1;arcSize=12;" vertex="1" parent="1">
+          <mxGeometry x="1130" y="665" width="1030" height="480" as="geometry" />
+        </mxCell>
+        <mxCell id="relation_title" value="RELATION COMPLIANCE GATE  V(r)" style="whiteSpace=wrap;html=1;fontFamily=Arial;fontSize=22;fontColor=#ffffff;fillColor=#b84c6a;strokeColor=#b84c6a;strokeWidth=2;align=center;verticalAlign=middle;rounded=1;arcSize=12;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="1165" y="690" width="960" height="65" as="geometry" />
+        </mxCell>
+        <mxCell id="checks" value="&lt;b&gt;ALL CHECKS MUST PASS&lt;/b&gt;&lt;br&gt;valid references + non-self relation&lt;br&gt;ontology signature + claim status&lt;br&gt;evidence + endpoint co-occurrence" style="whiteSpace=wrap;html=1;fontFamily=Arial;fontSize=22;fontColor=#7c3448;fillColor=#ffffff;strokeColor=#b84c6a;strokeWidth=2;align=center;verticalAlign=middle;rounded=1;arcSize=12;" vertex="1" parent="1">
+          <mxGeometry x="1170" y="795" width="950" height="180" as="geometry" />
+        </mxCell>
+        <mxCell id="r_verified" value="&lt;b&gt;PASS: R_EVGE&lt;/b&gt;&lt;br&gt;accepted HRGE relations" style="whiteSpace=wrap;html=1;fontFamily=Arial;fontSize=22;fontColor=#216244;fillColor=#eaf6ef;strokeColor=#2f7d5b;strokeWidth=2;align=center;verticalAlign=middle;rounded=1;arcSize=12;" vertex="1" parent="1">
+          <mxGeometry x="1190" y="1020" width="405" height="95" as="geometry" />
+        </mxCell>
+        <mxCell id="r_rejected" value="&lt;b&gt;FAIL: REJECTED&lt;/b&gt;&lt;br&gt;reason recorded" style="whiteSpace=wrap;html=1;fontFamily=Arial;fontSize=22;fontColor=#7c3448;fillColor=#fff5f7;strokeColor=#b84c6a;strokeWidth=2;align=center;verticalAlign=middle;rounded=1;arcSize=12;dashed=1;dashPattern=8 6;" vertex="1" parent="1">
+          <mxGeometry x="1710" y="1020" width="390" height="95" as="geometry" />
+        </mxCell>
+        <mxCell id="fusion_output" value="&lt;b&gt;CONSERVATIVE-FUSION EXTRACTION (CFE)&lt;/b&gt;&lt;br&gt;E_CFE + endpoint-filtered R_HRGE" style="whiteSpace=wrap;html=1;fontFamily=Arial;fontSize=22;fontColor=#513c7a;fillColor=#f1ecfa;strokeColor=#7257a6;strokeWidth=2;align=center;verticalAlign=middle;rounded=1;arcSize=12;" vertex="1" parent="1">
+          <mxGeometry x="220" y="1210" width="700" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="provenance_output" value="&lt;b&gt;PROVENANCE-GATED EXTRACTION (PGE)&lt;/b&gt;&lt;br&gt;E_CFE + endpoint-filtered R_EVGE" style="whiteSpace=wrap;html=1;fontFamily=Arial;fontSize=22;fontColor=#513c7a;fillColor=#f1ecfa;strokeColor=#7257a6;strokeWidth=2;align=center;verticalAlign=middle;rounded=1;arcSize=12;" vertex="1" parent="1">
+          <mxGeometry x="1280" y="1210" width="700" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="w1" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#2f6f9f;strokeWidth=3;fontFamily=Arial;fontSize=20;fontStyle=1;labelBackgroundColor=none;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="window" target="generator">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="w2" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#b7791f;strokeWidth=3;fontFamily=Arial;fontSize=20;fontStyle=1;labelBackgroundColor=none;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="generator" target="raw">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="r_to_entity" value="E_HRGE" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#2f7d5b;strokeWidth=3;fontFamily=Arial;fontSize=20;fontStyle=1;labelBackgroundColor=none;exitX=0.3;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="raw" target="entity_panel">
+          <mxGeometry relative="1" as="geometry" x="0.15" y="-34">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="r_to_relation" value="R_HRGE" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#b84c6a;strokeWidth=3;fontFamily=Arial;fontSize=20;fontStyle=1;labelBackgroundColor=none;exitX=0.7;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="raw" target="relation_panel">
+          <mxGeometry relative="1" as="geometry" x="0.15" y="34">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e1" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#2f7d5b;strokeWidth=2;fontFamily=Arial;fontSize=20;fontStyle=1;labelBackgroundColor=none;exitX=0.5;exitY=1;entryX=0.3;entryY=0;" edge="1" parent="1" source="sig_agree" target="any_signal">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e2" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#2f7d5b;strokeWidth=2;fontFamily=Arial;fontSize=20;fontStyle=1;labelBackgroundColor=none;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="sig_anchor" target="any_signal">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e3" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#2f7d5b;strokeWidth=2;fontFamily=Arial;fontSize=20;fontStyle=1;labelBackgroundColor=none;exitX=0.5;exitY=1;entryX=0.7;entryY=0;" edge="1" parent="1" source="sig_endpoint" target="any_signal">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e4" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#7257a6;strokeWidth=3;fontFamily=Arial;fontSize=20;fontStyle=1;labelBackgroundColor=none;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="any_signal" target="e_fusion">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="rv1" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#2f7d5b;strokeWidth=3;fontFamily=Arial;fontSize=20;fontStyle=1;labelBackgroundColor=none;exitX=0.3;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="checks" target="r_verified">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="rv2" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#b84c6a;strokeWidth=2;fontFamily=Arial;fontSize=20;fontStyle=1;labelBackgroundColor=none;dashed=1;dashPattern=8 6;exitX=0.8;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="checks" target="r_rejected">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="rv3" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#7257a6;strokeWidth=2;fontFamily=Arial;fontSize=20;fontStyle=1;labelBackgroundColor=none;exitX=0;exitY=0.45;entryX=1;entryY=0.6;" edge="1" parent="1" source="r_verified" target="sig_endpoint">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1100" y="1063" />
+              <mxPoint x="1100" y="873" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="out1" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#7257a6;strokeWidth=3;fontFamily=Arial;fontSize=20;fontStyle=1;labelBackgroundColor=none;exitX=0.35;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="e_fusion" target="fusion_output">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="out2" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#7257a6;strokeWidth=3;fontFamily=Arial;fontSize=20;fontStyle=1;labelBackgroundColor=none;exitX=1;exitY=0.55;entryX=0.25;entryY=0;" edge="1" parent="1" source="e_fusion" target="provenance_output">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1090" y="1098" />
+              <mxPoint x="1090" y="1180" />
+              <mxPoint x="1455" y="1180" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="out3" value="R_EVGE" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#b84c6a;strokeWidth=3;fontFamily=Arial;fontSize=20;fontStyle=1;labelBackgroundColor=none;exitX=0.5;exitY=1;entryX=0.75;entryY=0;" edge="1" parent="1" source="r_verified" target="provenance_output">
+          <mxGeometry relative="1" as="geometry" x="0.2" y="-34">
+            <mxPoint as="offset" />
+            <Array as="points">
+              <mxPoint x="1392" y="1160" />
+              <mxPoint x="1805" y="1160" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="raw_out" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#b7791f;strokeWidth=2;fontFamily=Arial;fontSize=20;fontStyle=1;labelBackgroundColor=none;exitX=0;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="raw" target="fusion_output">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="20" y="517" />
+              <mxPoint x="20" y="1265" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

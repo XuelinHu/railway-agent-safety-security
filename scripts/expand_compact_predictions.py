@@ -53,6 +53,19 @@ def run(args: argparse.Namespace) -> int:
             expansion_errors: list[str] = []
             entities = []
             for entity in compact.get("entities", []):
+                if not isinstance(entity, dict):
+                    expansion_errors.append("entity: expected an object")
+                    continue
+                missing_fields = [
+                    field
+                    for field in ("id", "text", "type")
+                    if not isinstance(entity.get(field), str) or not entity[field].strip()
+                ]
+                if missing_fields:
+                    expansion_errors.append(
+                        f"entity {entity.get('id')}: missing or invalid {', '.join(missing_fields)}"
+                    )
+                    continue
                 try:
                     evidence = locate(entity["text"], job["segments"], used_spans)
                 except ValueError as error:
@@ -75,8 +88,15 @@ def run(args: argparse.Namespace) -> int:
             by_id = {entity["id"]: entity for entity in entities}
             relations = []
             for relation in compact.get("relations", []):
-                source = by_id.get(relation["source_id"])
-                target = by_id.get(relation["target_id"])
+                source_id = relation.get("source_id")
+                target_id = relation.get("target_id")
+                if not source_id or not target_id:
+                    expansion_errors.append(
+                        f"relation {relation.get('id')}: missing source_id or target_id"
+                    )
+                    continue
+                source = by_id.get(source_id)
+                target = by_id.get(target_id)
                 if not source or not target:
                     expansion_errors.append(f"relation {relation.get('id')}: source or target entity was rejected")
                     continue

@@ -9,7 +9,7 @@ This directory is the writing workspace for the following target venue:
 
 ## Working title
 
-> Knowledge-Graph-Augmented and Evidence-Grounded LLM Agents for Risk Information Extraction in Low-Resource Safety Texts: Railway Accident Reports as a Primary Evaluation Scenario
+> Provenance-Preserving Evidence-Gated Knowledge-Graph Augmentation for Low-Resource Safety Information Extraction
 
 The title deliberately focuses on risk information extraction. Risk-substructure discovery, cascading-risk analysis, and resilience assessment should not be added to the title until graph-level experiments support those claims.
 

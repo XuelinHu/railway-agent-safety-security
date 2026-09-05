@@ -7,7 +7,7 @@ This file preserves the author information supplied for the planned manuscript. 
 - Journal: *Journal of Safety Science and Resilience*
 - Special issue: *Agent for Safety and Security: Complex Network Modeling, Substructure Analysis, Risk Discovery, and Resilience Assessment*
 - Submission deadline: 28 February 2027
-- Working title: *Knowledge-Graph-Augmented and Evidence-Grounded LLM Agents for Risk Information Extraction in Low-Resource Safety Texts: Railway Accident Reports as a Primary Evaluation Scenario*
+- Working title: *Provenance-Preserving Evidence-Gated Knowledge-Graph Augmentation for Low-Resource Safety Information Extraction*
 - Review model: double blind; upload the anonymous manuscript and title page separately.
 
 ## Authors

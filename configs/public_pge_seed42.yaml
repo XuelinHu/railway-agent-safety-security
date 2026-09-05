@@ -1,0 +1,62 @@
+protocol_id: public-pge-full-validation-seed42-v1
+status: frozen-before-training
+selection_split: validation
+formal_test_read: false
+seed: 42
+
+datasets:
+  conll04: {train: 922, validation: 231}
+  scierc: {train: 1861, validation: 275}
+  ade: {train: 3461, validation: 384}
+
+model:
+  family: Qwen3-4B
+  revision: 1cfa9a7208912126459214e8b04321603b3df60c
+  local_snapshot: /ds2/xuelin/cache/huggingface/hub/models--Qwen--Qwen3-4B/snapshots/1cfa9a7208912126459214e8b04321603b3df60c
+
+training:
+  branches: [EAE, HRGE]
+  epochs: 1
+  batch_size: 1
+  gradient_accumulation: 4
+  learning_rate: 0.0002
+  max_length: 4096
+  lora_rank: 8
+  lora_alpha: 16
+  lora_dropout: 0.05
+  quantization: NF4-double-quantization
+  compact_target: true
+  use_job_instruction: true
+  gpu_policy: exclusive
+  require_zero_prompt_truncation: true
+  require_zero_answer_truncation: true
+
+inference:
+  workers: 2
+  max_input_tokens: 4096
+  max_new_tokens: 1024
+  max_seconds_per_job: 90
+  missing_prediction_policy: materialize-empty-after-terminal-failure
+
+graph_context:
+  source: data/processed/public_benchmarks_hrge_v1
+  train_graph_only: true
+  validation_gold_used_for_context: false
+  test_data_used: false
+  exact_train_validation_overlap_policy: clear-all-graph-context
+
+systems:
+  SOE: {candidate_generation: graph-free-compact-qlora, postprocess: source-expansion}
+  EAE: {candidate_generation: exact-anchor-compact-qlora, postprocess: source-expansion}
+  HRGE: {candidate_generation: high-recall-graph-compact-qlora, postprocess: source-expansion}
+  EVGE: {candidate_generation: HRGE, postprocess: relation-verifier}
+  CFE: {candidate_generation: EAE-and-HRGE, postprocess: entity-gate-plus-endpoint-filtered-raw-relations}
+  PGE: {candidate_generation: EAE-and-HRGE, postprocess: entity-gate-plus-verified-relations}
+
+evaluation:
+  primary: strict-global-character-span-one-to-one
+  secondary: normalized-text-and-type
+  evidence_compliance: true
+  paired_bootstrap_iterations: 20000
+  paired_bootstrap_seed: 20260830
+  comparisons: [EAE-vs-HRGE, HRGE-vs-CFE, HRGE-vs-PGE]

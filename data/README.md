@@ -19,7 +19,7 @@
 
 当前审核结果与知识图谱输出保存在被 Git 忽略的 `data/processed/reviewed/`：
 
-- `gold/all.jsonl`：72 个文本块、29 份文档的当前 `gold v0.1.0` 标注；其中新增 3 个文本块经过 v1.1 教师预标注后人工确认接受。
+- `gold/all.jsonl`：370 个文本块、150 份文档的当前 `gold v0.1.0` 标注；其中本轮新增 291 个文本块经过 `gpt-5.6-terra` 预标注后统一人工确认接受。
 - `gold/train.jsonl`、`gold/validation.jsonl`、`gold/test.jsonl`：按原始文档切分的训练、验证和测试标注。
 - `knowledge_graph/concepts.jsonl`：规范化概念节点。
 - `knowledge_graph/mentions.jsonl`：带文档、文本块、页码和原文证据的实体提及。
@@ -40,7 +40,7 @@ python3 scripts/promote_reviewed_annotations.py
 python3 scripts/merge_reviewed_annotations.py
 ```
 
-该命令默认保留原有 69 个文本块和测试 split，将确认批次追加到 train，并同步生成 `jobs.jsonl`。覆盖前应保留本地备份。
+该命令会保留现有 train/validation/test 记录，将确认批次追加到指定 split，并同步生成 `jobs.jsonl`。覆盖前应保留本地备份。
 
 生成扩展标注清单和代表性文本块任务（122 份文档共 301 个任务）：
 
@@ -49,7 +49,7 @@ python3 scripts/build_annotation_expansion.py
 python3 scripts/prepare_preannotation_jobs.py --pilot-set data/catalog/annotation_expansion_set.csv --pending-only --max-chunks-per-document 3 --output data/processed/experiments/annotation_pending_sampled_jobs.jsonl --teacher-model gpt-5.6-terra
 ```
 
-任务使用本体 `1.0.0`、提示 `teacher-preannotation-v1.1.0`，并显式携带合法关系签名。生成候选仍是 `pending`，只有逐条实体关系审核后才能并入 gold。
+任务使用本体 `1.0.0`、提示 `teacher-preannotation-v1.1.0`，并显式携带合法关系签名。291 条扩展候选已完成统一人工确认并并入当前 gold；后续新增候选仍必须审核后才能入库。
 
 模型实验输出使用独立目录保存：`qwen3_4b_kg_qlora_v1_1_full`、`qwen3_4b_compact_qlora_v1_1_eos`。推理解析会优先选择完整 annotation，并记录格式失败的原始输出；这些预测不会自动写入 reviewed gold。
 

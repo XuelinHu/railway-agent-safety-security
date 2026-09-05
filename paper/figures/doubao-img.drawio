@@ -1,0 +1,374 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mxfile host="app.diagrams.net" modified="2026-09-04T12:00:00.000Z" agent="Codex" version="24.7.17" type="device">
+  <diagram id="pge-neural-architecture" name="PGE Neural Architecture">
+    <mxGraphModel dx="3000" dy="1700" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="3000" pageHeight="1700" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+
+        <!-- Canvas and title -->
+        <mxCell id="canvas" value="" style="whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#ffffff;strokeWidth=0;" vertex="1" parent="1">
+          <mxGeometry x="0" y="0" width="3000" height="1700" as="geometry"/>
+        </mxCell>
+        <mxCell id="title" value="&lt;b&gt;MULTI-BRANCH PROVENANCE-GATED EXTRACTION (PGE)&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size: 22px;&quot;&gt;Qwen3 neural architecture for joint entity and relation extraction&lt;/font&gt;" style="whiteSpace=wrap;html=1;fontFamily=Arial;fontSize=30;fontColor=#17324d;fillColor=none;strokeColor=none;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="70" y="18" width="2860" height="72" as="geometry"/>
+        </mxCell>
+
+        <!-- Input and graph-context construction -->
+        <mxCell id="source_document" value="&lt;b&gt;SOURCE DOCUMENT&lt;/b&gt;&lt;br&gt;token sequence + local evidence spans" style="whiteSpace=wrap;html=1;fontFamily=Arial;fontSize=19;fontColor=#7a4e00;fillColor=#fff4d6;strokeColor=#b7791f;strokeWidth=2;rounded=1;arcSize=12;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="70" y="115" width="300" height="120" as="geometry"/>
+        </mxCell>
+        <mxCell id="subset_kg" value="&lt;b&gt;TRAIN-SPLIT KG&lt;/b&gt;&lt;br&gt;typed entities, relations, evidence and provenance&lt;br&gt;&lt;font style=&quot;font-size: 15px;&quot;&gt;validation/test gold excluded&lt;/font&gt;" style="whiteSpace=wrap;html=1;fontFamily=Arial;fontSize=18;fontColor=#7a4e00;fillColor=#fff4d6;strokeColor=#b7791f;strokeWidth=2;rounded=1;arcSize=12;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="455" y="105" width="365" height="140" as="geometry"/>
+        </mxCell>
+        <mxCell id="exact_context" value="&lt;b&gt;EXACT-ANCHOR CONTEXT&lt;/b&gt;&lt;br&gt;exact source match + type balance&lt;br&gt;conservative EAE hints" style="whiteSpace=wrap;html=1;fontFamily=Arial;fontSize=17;fontColor=#7a4e00;fillColor=#fff8e8;strokeColor=#b7791f;strokeWidth=2;rounded=1;arcSize=12;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="480" y="265" width="315" height="85" as="geometry"/>
+        </mxCell>
+        <mxCell id="bge_encoder" value="&lt;b&gt;FROZEN BGE-M3&lt;/b&gt;&lt;br&gt;semantic encoder" style="whiteSpace=wrap;html=1;fontFamily=Arial;fontSize=19;fontColor=#17324d;fillColor=#dbeaf7;strokeColor=#2f6f9f;strokeWidth=3;rounded=1;arcSize=12;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="900" y="115" width="340" height="105" as="geometry"/>
+        </mxCell>
+        <mxCell id="semantic_retrieval" value="&lt;b&gt;DENSE RETRIEVAL&lt;/b&gt;&lt;br&gt;normalized embeddings → cosine Top-k&lt;br&gt;source/evidence eligibility gates" style="whiteSpace=wrap;html=1;fontFamily=Arial;fontSize=17;fontColor=#216244;fillColor=#eaf6ef;strokeColor=#2f7d5b;strokeWidth=2;rounded=1;arcSize=12;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="1300" y="105" width="380" height="125" as="geometry"/>
+        </mxCell>
+        <mxCell id="hrge_context" value="&lt;b&gt;BOUNDED HIGH-RECALL KG CONTEXT&lt;/b&gt;&lt;br&gt;exact anchors + edge priors + semantic relation patterns&lt;br&gt;&lt;font style=&quot;font-size: 15px;&quot;&gt;frozen caps: 12 anchors / 6 edges / 4 patterns&lt;/font&gt;" style="whiteSpace=wrap;html=1;fontFamily=Arial;fontSize=17;fontColor=#7a4e00;fillColor=#fff4d6;strokeColor=#b7791f;strokeWidth=2;rounded=1;arcSize=12;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="1735" y="100" width="465" height="140" as="geometry"/>
+        </mxCell>
+        <mxCell id="retrieval_note" value="&lt;b&gt;OFFLINE RETRIEVAL ONLY&lt;/b&gt;&lt;br&gt;BGE-M3 is not a GNN and does not decode entities or relations." style="whiteSpace=wrap;html=1;fontFamily=Arial;fontSize=17;fontColor=#5b6573;fillColor=#f7f8fa;strokeColor=#9aa4b2;strokeWidth=2;rounded=1;arcSize=12;dashed=1;dashPattern=8 6;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="2245" y="110" width="455" height="120" as="geometry"/>
+        </mxCell>
+        <!-- Branch background panels -->
+        <mxCell id="soe_panel" value="" style="whiteSpace=wrap;html=1;fillColor=#fafbfc;strokeColor=#9aa4b2;strokeWidth=2;rounded=1;arcSize=12;dashed=1;dashPattern=8 6;" vertex="1" parent="1">
+          <mxGeometry x="50" y="365" width="390" height="620" as="geometry"/>
+        </mxCell>
+        <mxCell id="eae_panel" value="" style="whiteSpace=wrap;html=1;fillColor=#f7f3fb;strokeColor=#7257a6;strokeWidth=2;rounded=1;arcSize=12;" vertex="1" parent="1">
+          <mxGeometry x="480" y="365" width="420" height="620" as="geometry"/>
+        </mxCell>
+        <mxCell id="hrge_panel" value="" style="whiteSpace=wrap;html=1;fillColor=#f7f3fb;strokeColor=#7257a6;strokeWidth=2;rounded=1;arcSize=12;" vertex="1" parent="1">
+          <mxGeometry x="940" y="365" width="420" height="620" as="geometry"/>
+        </mxCell>
+
+        <!-- SOE neural tower -->
+        <mxCell id="soe_title" value="&lt;b&gt;SOE BRANCH&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size: 15px;&quot;&gt;Source-Only Extraction · independent baseline&lt;/font&gt;" style="whiteSpace=wrap;html=1;fontFamily=Arial;fontSize=22;fontColor=#ffffff;fillColor=#66727f;strokeColor=#66727f;strokeWidth=2;rounded=1;arcSize=10;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="75" y="385" width="340" height="62" as="geometry"/>
+        </mxCell>
+        <mxCell id="soe_prompt" value="&lt;b&gt;Source-only prompt tokens&lt;/b&gt;&lt;br&gt;source + frozen ontology · no KG context" style="whiteSpace=wrap;html=1;fontFamily=Arial;fontSize=16;fontColor=#7a4e00;fillColor=#fff4d6;strokeColor=#b7791f;strokeWidth=2;rounded=1;arcSize=10;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="95" y="470" width="300" height="66" as="geometry"/>
+        </mxCell>
+        <mxCell id="soe_embed" value="Token Embedding" style="whiteSpace=wrap;html=1;fontFamily=Arial;fontSize=17;fontColor=#17324d;fillColor=#dbeaf7;strokeColor=#2f6f9f;strokeWidth=2;rounded=1;arcSize=10;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="95" y="553" width="300" height="52" as="geometry"/>
+        </mxCell>
+        <mxCell id="soe_backbone" value="&lt;b&gt;FROZEN QWEN3-4B&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size: 14px;&quot;&gt;36 blocks · RMSNorm · GQA/RoPE · SwiGLU&lt;/font&gt;" style="whiteSpace=wrap;html=1;fontFamily=Arial;fontSize=18;fontColor=#17324d;fillColor=#cfe2f3;strokeColor=#2f6f9f;strokeWidth=3;rounded=1;arcSize=10;align=center;verticalAlign=top;spacingTop=10;" vertex="1" parent="1">
+          <mxGeometry x="80" y="622" width="330" height="158" as="geometry"/>
+        </mxCell>
+        <mxCell id="soe_adapter" value="&lt;b&gt;SOE QLoRA ADAPTER&lt;/b&gt;&lt;br&gt;q/k/v/o + gate/up/down projections" style="whiteSpace=wrap;html=1;fontFamily=Arial;fontSize=17;fontColor=#513c7a;fillColor=#e5d8f3;strokeColor=#7257a6;strokeWidth=3;rounded=1;arcSize=10;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="105" y="692" width="280" height="70" as="geometry"/>
+        </mxCell>
+        <mxCell id="soe_head" value="LM Head → compact structured sequence" style="whiteSpace=wrap;html=1;fontFamily=Arial;fontSize=16;fontColor=#7a4e00;fillColor=#fff0c2;strokeColor=#b7791f;strokeWidth=2;rounded=1;arcSize=10;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="95" y="798" width="300" height="52" as="geometry"/>
+        </mxCell>
+        <mxCell id="soe_expand" value="Deterministic source-span expansion" style="whiteSpace=wrap;html=1;fontFamily=Arial;fontSize=15;fontColor=#216244;fillColor=#eaf6ef;strokeColor=#2f7d5b;strokeWidth=2;rounded=1;arcSize=10;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="95" y="865" width="300" height="48" as="geometry"/>
+        </mxCell>
+        <mxCell id="soe_output" value="&lt;b&gt;E_SOE + R_SOE&lt;/b&gt;" style="whiteSpace=wrap;html=1;fontFamily=Arial;fontSize=18;fontColor=#5b6573;fillColor=#f0f2f5;strokeColor=#7f8995;strokeWidth=2;rounded=1;arcSize=10;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="115" y="928" width="260" height="42" as="geometry"/>
+        </mxCell>
+        <mxCell id="baseline_eval" value="&lt;b&gt;BASELINE EVALUATION&lt;/b&gt;&lt;br&gt;excluded from PGE fusion" style="whiteSpace=wrap;html=1;fontFamily=Arial;fontSize=17;fontColor=#5b6573;fillColor=#f7f8fa;strokeColor=#7f8995;strokeWidth=2;rounded=1;arcSize=10;dashed=1;dashPattern=8 6;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="95" y="1018" width="300" height="72" as="geometry"/>
+        </mxCell>
+
+        <!-- EAE neural tower -->
+        <mxCell id="eae_title" value="&lt;b&gt;EAE BRANCH&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size: 15px;&quot;&gt;Exact-Anchor Extraction&lt;/font&gt;" style="whiteSpace=wrap;html=1;fontFamily=Arial;fontSize=22;fontColor=#ffffff;fillColor=#7257a6;strokeColor=#7257a6;strokeWidth=2;rounded=1;arcSize=10;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="515" y="385" width="350" height="62" as="geometry"/>
+        </mxCell>
+        <mxCell id="eae_prompt" value="&lt;b&gt;Prompt serialization&lt;/b&gt;&lt;br&gt;source + frozen ontology + conservative exact anchors" style="whiteSpace=wrap;html=1;fontFamily=Arial;fontSize=16;fontColor=#7a4e00;fillColor=#fff4d6;strokeColor=#b7791f;strokeWidth=2;rounded=1;arcSize=10;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="530" y="470" width="320" height="66" as="geometry"/>
+        </mxCell>
+        <mxCell id="eae_embed" value="Token Embedding" style="whiteSpace=wrap;html=1;fontFamily=Arial;fontSize=17;fontColor=#17324d;fillColor=#dbeaf7;strokeColor=#2f6f9f;strokeWidth=2;rounded=1;arcSize=10;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="530" y="553" width="320" height="52" as="geometry"/>
+        </mxCell>
+        <mxCell id="eae_backbone" value="&lt;b&gt;FROZEN QWEN3-4B&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size: 14px;&quot;&gt;36 blocks · RMSNorm · GQA/RoPE · SwiGLU&lt;/font&gt;" style="whiteSpace=wrap;html=1;fontFamily=Arial;fontSize=18;fontColor=#17324d;fillColor=#cfe2f3;strokeColor=#2f6f9f;strokeWidth=3;rounded=1;arcSize=10;align=center;verticalAlign=top;spacingTop=10;" vertex="1" parent="1">
+          <mxGeometry x="515" y="622" width="350" height="158" as="geometry"/>
+        </mxCell>
+        <mxCell id="eae_adapter" value="&lt;b&gt;EAE QLoRA ADAPTER&lt;/b&gt;&lt;br&gt;q/k/v/o + gate/up/down projections" style="whiteSpace=wrap;html=1;fontFamily=Arial;fontSize=17;fontColor=#513c7a;fillColor=#e5d8f3;strokeColor=#7257a6;strokeWidth=3;rounded=1;arcSize=10;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="550" y="692" width="280" height="70" as="geometry"/>
+        </mxCell>
+        <mxCell id="eae_head" value="LM Head → compact structured sequence" style="whiteSpace=wrap;html=1;fontFamily=Arial;fontSize=16;fontColor=#7a4e00;fillColor=#fff0c2;strokeColor=#b7791f;strokeWidth=2;rounded=1;arcSize=10;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="530" y="798" width="320" height="52" as="geometry"/>
+        </mxCell>
+        <mxCell id="eae_expand" value="Deterministic source-span expansion" style="whiteSpace=wrap;html=1;fontFamily=Arial;fontSize=15;fontColor=#216244;fillColor=#eaf6ef;strokeColor=#2f7d5b;strokeWidth=2;rounded=1;arcSize=10;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="530" y="865" width="320" height="48" as="geometry"/>
+        </mxCell>
+        <mxCell id="eae_output" value="&lt;b&gt;E_EAE + R_EAE&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size: 14px;&quot;&gt;R_EAE used only for standalone comparison&lt;/font&gt;" style="whiteSpace=wrap;html=1;fontFamily=Arial;fontSize=17;fontColor=#7a4e00;fillColor=#fff0c2;strokeColor=#b7791f;strokeWidth=2;rounded=1;arcSize=10;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="530" y="925" width="320" height="52" as="geometry"/>
+        </mxCell>
+
+        <!-- HRGE neural tower -->
+        <mxCell id="hrge_title" value="&lt;b&gt;HRGE BRANCH&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size: 15px;&quot;&gt;High-Recall Graph Extraction&lt;/font&gt;" style="whiteSpace=wrap;html=1;fontFamily=Arial;fontSize=22;fontColor=#ffffff;fillColor=#7257a6;strokeColor=#7257a6;strokeWidth=2;rounded=1;arcSize=10;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="975" y="385" width="350" height="62" as="geometry"/>
+        </mxCell>
+        <mxCell id="hrge_prompt" value="&lt;b&gt;Prompt serialization&lt;/b&gt;&lt;br&gt;source + frozen ontology + bounded high-recall context" style="whiteSpace=wrap;html=1;fontFamily=Arial;fontSize=16;fontColor=#7a4e00;fillColor=#fff4d6;strokeColor=#b7791f;strokeWidth=2;rounded=1;arcSize=10;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="990" y="470" width="320" height="66" as="geometry"/>
+        </mxCell>
+        <mxCell id="hrge_embed" value="Token Embedding" style="whiteSpace=wrap;html=1;fontFamily=Arial;fontSize=17;fontColor=#17324d;fillColor=#dbeaf7;strokeColor=#2f6f9f;strokeWidth=2;rounded=1;arcSize=10;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="990" y="553" width="320" height="52" as="geometry"/>
+        </mxCell>
+        <mxCell id="hrge_backbone" value="&lt;b&gt;FROZEN QWEN3-4B&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size: 14px;&quot;&gt;36 blocks · RMSNorm · GQA/RoPE · SwiGLU&lt;/font&gt;" style="whiteSpace=wrap;html=1;fontFamily=Arial;fontSize=18;fontColor=#17324d;fillColor=#cfe2f3;strokeColor=#2f6f9f;strokeWidth=3;rounded=1;arcSize=10;align=center;verticalAlign=top;spacingTop=10;" vertex="1" parent="1">
+          <mxGeometry x="975" y="622" width="350" height="158" as="geometry"/>
+        </mxCell>
+        <mxCell id="hrge_adapter" value="&lt;b&gt;HRGE QLoRA ADAPTER&lt;/b&gt;&lt;br&gt;q/k/v/o + gate/up/down projections" style="whiteSpace=wrap;html=1;fontFamily=Arial;fontSize=17;fontColor=#513c7a;fillColor=#e5d8f3;strokeColor=#7257a6;strokeWidth=3;rounded=1;arcSize=10;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="1010" y="692" width="280" height="70" as="geometry"/>
+        </mxCell>
+        <mxCell id="hrge_head" value="LM Head → compact structured sequence" style="whiteSpace=wrap;html=1;fontFamily=Arial;fontSize=16;fontColor=#7a4e00;fillColor=#fff0c2;strokeColor=#b7791f;strokeWidth=2;rounded=1;arcSize=10;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="990" y="798" width="320" height="52" as="geometry"/>
+        </mxCell>
+        <mxCell id="hrge_expand" value="Deterministic source-span expansion" style="whiteSpace=wrap;html=1;fontFamily=Arial;fontSize=15;fontColor=#216244;fillColor=#eaf6ef;strokeColor=#2f7d5b;strokeWidth=2;rounded=1;arcSize=10;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="990" y="865" width="320" height="48" as="geometry"/>
+        </mxCell>
+        <mxCell id="hrge_output" value="&lt;b&gt;E_HRGE + R_HRGE&lt;/b&gt;" style="whiteSpace=wrap;html=1;fontFamily=Arial;fontSize=18;fontColor=#7a4e00;fillColor=#fff0c2;strokeColor=#b7791f;strokeWidth=2;rounded=1;arcSize=10;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="1010" y="928" width="280" height="42" as="geometry"/>
+        </mxCell>
+
+        <!-- Candidate sets between neural models and deterministic gates -->
+        <mxCell id="r_hrge" value="&lt;b&gt;R_HRGE&lt;/b&gt;&lt;br&gt;high-recall relation candidates" style="whiteSpace=wrap;html=1;fontFamily=Arial;fontSize=17;fontColor=#7a4e00;fillColor=#fff4d6;strokeColor=#b7791f;strokeWidth=2;rounded=1;arcSize=10;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="1420" y="455" width="235" height="82" as="geometry"/>
+        </mxCell>
+        <mxCell id="e_eae" value="&lt;b&gt;E_EAE&lt;/b&gt;&lt;br&gt;exact-anchor entity candidates" style="whiteSpace=wrap;html=1;fontFamily=Arial;fontSize=17;fontColor=#7a4e00;fillColor=#fff4d6;strokeColor=#b7791f;strokeWidth=2;rounded=1;arcSize=10;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="1420" y="690" width="235" height="82" as="geometry"/>
+        </mxCell>
+        <mxCell id="e_hrge" value="&lt;b&gt;E_HRGE&lt;/b&gt;&lt;br&gt;high-recall entity candidates" style="whiteSpace=wrap;html=1;fontFamily=Arial;fontSize=17;fontColor=#7a4e00;fillColor=#fff4d6;strokeColor=#b7791f;strokeWidth=2;rounded=1;arcSize=10;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="1420" y="805" width="235" height="82" as="geometry"/>
+        </mxCell>
+
+        <!-- Deterministic gate background -->
+        <mxCell id="gate_panel" value="" style="whiteSpace=wrap;html=1;fillColor=#f1f8f4;strokeColor=#2f7d5b;strokeWidth=3;rounded=1;arcSize=16;" vertex="1" parent="1">
+          <mxGeometry x="1690" y="350" width="690" height="655" as="geometry"/>
+        </mxCell>
+        <mxCell id="gate_header" value="&lt;b&gt;DETERMINISTIC DUAL-GATE COMPOSITION&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size: 15px;&quot;&gt;auditable Boolean rules · no learned gate · no additional neural network&lt;/font&gt;" style="whiteSpace=wrap;html=1;fontFamily=Arial;fontSize=22;fontColor=#ffffff;fillColor=#2f7d5b;strokeColor=#2f7d5b;strokeWidth=2;rounded=1;arcSize=10;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="1720" y="370" width="630" height="67" as="geometry"/>
+        </mxCell>
+
+        <!-- Relation verification gate -->
+        <mxCell id="relation_gate_panel" value="" style="whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#2f7d5b;strokeWidth=2;rounded=1;arcSize=12;" vertex="1" parent="1">
+          <mxGeometry x="1720" y="455" width="630" height="235" as="geometry"/>
+        </mxCell>
+        <mxCell id="relation_gate_title" value="&lt;b&gt;RELATION COMPLIANCE GATE · V(r)&lt;/b&gt;" style="whiteSpace=wrap;html=1;fontFamily=Arial;fontSize=19;fontColor=#216244;fillColor=#dcefe3;strokeColor=#2f7d5b;strokeWidth=2;rounded=1;arcSize=10;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="1740" y="472" width="590" height="42" as="geometry"/>
+        </mxCell>
+        <mxCell id="relation_checks" value="&lt;b&gt;ALL SIX CHECKS&lt;/b&gt;&lt;br&gt;① valid, distinct endpoint references&lt;br&gt;② known relation type&lt;br&gt;③ legal endpoint-type signature&lt;br&gt;④ permitted claim status&lt;br&gt;⑤ well-formed evidence&lt;br&gt;⑥ local endpoint co-occurrence" style="whiteSpace=wrap;html=1;fontFamily=Arial;fontSize=15;fontColor=#216244;fillColor=#f4fbf6;strokeColor=#76a98a;strokeWidth=2;rounded=1;arcSize=10;align=left;spacingLeft=14;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="1745" y="530" width="360" height="140" as="geometry"/>
+        </mxCell>
+        <mxCell id="relation_and" value="&lt;b&gt;AND&lt;/b&gt;" style="whiteSpace=wrap;html=1;fontFamily=Arial;fontSize=17;fontColor=#ffffff;fillColor=#4f9d69;strokeColor=#216244;strokeWidth=2;shape=rhombus;perimeter=rhombusPerimeter;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="2120" y="565" width="65" height="65" as="geometry"/>
+        </mxCell>
+        <mxCell id="r_evge" value="&lt;b&gt;R_EVGE&lt;/b&gt;&lt;br&gt;evidence-verified relations" style="whiteSpace=wrap;html=1;fontFamily=Arial;fontSize=16;fontColor=#216244;fillColor=#dcefe3;strokeColor=#2f7d5b;strokeWidth=2;rounded=1;arcSize=10;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="2200" y="545" width="125" height="105" as="geometry"/>
+        </mxCell>
+
+        <!-- Entity acceptance gate -->
+        <mxCell id="entity_gate_panel" value="" style="whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#2f7d5b;strokeWidth=2;rounded=1;arcSize=12;" vertex="1" parent="1">
+          <mxGeometry x="1720" y="715" width="630" height="265" as="geometry"/>
+        </mxCell>
+        <mxCell id="entity_gate_title" value="&lt;b&gt;ENTITY ACCEPTANCE GATE · A(e)&lt;/b&gt;" style="whiteSpace=wrap;html=1;fontFamily=Arial;fontSize=19;fontColor=#216244;fillColor=#dcefe3;strokeColor=#2f7d5b;strokeWidth=2;rounded=1;arcSize=10;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="1740" y="732" width="590" height="42" as="geometry"/>
+        </mxCell>
+        <mxCell id="agree_signal" value="&lt;b&gt;EAE ↔ HRGE&lt;/b&gt;&lt;br&gt;same normalized&lt;br&gt;text + type" style="whiteSpace=wrap;html=1;fontFamily=Arial;fontSize=15;fontColor=#17324d;fillColor=#eaf2fb;strokeColor=#2f6f9f;strokeWidth=2;rounded=1;arcSize=10;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="1745" y="795" width="165" height="102" as="geometry"/>
+        </mxCell>
+        <mxCell id="anchor_signal" value="&lt;b&gt;SOURCE ANCHOR&lt;/b&gt;&lt;br&gt;same-type,&lt;br&gt;source-gated match" style="whiteSpace=wrap;html=1;fontFamily=Arial;fontSize=15;fontColor=#7a4e00;fillColor=#fff8e8;strokeColor=#b7791f;strokeWidth=2;rounded=1;arcSize=10;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="1922" y="795" width="165" height="102" as="geometry"/>
+        </mxCell>
+        <mxCell id="endpoint_signal" value="&lt;b&gt;VERIFIED ENDPOINT&lt;/b&gt;&lt;br&gt;participates in an&lt;br&gt;R_EVGE relation" style="whiteSpace=wrap;html=1;fontFamily=Arial;fontSize=15;fontColor=#216244;fillColor=#eaf6ef;strokeColor=#2f7d5b;strokeWidth=2;rounded=1;arcSize=10;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="2099" y="795" width="165" height="102" as="geometry"/>
+        </mxCell>
+        <mxCell id="entity_or" value="&lt;b&gt;ANY / OR&lt;/b&gt;" style="whiteSpace=wrap;html=1;fontFamily=Arial;fontSize=16;fontColor=#ffffff;fillColor=#4f9d69;strokeColor=#216244;strokeWidth=2;shape=hexagon;perimeter=hexagonPerimeter2;fixedSize=1;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="1825" y="918" width="150" height="45" as="geometry"/>
+        </mxCell>
+        <mxCell id="accepted_entities" value="&lt;b&gt;E_CFE · ACCEPTED ENTITIES&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size: 14px;&quot;&gt;normalized text–type deduplication&lt;/font&gt;" style="whiteSpace=wrap;html=1;fontFamily=Arial;fontSize=16;fontColor=#216244;fillColor=#dcefe3;strokeColor=#2f7d5b;strokeWidth=2;rounded=1;arcSize=10;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="2010" y="910" width="310" height="60" as="geometry"/>
+        </mxCell>
+
+        <!-- Final PGE output -->
+        <mxCell id="final_panel" value="" style="whiteSpace=wrap;html=1;fillColor=#fffdf5;strokeColor=#b7791f;strokeWidth=3;rounded=1;arcSize=16;" vertex="1" parent="1">
+          <mxGeometry x="2420" y="350" width="530" height="655" as="geometry"/>
+        </mxCell>
+        <mxCell id="final_title" value="&lt;b&gt;FINAL PGE PREDICTION&lt;/b&gt;" style="whiteSpace=wrap;html=1;fontFamily=Arial;fontSize=22;fontColor=#ffffff;fillColor=#b7791f;strokeColor=#b7791f;strokeWidth=2;rounded=1;arcSize=10;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="2450" y="375" width="470" height="55" as="geometry"/>
+        </mxCell>
+        <mxCell id="pge_compose" value="&lt;b&gt;ENDPOINT-FILTERED COMPOSITION&lt;/b&gt;&lt;br&gt;retain verified relation only when both endpoints survive" style="whiteSpace=wrap;html=1;fontFamily=Arial;fontSize=17;fontColor=#216244;fillColor=#eaf6ef;strokeColor=#2f7d5b;strokeWidth=2;rounded=1;arcSize=10;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="2480" y="465" width="410" height="82" as="geometry"/>
+        </mxCell>
+        <mxCell id="graph_boundary" value="" style="shape=cloud;whiteSpace=wrap;html=1;size=0.2;fillColor=#ffffff;strokeColor=#9aa4b2;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="2515" y="585" width="340" height="270" as="geometry"/>
+        </mxCell>
+        <mxCell id="graph_n1" value="e1" style="whiteSpace=wrap;html=1;fontFamily=Arial;fontSize=15;fontColor=#17324d;fillColor=#9dc3d4;strokeColor=#2f6f9f;strokeWidth=2;ellipse;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="2580" y="625" width="64" height="64" as="geometry"/>
+        </mxCell>
+        <mxCell id="graph_n2" value="e2" style="whiteSpace=wrap;html=1;fontFamily=Arial;fontSize=15;fontColor=#513c7a;fillColor=#d5c6e6;strokeColor=#7257a6;strokeWidth=2;ellipse;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="2740" y="625" width="64" height="64" as="geometry"/>
+        </mxCell>
+        <mxCell id="graph_n3" value="e3" style="whiteSpace=wrap;html=1;fontFamily=Arial;fontSize=16;fontColor=#216244;fillColor=#92c6b0;strokeColor=#2f7d5b;strokeWidth=3;ellipse;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="2660" y="700" width="82" height="82" as="geometry"/>
+        </mxCell>
+        <mxCell id="graph_n4" value="e4" style="whiteSpace=wrap;html=1;fontFamily=Arial;fontSize=15;fontColor=#7a4e00;fillColor=#ead1a8;strokeColor=#b7791f;strokeWidth=2;ellipse;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="2550" y="735" width="64" height="64" as="geometry"/>
+        </mxCell>
+        <mxCell id="graph_n5" value="e5" style="whiteSpace=wrap;html=1;fontFamily=Arial;fontSize=15;fontColor=#7c3448;fillColor=#edb8c6;strokeColor=#b84c6a;strokeWidth=2;ellipse;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="2790" y="735" width="64" height="64" as="geometry"/>
+        </mxCell>
+        <mxCell id="graph_n6" value="e6" style="whiteSpace=wrap;html=1;fontFamily=Arial;fontSize=15;fontColor=#7a4e00;fillColor=#f0d58a;strokeColor=#b7791f;strokeWidth=2;ellipse;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="2605" y="802" width="64" height="64" as="geometry"/>
+        </mxCell>
+        <mxCell id="graph_n7" value="e7" style="whiteSpace=wrap;html=1;fontFamily=Arial;fontSize=15;fontColor=#216244;fillColor=#b8d8ca;strokeColor=#2f7d5b;strokeWidth=2;ellipse;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="2735" y="802" width="64" height="64" as="geometry"/>
+        </mxCell>
+        <mxCell id="pge_formula" value="&lt;b&gt;PGE = E_CFE + endpoint-filtered R_EVGE&lt;/b&gt;&lt;br&gt;directed, typed, evidence-linked entity–relation graph" style="whiteSpace=wrap;html=1;fontFamily=Arial;fontSize=17;fontColor=#7a4e00;fillColor=#fff4d6;strokeColor=#b7791f;strokeWidth=2;rounded=1;arcSize=10;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="2470" y="890" width="430" height="82" as="geometry"/>
+        </mxCell>
+
+        <!-- Legend -->
+        <mxCell id="legend_panel" value="" style="whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#9aa4b2;strokeWidth=2;rounded=1;arcSize=12;" vertex="1" parent="1">
+          <mxGeometry x="50" y="1140" width="390" height="435" as="geometry"/>
+        </mxCell>
+        <mxCell id="legend_title" value="&lt;b&gt;FIGURE LEGEND&lt;/b&gt;" style="whiteSpace=wrap;html=1;fontFamily=Arial;fontSize=20;fontColor=#17324d;fillColor=#f0f2f5;strokeColor=#9aa4b2;strokeWidth=2;rounded=1;arcSize=10;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="75" y="1160" width="340" height="48" as="geometry"/>
+        </mxCell>
+        <mxCell id="lg1" value="" style="whiteSpace=wrap;html=1;fillColor=#cfe2f3;strokeColor=#2f6f9f;strokeWidth=2;rounded=1;arcSize=8;" vertex="1" parent="1"><mxGeometry x="82" y="1235" width="48" height="30" as="geometry"/></mxCell>
+        <mxCell id="lgt1" value="Frozen neural backbone" style="whiteSpace=wrap;html=1;fontFamily=Arial;fontSize=17;fontColor=#17324d;fillColor=none;strokeColor=none;align=left;verticalAlign=middle;" vertex="1" parent="1"><mxGeometry x="145" y="1228" width="250" height="44" as="geometry"/></mxCell>
+        <mxCell id="lg2" value="" style="whiteSpace=wrap;html=1;fillColor=#e5d8f3;strokeColor=#7257a6;strokeWidth=2;rounded=1;arcSize=8;" vertex="1" parent="1"><mxGeometry x="82" y="1288" width="48" height="30" as="geometry"/></mxCell>
+        <mxCell id="lgt2" value="Trainable QLoRA adapter" style="whiteSpace=wrap;html=1;fontFamily=Arial;fontSize=17;fontColor=#513c7a;fillColor=none;strokeColor=none;align=left;verticalAlign=middle;" vertex="1" parent="1"><mxGeometry x="145" y="1281" width="250" height="44" as="geometry"/></mxCell>
+        <mxCell id="lg3" value="" style="whiteSpace=wrap;html=1;fillColor=#fff4d6;strokeColor=#b7791f;strokeWidth=2;rounded=1;arcSize=8;" vertex="1" parent="1"><mxGeometry x="82" y="1341" width="48" height="30" as="geometry"/></mxCell>
+        <mxCell id="lgt3" value="Source and KG context" style="whiteSpace=wrap;html=1;fontFamily=Arial;fontSize=17;fontColor=#7a4e00;fillColor=none;strokeColor=none;align=left;verticalAlign=middle;" vertex="1" parent="1"><mxGeometry x="145" y="1334" width="250" height="44" as="geometry"/></mxCell>
+        <mxCell id="lg4" value="" style="whiteSpace=wrap;html=1;fillColor=#eaf6ef;strokeColor=#2f7d5b;strokeWidth=2;rounded=1;arcSize=8;" vertex="1" parent="1"><mxGeometry x="82" y="1394" width="48" height="30" as="geometry"/></mxCell>
+        <mxCell id="lgt4" value="Deterministic verification / gating" style="whiteSpace=wrap;html=1;fontFamily=Arial;fontSize=17;fontColor=#216244;fillColor=none;strokeColor=none;align=left;verticalAlign=middle;" vertex="1" parent="1"><mxGeometry x="145" y="1387" width="250" height="44" as="geometry"/></mxCell>
+        <mxCell id="lg5" value="" style="whiteSpace=wrap;html=1;fillColor=#fff0c2;strokeColor=#b7791f;strokeWidth=2;rounded=1;arcSize=8;" vertex="1" parent="1"><mxGeometry x="82" y="1447" width="48" height="30" as="geometry"/></mxCell>
+        <mxCell id="lgt5" value="Structured prediction" style="whiteSpace=wrap;html=1;fontFamily=Arial;fontSize=17;fontColor=#7a4e00;fillColor=none;strokeColor=none;align=left;verticalAlign=middle;" vertex="1" parent="1"><mxGeometry x="145" y="1440" width="250" height="44" as="geometry"/></mxCell>
+        <mxCell id="lg6" value="" style="whiteSpace=wrap;html=1;fillColor=#f7f8fa;strokeColor=#7f8995;strokeWidth=2;rounded=1;arcSize=8;dashed=1;dashPattern=8 6;" vertex="1" parent="1"><mxGeometry x="82" y="1500" width="48" height="30" as="geometry"/></mxCell>
+        <mxCell id="lgt6" value="Baseline / ablation-only path" style="whiteSpace=wrap;html=1;fontFamily=Arial;fontSize=17;fontColor=#5b6573;fillColor=none;strokeColor=none;align=left;verticalAlign=middle;" vertex="1" parent="1"><mxGeometry x="145" y="1493" width="250" height="44" as="geometry"/></mxCell>
+
+        <!-- Expanded Transformer detail -->
+        <mxCell id="decoder_panel" value="" style="whiteSpace=wrap;html=1;fillColor=#f8fbfd;strokeColor=#2f6f9f;strokeWidth=2;rounded=1;arcSize=12;dashed=1;dashPattern=8 6;" vertex="1" parent="1">
+          <mxGeometry x="475" y="1105" width="1220" height="500" as="geometry"/>
+        </mxCell>
+        <mxCell id="decoder_title" value="&lt;b&gt;QWEN3-4B DECODER-ONLY TRANSFORMER · EXPANDED NEURAL BLOCK&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size: 15px;&quot;&gt;same architecture inside SOE, EAE and HRGE towers&lt;/font&gt;" style="whiteSpace=wrap;html=1;fontFamily=Arial;fontSize=20;fontColor=#ffffff;fillColor=#2f6f9f;strokeColor=#2f6f9f;strokeWidth=2;rounded=1;arcSize=10;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="500" y="1125" width="1170" height="62" as="geometry"/>
+        </mxCell>
+        <mxCell id="detail_embed" value="Token&lt;br&gt;Embedding" style="whiteSpace=wrap;html=1;fontFamily=Arial;fontSize=16;fontColor=#17324d;fillColor=#dbeaf7;strokeColor=#2f6f9f;strokeWidth=2;rounded=1;arcSize=8;align=center;verticalAlign=middle;" vertex="1" parent="1"><mxGeometry x="510" y="1210" width="145" height="64" as="geometry"/></mxCell>
+        <mxCell id="detail_stack" value="&lt;b&gt;36 × Decoder Blocks&lt;/b&gt;&lt;br&gt;hidden size 2560" style="whiteSpace=wrap;html=1;fontFamily=Arial;fontSize=16;fontColor=#17324d;fillColor=#cfe2f3;strokeColor=#2f6f9f;strokeWidth=2;rounded=1;arcSize=8;align=center;verticalAlign=middle;" vertex="1" parent="1"><mxGeometry x="695" y="1210" width="210" height="64" as="geometry"/></mxCell>
+        <mxCell id="detail_finalnorm" value="Final&lt;br&gt;RMSNorm" style="whiteSpace=wrap;html=1;fontFamily=Arial;fontSize=16;fontColor=#17324d;fillColor=#dbeaf7;strokeColor=#2f6f9f;strokeWidth=2;rounded=1;arcSize=8;align=center;verticalAlign=middle;" vertex="1" parent="1"><mxGeometry x="945" y="1210" width="145" height="64" as="geometry"/></mxCell>
+        <mxCell id="detail_lmhead" value="LM Head" style="whiteSpace=wrap;html=1;fontFamily=Arial;fontSize=16;fontColor=#7a4e00;fillColor=#fff0c2;strokeColor=#b7791f;strokeWidth=2;rounded=1;arcSize=8;align=center;verticalAlign=middle;" vertex="1" parent="1"><mxGeometry x="1130" y="1210" width="145" height="64" as="geometry"/></mxCell>
+        <mxCell id="detail_sequence" value="Autoregressive structured output&lt;br&gt;[(span,type)] + [(head,relation,tail)]" style="whiteSpace=wrap;html=1;fontFamily=Arial;fontSize=15;fontColor=#7a4e00;fillColor=#fff4d6;strokeColor=#b7791f;strokeWidth=2;rounded=1;arcSize=8;align=center;verticalAlign=middle;" vertex="1" parent="1"><mxGeometry x="1315" y="1210" width="330" height="64" as="geometry"/></mxCell>
+        <mxCell id="block_label" value="ONE REPEATED DECODER BLOCK" style="whiteSpace=wrap;html=1;fontFamily=Arial;fontSize=16;fontStyle=1;fontColor=#513c7a;fillColor=#f1ecfa;strokeColor=#7257a6;strokeWidth=2;rounded=1;arcSize=8;align=center;verticalAlign=middle;" vertex="1" parent="1"><mxGeometry x="510" y="1300" width="1135" height="40" as="geometry"/></mxCell>
+        <mxCell id="block_input" value="Hidden&lt;br&gt;states" style="whiteSpace=wrap;html=1;fontFamily=Arial;fontSize=15;fontColor=#17324d;fillColor=#ffffff;strokeColor=#2f6f9f;strokeWidth=2;rounded=1;arcSize=8;align=center;verticalAlign=middle;" vertex="1" parent="1"><mxGeometry x="515" y="1370" width="105" height="78" as="geometry"/></mxCell>
+        <mxCell id="block_norm1" value="RMSNorm" style="whiteSpace=wrap;html=1;fontFamily=Arial;fontSize=15;fontColor=#17324d;fillColor=#dbeaf7;strokeColor=#2f6f9f;strokeWidth=2;rounded=1;arcSize=8;align=center;verticalAlign=middle;" vertex="1" parent="1"><mxGeometry x="650" y="1370" width="105" height="78" as="geometry"/></mxCell>
+        <mxCell id="block_attn" value="&lt;b&gt;CAUSAL GQA + RoPE&lt;/b&gt;&lt;br&gt;32 query / 8 KV heads&lt;br&gt;&lt;font color=&quot;#513c7a&quot;&gt;LoRA: q, k, v, o projections&lt;/font&gt;" style="whiteSpace=wrap;html=1;fontFamily=Arial;fontSize=15;fontColor=#17324d;fillColor=#cfe2f3;strokeColor=#2f6f9f;strokeWidth=2;rounded=1;arcSize=8;align=center;verticalAlign=middle;" vertex="1" parent="1"><mxGeometry x="785" y="1355" width="230" height="108" as="geometry"/></mxCell>
+        <mxCell id="block_add1" value="+&lt;br&gt;Residual" style="whiteSpace=wrap;html=1;fontFamily=Arial;fontSize=15;fontColor=#216244;fillColor=#eaf6ef;strokeColor=#2f7d5b;strokeWidth=2;ellipse;align=center;verticalAlign=middle;" vertex="1" parent="1"><mxGeometry x="1045" y="1370" width="78" height="78" as="geometry"/></mxCell>
+        <mxCell id="block_norm2" value="RMSNorm" style="whiteSpace=wrap;html=1;fontFamily=Arial;fontSize=15;fontColor=#17324d;fillColor=#dbeaf7;strokeColor=#2f6f9f;strokeWidth=2;rounded=1;arcSize=8;align=center;verticalAlign=middle;" vertex="1" parent="1"><mxGeometry x="1150" y="1370" width="105" height="78" as="geometry"/></mxCell>
+        <mxCell id="block_mlp" value="&lt;b&gt;SWIGLU MLP&lt;/b&gt;&lt;br&gt;SiLU(gate) ⊙ up → down&lt;br&gt;FFN size 9728&lt;br&gt;&lt;font color=&quot;#513c7a&quot;&gt;LoRA: gate, up, down projections&lt;/font&gt;" style="whiteSpace=wrap;html=1;fontFamily=Arial;fontSize=14;fontColor=#17324d;fillColor=#cfe2f3;strokeColor=#2f6f9f;strokeWidth=2;rounded=1;arcSize=8;align=center;verticalAlign=middle;" vertex="1" parent="1"><mxGeometry x="1285" y="1355" width="235" height="108" as="geometry"/></mxCell>
+        <mxCell id="block_add2" value="+&lt;br&gt;Residual" style="whiteSpace=wrap;html=1;fontFamily=Arial;fontSize=15;fontColor=#216244;fillColor=#eaf6ef;strokeColor=#2f7d5b;strokeWidth=2;ellipse;align=center;verticalAlign=middle;" vertex="1" parent="1"><mxGeometry x="1550" y="1370" width="78" height="78" as="geometry"/></mxCell>
+        <mxCell id="qlora_note" value="&lt;b&gt;QLoRA protocol:&lt;/b&gt; frozen 4-bit NF4 base · double quantization · BF16 compute · r=8 · α=16 · dropout=0.05" style="whiteSpace=wrap;html=1;fontFamily=Arial;fontSize=16;fontColor=#513c7a;fillColor=#f1ecfa;strokeColor=#7257a6;strokeWidth=2;rounded=1;arcSize=8;align=center;verticalAlign=middle;" vertex="1" parent="1"><mxGeometry x="515" y="1490" width="1115" height="64" as="geometry"/></mxCell>
+
+        <!-- CFE ablation -->
+        <mxCell id="cfe_panel" value="" style="whiteSpace=wrap;html=1;fillColor=#f7f8fa;strokeColor=#7f8995;strokeWidth=2;rounded=1;arcSize=12;dashed=1;dashPattern=8 6;" vertex="1" parent="1">
+          <mxGeometry x="1735" y="1105" width="645" height="500" as="geometry"/>
+        </mxCell>
+        <mxCell id="cfe_title" value="&lt;b&gt;CFE ABLATION PATH&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size: 15px;&quot;&gt;deterministic composition · not an additional neural network&lt;/font&gt;" style="whiteSpace=wrap;html=1;fontFamily=Arial;fontSize=20;fontColor=#ffffff;fillColor=#7f8995;strokeColor=#7f8995;strokeWidth=2;rounded=1;arcSize=10;align=center;verticalAlign=middle;" vertex="1" parent="1"><mxGeometry x="1760" y="1125" width="595" height="64" as="geometry"/></mxCell>
+        <mxCell id="cfe_e" value="&lt;b&gt;E_CFE&lt;/b&gt;&lt;br&gt;accepted entities" style="whiteSpace=wrap;html=1;fontFamily=Arial;fontSize=16;fontColor=#216244;fillColor=#eaf6ef;strokeColor=#2f7d5b;strokeWidth=2;rounded=1;arcSize=10;align=center;verticalAlign=middle;" vertex="1" parent="1"><mxGeometry x="1790" y="1230" width="220" height="72" as="geometry"/></mxCell>
+        <mxCell id="cfe_r" value="&lt;b&gt;RAW R_HRGE&lt;/b&gt;&lt;br&gt;unverified relations" style="whiteSpace=wrap;html=1;fontFamily=Arial;fontSize=16;fontColor=#7a4e00;fillColor=#fff4d6;strokeColor=#b7791f;strokeWidth=2;rounded=1;arcSize=10;align=center;verticalAlign=middle;" vertex="1" parent="1"><mxGeometry x="2095" y="1230" width="220" height="72" as="geometry"/></mxCell>
+        <mxCell id="cfe_filter" value="&lt;b&gt;ENDPOINT FILTER&lt;/b&gt;&lt;br&gt;retain raw relation only when both endpoints are in E_CFE" style="whiteSpace=wrap;html=1;fontFamily=Arial;fontSize=17;fontColor=#5b6573;fillColor=#ffffff;strokeColor=#7f8995;strokeWidth=2;rounded=1;arcSize=10;align=center;verticalAlign=middle;" vertex="1" parent="1"><mxGeometry x="1850" y="1360" width="420" height="88" as="geometry"/></mxCell>
+        <mxCell id="cfe_output" value="&lt;b&gt;CFE = E_CFE + endpoint-filtered raw R_HRGE&lt;/b&gt;" style="whiteSpace=wrap;html=1;fontFamily=Arial;fontSize=17;fontColor=#5b6573;fillColor=#f0f2f5;strokeColor=#7f8995;strokeWidth=2;rounded=1;arcSize=10;align=center;verticalAlign=middle;" vertex="1" parent="1"><mxGeometry x="1810" y="1500" width="500" height="62" as="geometry"/></mxCell>
+
+        <!-- Architecture truth note -->
+        <mxCell id="truth_panel" value="&lt;b&gt;ARCHITECTURE SEMANTICS&lt;/b&gt;&lt;br&gt;&lt;br&gt;• SOE, EAE and HRGE are separate Qwen3-4B + QLoRA neural models.&lt;br&gt;&lt;br&gt;• KG records are serialized into prompts; there is no graph neural network.&lt;br&gt;&lt;br&gt;• EVGE, CFE and PGE are deterministic filters/compositions, not trained networks.&lt;br&gt;&lt;br&gt;• The diagram shows logical parallelism; the single-GPU run is sequential." style="whiteSpace=wrap;html=1;fontFamily=Arial;fontSize=17;fontColor=#17324d;fillColor=#f7fafc;strokeColor=#9fb3c8;strokeWidth=2;rounded=1;arcSize=12;align=left;spacingLeft=18;spacingRight=14;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="2420" y="1105" width="530" height="500" as="geometry"/>
+        </mxCell>
+
+        <!-- Main data-flow edges -->
+        <mxCell id="kg_to_exact" value="exact match + balancing" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#b7791f;strokeWidth=2;fontFamily=Arial;fontSize=14;fontColor=#7a4e00;labelBackgroundColor=#ffffff;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="subset_kg" target="exact_context"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="source_to_exact" value="source strings" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#b7791f;strokeWidth=2;fontFamily=Arial;fontSize=13;fontColor=#7a4e00;labelBackgroundColor=#ffffff;exitX=1;exitY=0.8;entryX=0;entryY=0.45;" edge="1" parent="1" source="source_document" target="exact_context"><mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="420" y="211"/><mxPoint x="420" y="303"/></Array></mxGeometry></mxCell>
+        <mxCell id="kg_to_bge" value="eligible relation patterns" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#2f6f9f;strokeWidth=2;fontFamily=Arial;fontSize=14;fontColor=#17324d;labelBackgroundColor=#ffffff;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="subset_kg" target="bge_encoder"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="source_to_bge" value="source segments q_i" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#2f6f9f;strokeWidth=2;fontFamily=Arial;fontSize=13;fontColor=#17324d;labelBackgroundColor=#ffffff;exitX=0.5;exitY=0;entryX=0.5;entryY=0;" edge="1" parent="1" source="source_document" target="bge_encoder"><mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="220" y="92"/><mxPoint x="1070" y="92"/></Array></mxGeometry></mxCell>
+        <mxCell id="bge_to_retrieval" value="dense embeddings" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#2f6f9f;strokeWidth=2;fontFamily=Arial;fontSize=14;fontColor=#17324d;labelBackgroundColor=#ffffff;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="bge_encoder" target="semantic_retrieval"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="retrieval_to_context" value="selected patterns" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#2f7d5b;strokeWidth=2;fontFamily=Arial;fontSize=14;fontColor=#216244;labelBackgroundColor=#ffffff;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="semantic_retrieval" target="hrge_context"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="note_to_bge" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=open;endFill=0;strokeColor=#7f8995;strokeWidth=2;dashed=1;dashPattern=8 6;exitX=0;exitY=0.5;entryX=1;entryY=0.5;" edge="1" parent="1" source="retrieval_note" target="hrge_context"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="source_to_soe" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#b7791f;strokeWidth=2;exitX=0.25;exitY=1;entryX=0;entryY=0.5;" edge="1" parent="1" source="source_document" target="soe_prompt"><mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="35" y="270"/><mxPoint x="35" y="503"/></Array></mxGeometry></mxCell>
+        <mxCell id="source_to_eae" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#b7791f;strokeWidth=2;exitX=0.55;exitY=1;entryX=0;entryY=0.5;" edge="1" parent="1" source="source_document" target="eae_prompt"><mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="410" y="310"/><mxPoint x="410" y="503"/></Array></mxGeometry></mxCell>
+        <mxCell id="source_to_hrge" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#b7791f;strokeWidth=2;exitX=0.85;exitY=1;entryX=0;entryY=0.5;" edge="1" parent="1" source="source_document" target="hrge_prompt"><mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="435" y="335"/><mxPoint x="920" y="335"/><mxPoint x="920" y="503"/></Array></mxGeometry></mxCell>
+        <mxCell id="exact_to_eae" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#b7791f;strokeWidth=2;exitX=1;exitY=0.5;entryX=1;entryY=0.5;" edge="1" parent="1" source="exact_context" target="eae_prompt"><mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="920" y="307"/><mxPoint x="920" y="503"/></Array></mxGeometry></mxCell>
+        <mxCell id="context_to_hrge" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#b7791f;strokeWidth=2;exitX=0;exitY=0.75;entryX=1;entryY=0.5;" edge="1" parent="1" source="hrge_context" target="hrge_prompt"><mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="1390" y="205"/><mxPoint x="1390" y="503"/></Array></mxGeometry></mxCell>
+
+        <!-- Sequential tower edges -->
+        <mxCell id="soe_1" value="" style="edgeStyle=orthogonalEdgeStyle;html=1;endArrow=block;endFill=1;strokeColor=#2f6f9f;strokeWidth=2;" edge="1" parent="1" source="soe_prompt" target="soe_embed"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="soe_2" value="" style="edgeStyle=orthogonalEdgeStyle;html=1;endArrow=block;endFill=1;strokeColor=#2f6f9f;strokeWidth=2;" edge="1" parent="1" source="soe_embed" target="soe_backbone"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="soe_3" value="" style="edgeStyle=orthogonalEdgeStyle;html=1;endArrow=block;endFill=1;strokeColor=#2f6f9f;strokeWidth=2;" edge="1" parent="1" source="soe_backbone" target="soe_head"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="soe_4" value="" style="edgeStyle=orthogonalEdgeStyle;html=1;endArrow=block;endFill=1;strokeColor=#2f7d5b;strokeWidth=2;" edge="1" parent="1" source="soe_head" target="soe_expand"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="soe_5" value="" style="edgeStyle=orthogonalEdgeStyle;html=1;endArrow=block;endFill=1;strokeColor=#7f8995;strokeWidth=2;" edge="1" parent="1" source="soe_expand" target="soe_output"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="soe_eval_edge" value="baseline only" style="edgeStyle=orthogonalEdgeStyle;html=1;endArrow=block;endFill=1;strokeColor=#7f8995;strokeWidth=2;dashed=1;dashPattern=8 6;fontFamily=Arial;fontSize=14;fontColor=#5b6573;labelBackgroundColor=#ffffff;" edge="1" parent="1" source="soe_output" target="baseline_eval"><mxGeometry relative="1" as="geometry"/></mxCell>
+
+        <mxCell id="eae_1" value="" style="edgeStyle=orthogonalEdgeStyle;html=1;endArrow=block;endFill=1;strokeColor=#2f6f9f;strokeWidth=2;" edge="1" parent="1" source="eae_prompt" target="eae_embed"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="eae_2" value="" style="edgeStyle=orthogonalEdgeStyle;html=1;endArrow=block;endFill=1;strokeColor=#2f6f9f;strokeWidth=2;" edge="1" parent="1" source="eae_embed" target="eae_backbone"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="eae_3" value="" style="edgeStyle=orthogonalEdgeStyle;html=1;endArrow=block;endFill=1;strokeColor=#2f6f9f;strokeWidth=2;" edge="1" parent="1" source="eae_backbone" target="eae_head"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="eae_4" value="" style="edgeStyle=orthogonalEdgeStyle;html=1;endArrow=block;endFill=1;strokeColor=#2f7d5b;strokeWidth=2;" edge="1" parent="1" source="eae_head" target="eae_expand"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="eae_5" value="" style="edgeStyle=orthogonalEdgeStyle;html=1;endArrow=block;endFill=1;strokeColor=#b7791f;strokeWidth=2;" edge="1" parent="1" source="eae_expand" target="eae_output"><mxGeometry relative="1" as="geometry"/></mxCell>
+
+        <mxCell id="hrge_1" value="" style="edgeStyle=orthogonalEdgeStyle;html=1;endArrow=block;endFill=1;strokeColor=#2f6f9f;strokeWidth=2;" edge="1" parent="1" source="hrge_prompt" target="hrge_embed"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="hrge_2" value="" style="edgeStyle=orthogonalEdgeStyle;html=1;endArrow=block;endFill=1;strokeColor=#2f6f9f;strokeWidth=2;" edge="1" parent="1" source="hrge_embed" target="hrge_backbone"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="hrge_3" value="" style="edgeStyle=orthogonalEdgeStyle;html=1;endArrow=block;endFill=1;strokeColor=#2f6f9f;strokeWidth=2;" edge="1" parent="1" source="hrge_backbone" target="hrge_head"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="hrge_4" value="" style="edgeStyle=orthogonalEdgeStyle;html=1;endArrow=block;endFill=1;strokeColor=#2f7d5b;strokeWidth=2;" edge="1" parent="1" source="hrge_head" target="hrge_expand"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="hrge_5" value="" style="edgeStyle=orthogonalEdgeStyle;html=1;endArrow=block;endFill=1;strokeColor=#b7791f;strokeWidth=2;" edge="1" parent="1" source="hrge_expand" target="hrge_output"><mxGeometry relative="1" as="geometry"/></mxCell>
+
+        <!-- Candidate and gate edges -->
+        <mxCell id="eae_to_entities" value="entity candidates" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#b7791f;strokeWidth=2;fontFamily=Arial;fontSize=14;fontColor=#7a4e00;labelBackgroundColor=#ffffff;exitX=0.5;exitY=1;entryX=0;entryY=0.5;" edge="1" parent="1" source="eae_output" target="e_eae"><mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="690" y="1035"/><mxPoint x="1385" y="1035"/><mxPoint x="1385" y="731"/></Array></mxGeometry></mxCell>
+        <mxCell id="hrge_to_relations" value="relations" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#b7791f;strokeWidth=2;fontFamily=Arial;fontSize=14;fontColor=#7a4e00;labelBackgroundColor=#ffffff;exitX=1;exitY=0.3;entryX=0;entryY=0.5;" edge="1" parent="1" source="hrge_output" target="r_hrge"><mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="1350" y="941"/><mxPoint x="1385" y="941"/><mxPoint x="1385" y="496"/></Array></mxGeometry></mxCell>
+        <mxCell id="hrge_to_entities" value="entities" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#b7791f;strokeWidth=2;fontFamily=Arial;fontSize=14;fontColor=#7a4e00;labelBackgroundColor=#ffffff;exitX=1;exitY=0.7;entryX=0;entryY=0.5;" edge="1" parent="1" source="hrge_output" target="e_hrge"><mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="1365" y="958"/><mxPoint x="1385" y="958"/><mxPoint x="1385" y="846"/></Array></mxGeometry></mxCell>
+        <mxCell id="r_to_checks" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#2f7d5b;strokeWidth=3;exitX=1;exitY=0.5;entryX=0;entryY=0.45;" edge="1" parent="1" source="r_hrge" target="relation_checks"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="checks_to_and" value="" style="edgeStyle=orthogonalEdgeStyle;html=1;endArrow=block;endFill=1;strokeColor=#2f7d5b;strokeWidth=2;" edge="1" parent="1" source="relation_checks" target="relation_and"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="and_to_evge" value="" style="edgeStyle=orthogonalEdgeStyle;html=1;endArrow=block;endFill=1;strokeColor=#2f7d5b;strokeWidth=2;" edge="1" parent="1" source="relation_and" target="r_evge"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="eae_to_agree" value="E_EAE" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#2f6f9f;strokeWidth=2;fontFamily=Arial;fontSize=13;fontColor=#17324d;labelBackgroundColor=#ffffff;exitX=1;exitY=0.45;entryX=0;entryY=0.35;" edge="1" parent="1" source="e_eae" target="agree_signal"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="hrge_to_agree" value="E_HRGE" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#2f6f9f;strokeWidth=2;fontFamily=Arial;fontSize=13;fontColor=#17324d;labelBackgroundColor=#ffffff;exitX=1;exitY=0.5;entryX=0;entryY=0.7;" edge="1" parent="1" source="e_hrge" target="agree_signal"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="hrge_to_anchor" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#b7791f;strokeWidth=2;exitX=1;exitY=0.75;entryX=0;entryY=0.5;" edge="1" parent="1" source="e_hrge" target="anchor_signal"><mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="1680" y="866"/><mxPoint x="1680" y="846"/></Array></mxGeometry></mxCell>
+        <mxCell id="evge_to_endpoint" value="verified endpoints" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#2f7d5b;strokeWidth=2;fontFamily=Arial;fontSize=13;fontColor=#216244;labelBackgroundColor=#ffffff;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="r_evge" target="endpoint_signal"><mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="2262" y="700"/><mxPoint x="2182" y="700"/></Array></mxGeometry></mxCell>
+        <mxCell id="sig1_to_or" value="" style="edgeStyle=orthogonalEdgeStyle;html=1;endArrow=block;endFill=1;strokeColor=#2f7d5b;strokeWidth=2;" edge="1" parent="1" source="agree_signal" target="entity_or"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="sig2_to_or" value="" style="edgeStyle=orthogonalEdgeStyle;html=1;endArrow=block;endFill=1;strokeColor=#2f7d5b;strokeWidth=2;" edge="1" parent="1" source="anchor_signal" target="entity_or"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="sig3_to_or" value="" style="edgeStyle=orthogonalEdgeStyle;html=1;endArrow=block;endFill=1;strokeColor=#2f7d5b;strokeWidth=2;" edge="1" parent="1" source="endpoint_signal" target="entity_or"><mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="2182" y="905"/><mxPoint x="1900" y="905"/></Array></mxGeometry></mxCell>
+        <mxCell id="or_to_entities" value="A(e)=1" style="edgeStyle=orthogonalEdgeStyle;html=1;endArrow=block;endFill=1;strokeColor=#2f7d5b;strokeWidth=2;fontFamily=Arial;fontSize=13;fontColor=#216244;labelBackgroundColor=#ffffff;" edge="1" parent="1" source="entity_or" target="accepted_entities"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="evge_to_pge" value="verified relations" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#2f7d5b;strokeWidth=3;fontFamily=Arial;fontSize=14;fontColor=#216244;labelBackgroundColor=#ffffff;exitX=1;exitY=0.4;entryX=0;entryY=0.3;" edge="1" parent="1" source="r_evge" target="pge_compose"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="entities_to_pge" value="accepted entities" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#2f7d5b;strokeWidth=3;fontFamily=Arial;fontSize=14;fontColor=#216244;labelBackgroundColor=#ffffff;exitX=1;exitY=0.5;entryX=0;entryY=0.75;" edge="1" parent="1" source="accepted_entities" target="pge_compose"><mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="2395" y="940"/><mxPoint x="2395" y="527"/></Array></mxGeometry></mxCell>
+        <mxCell id="compose_to_graph" value="" style="edgeStyle=orthogonalEdgeStyle;html=1;endArrow=block;endFill=1;strokeColor=#b7791f;strokeWidth=3;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="pge_compose" target="graph_boundary"><mxGeometry relative="1" as="geometry"/></mxCell>
+
+        <!-- Editable graph edges -->
+        <mxCell id="ge1" value="r1" style="edgeStyle=none;html=1;endArrow=block;endFill=1;strokeColor=#4f5965;strokeWidth=2;fontFamily=Arial;fontSize=12;fontColor=#4f5965;labelBackgroundColor=#ffffff;" edge="1" parent="1" source="graph_n1" target="graph_n3"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="ge2" value="r2" style="edgeStyle=none;html=1;endArrow=block;endFill=1;strokeColor=#4f5965;strokeWidth=2;fontFamily=Arial;fontSize=12;fontColor=#4f5965;labelBackgroundColor=#ffffff;" edge="1" parent="1" source="graph_n2" target="graph_n3"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="ge3" value="r3" style="edgeStyle=none;html=1;endArrow=block;endFill=1;strokeColor=#4f5965;strokeWidth=2;fontFamily=Arial;fontSize=12;fontColor=#4f5965;labelBackgroundColor=#ffffff;" edge="1" parent="1" source="graph_n4" target="graph_n3"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="ge4" value="r4" style="edgeStyle=none;html=1;endArrow=block;endFill=1;strokeColor=#4f5965;strokeWidth=2;fontFamily=Arial;fontSize=12;fontColor=#4f5965;labelBackgroundColor=#ffffff;" edge="1" parent="1" source="graph_n3" target="graph_n5"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="ge5" value="r5" style="edgeStyle=none;html=1;endArrow=block;endFill=1;strokeColor=#4f5965;strokeWidth=2;fontFamily=Arial;fontSize=12;fontColor=#4f5965;labelBackgroundColor=#ffffff;" edge="1" parent="1" source="graph_n3" target="graph_n6"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="ge6" value="r6" style="edgeStyle=none;html=1;endArrow=block;endFill=1;strokeColor=#4f5965;strokeWidth=2;fontFamily=Arial;fontSize=12;fontColor=#4f5965;labelBackgroundColor=#ffffff;" edge="1" parent="1" source="graph_n3" target="graph_n7"><mxGeometry relative="1" as="geometry"/></mxCell>
+
+        <!-- Decoder-detail edges -->
+        <mxCell id="dp1" value="" style="edgeStyle=orthogonalEdgeStyle;html=1;endArrow=block;endFill=1;strokeColor=#2f6f9f;strokeWidth=2;" edge="1" parent="1" source="detail_embed" target="detail_stack"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="dp2" value="" style="edgeStyle=orthogonalEdgeStyle;html=1;endArrow=block;endFill=1;strokeColor=#2f6f9f;strokeWidth=2;" edge="1" parent="1" source="detail_stack" target="detail_finalnorm"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="dp3" value="" style="edgeStyle=orthogonalEdgeStyle;html=1;endArrow=block;endFill=1;strokeColor=#2f6f9f;strokeWidth=2;" edge="1" parent="1" source="detail_finalnorm" target="detail_lmhead"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="dp4" value="" style="edgeStyle=orthogonalEdgeStyle;html=1;endArrow=block;endFill=1;strokeColor=#b7791f;strokeWidth=2;" edge="1" parent="1" source="detail_lmhead" target="detail_sequence"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="db1" value="" style="edgeStyle=orthogonalEdgeStyle;html=1;endArrow=block;endFill=1;strokeColor=#2f6f9f;strokeWidth=2;" edge="1" parent="1" source="block_input" target="block_norm1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="db2" value="" style="edgeStyle=orthogonalEdgeStyle;html=1;endArrow=block;endFill=1;strokeColor=#2f6f9f;strokeWidth=2;" edge="1" parent="1" source="block_norm1" target="block_attn"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="db3" value="" style="edgeStyle=orthogonalEdgeStyle;html=1;endArrow=block;endFill=1;strokeColor=#2f7d5b;strokeWidth=2;" edge="1" parent="1" source="block_attn" target="block_add1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="db4" value="" style="edgeStyle=orthogonalEdgeStyle;html=1;endArrow=block;endFill=1;strokeColor=#2f6f9f;strokeWidth=2;" edge="1" parent="1" source="block_add1" target="block_norm2"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="db5" value="" style="edgeStyle=orthogonalEdgeStyle;html=1;endArrow=block;endFill=1;strokeColor=#2f6f9f;strokeWidth=2;" edge="1" parent="1" source="block_norm2" target="block_mlp"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="db6" value="" style="edgeStyle=orthogonalEdgeStyle;html=1;endArrow=block;endFill=1;strokeColor=#2f7d5b;strokeWidth=2;" edge="1" parent="1" source="block_mlp" target="block_add2"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="db_res1" value="residual" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=open;endFill=0;strokeColor=#7257a6;strokeWidth=2;dashed=1;dashPattern=6 4;fontFamily=Arial;fontSize=12;fontColor=#513c7a;labelBackgroundColor=#ffffff;exitX=0.5;exitY=1;entryX=0.5;entryY=1;" edge="1" parent="1" source="block_input" target="block_add1"><mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="567" y="1475"/><mxPoint x="1084" y="1475"/></Array></mxGeometry></mxCell>
+        <mxCell id="db_res2" value="residual" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=open;endFill=0;strokeColor=#7257a6;strokeWidth=2;dashed=1;dashPattern=6 4;fontFamily=Arial;fontSize=12;fontColor=#513c7a;labelBackgroundColor=#ffffff;exitX=0.5;exitY=0;entryX=0.5;entryY=0;" edge="1" parent="1" source="block_add1" target="block_add2"><mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="1084" y="1345"/><mxPoint x="1589" y="1345"/></Array></mxGeometry></mxCell>
+        <mxCell id="tower_to_detail" value="expanded block" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=open;endFill=0;strokeColor=#2f6f9f;strokeWidth=2;dashed=1;dashPattern=8 6;fontFamily=Arial;fontSize=14;fontColor=#17324d;labelBackgroundColor=#ffffff;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="eae_backbone" target="decoder_title"><mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="690" y="1070"/><mxPoint x="1085" y="1070"/></Array></mxGeometry></mxCell>
+
+        <!-- CFE edges -->
+        <mxCell id="accepted_to_cfe" value="same entity set" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;strokeColor=#7f8995;strokeWidth=2;dashed=1;dashPattern=8 6;fontFamily=Arial;fontSize=13;fontColor=#5b6573;labelBackgroundColor=#ffffff;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="accepted_entities" target="cfe_e"><mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="2165" y="1065"/><mxPoint x="1900" y="1065"/></Array></mxGeometry></mxCell>
+        <mxCell id="raw_to_cfe" value="raw relations" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;strokeColor=#7f8995;strokeWidth=2;dashed=1;dashPattern=8 6;fontFamily=Arial;fontSize=13;fontColor=#5b6573;labelBackgroundColor=#ffffff;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="r_hrge" target="cfe_r"><mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="1537" y="1080"/><mxPoint x="2205" y="1080"/></Array></mxGeometry></mxCell>
+        <mxCell id="cfe_e_to_filter" value="" style="edgeStyle=orthogonalEdgeStyle;html=1;endArrow=block;endFill=1;strokeColor=#7f8995;strokeWidth=2;dashed=1;dashPattern=8 6;" edge="1" parent="1" source="cfe_e" target="cfe_filter"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="cfe_r_to_filter" value="" style="edgeStyle=orthogonalEdgeStyle;html=1;endArrow=block;endFill=1;strokeColor=#7f8995;strokeWidth=2;dashed=1;dashPattern=8 6;" edge="1" parent="1" source="cfe_r" target="cfe_filter"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="cfe_filter_to_output" value="" style="edgeStyle=orthogonalEdgeStyle;html=1;endArrow=block;endFill=1;strokeColor=#7f8995;strokeWidth=2;dashed=1;dashPattern=8 6;" edge="1" parent="1" source="cfe_filter" target="cfe_output"><mxGeometry relative="1" as="geometry"/></mxCell>
+
+        <mxCell id="footer" value="Architecture reconstructed from the supplied reference image and aligned with the frozen seed-42 public-data protocol · Qwen3-4B revision 1cfa9a7208912126459214e8b04321603b3df60c" style="whiteSpace=wrap;html=1;fontFamily=Arial;fontSize=14;fontColor=#6b7280;fillColor=none;strokeColor=none;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="80" y="1640" width="2840" height="35" as="geometry"/>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

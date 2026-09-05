@@ -64,6 +64,8 @@ def run_openai(
     _: bool,
     base_url: str | None,
     api_key_env: str,
+    reasoning_effort: str | None,
+    max_tokens: int,
 ) -> tuple[str, Any]:
     from openai import OpenAI
 
@@ -74,13 +76,13 @@ def run_openai(
     if base_url:
         client_kwargs["base_url"] = base_url.rstrip("/")
     client = OpenAI(**client_kwargs)
-    response = client.chat.completions.create(
-        model=model,
-        messages=[
+    request: dict[str, Any] = {
+        "model": model,
+        "messages": [
             {"role": "system", "content": job["system_instruction"]},
             {"role": "user", "content": user_payload(job)},
         ],
-        response_format={
+        "response_format": {
             "type": "json_schema",
             "json_schema": {
                 "name": "safety_risk_preannotation",
@@ -88,9 +90,12 @@ def run_openai(
                 "schema": schema,
             },
         },
-        temperature=0,
-        max_tokens=12000,
-    )
+        "temperature": 0,
+        "max_tokens": max_tokens,
+    }
+    if reasoning_effort:
+        request["reasoning_effort"] = reasoning_effort
+    response = client.chat.completions.create(**request)
     usage = response.usage.model_dump() if response.usage else None
     content = response.choices[0].message.content
     if not content:
@@ -128,6 +133,8 @@ def run(args: argparse.Namespace) -> int:
                 "model": args.model,
                 "prompt_version": job.get("prompt_version"),
                 "ontology_version": job.get("ontology", {}).get("version"),
+                "reasoning_effort": args.reasoning_effort,
+                "max_tokens": args.max_tokens,
             }
             try:
                 call_job = job
@@ -154,6 +161,8 @@ def run(args: argparse.Namespace) -> int:
                                 args.think,
                                 args.base_url,
                                 args.api_key_env,
+                                args.reasoning_effort,
+                                args.max_tokens,
                             )
                         else:
                             content, usage = provider_runner(call_job, args.model, schema, args.timeout, args.think)
@@ -201,6 +210,12 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--model", required=True)
     parser.add_argument("--base-url", default=None, help="OpenAI-compatible API base URL, such as http://127.0.0.1:8999/v1")
     parser.add_argument("--api-key-env", default="OPENAI_API_KEY", help="Environment variable containing the provider API key")
+    parser.add_argument(
+        "--reasoning-effort",
+        choices=("none", "minimal", "low", "medium", "high", "xhigh", "max"),
+        help="Optional reasoning effort forwarded to an OpenAI-compatible provider",
+    )
+    parser.add_argument("--max-tokens", type=int, default=12000, help="Maximum completion tokens for the OpenAI-compatible provider")
     parser.add_argument("--jobs", type=Path, default=Path("data/processed/preannotation/jobs.jsonl"))
     parser.add_argument("--schema", type=Path, default=Path("schemas/preannotation_candidate.schema.json"))
     parser.add_argument("--output", type=Path, default=Path("data/processed/preannotation/candidates.jsonl"))

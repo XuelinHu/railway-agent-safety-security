@@ -1,0 +1,246 @@
+<?xml version='1.0' encoding='utf-8'?>
+<mxfile host="app.diagrams.net" modified="2026-09-01T02:20:00.000Z" agent="Codex" version="24.7.17">
+  <diagram id="representation-flow" name="Graph Structure and Representation Flow">
+    <mxGraphModel dx="2500" dy="1320" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="2500" pageHeight="1320" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="canvas" value="" style="whiteSpace=wrap;html=1;fontFamily=Arial;fontSize=22;fontColor=#17324d;fillColor=#ffffff;strokeColor=#ffffff;strokeWidth=0;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="0" y="0" width="2500" height="1320" as="geometry" />
+        </mxCell>
+        <mxCell id="a_panel" value="" style="whiteSpace=wrap;html=1;fontFamily=Arial;fontSize=22;fontColor=#17324d;fillColor=#eaf2fb;strokeColor=#2f6f9f;strokeWidth=2;align=center;verticalAlign=middle;rounded=1;arcSize=12;" vertex="1" parent="1">
+          <mxGeometry x="30" y="30" width="560" height="1260" as="geometry" />
+        </mxCell>
+        <mxCell id="a_title" value="A  PROVENANCE-BEARING DIRECTED KG" style="whiteSpace=wrap;html=1;fontFamily=Arial;fontSize=22;fontColor=#ffffff;fillColor=#2f6f9f;strokeColor=#2f6f9f;strokeWidth=2;align=center;verticalAlign=middle;rounded=1;arcSize=12;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="55" y="55" width="510" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="b_panel" value="" style="whiteSpace=wrap;html=1;fontFamily=Arial;fontSize=22;fontColor=#17324d;fillColor=#eaf6ef;strokeColor=#2f7d5b;strokeWidth=2;align=center;verticalAlign=middle;rounded=1;arcSize=12;" vertex="1" parent="1">
+          <mxGeometry x="620" y="30" width="600" height="1260" as="geometry" />
+        </mxCell>
+        <mxCell id="b_title" value="B  EMBEDDING REPRESENTATION" style="whiteSpace=wrap;html=1;fontFamily=Arial;fontSize=22;fontColor=#ffffff;fillColor=#2f7d5b;strokeColor=#2f7d5b;strokeWidth=2;align=center;verticalAlign=middle;rounded=1;arcSize=12;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="645" y="55" width="550" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="c_panel" value="" style="whiteSpace=wrap;html=1;fontFamily=Arial;fontSize=22;fontColor=#17324d;fillColor=#fff8e8;strokeColor=#b7791f;strokeWidth=2;align=center;verticalAlign=middle;rounded=1;arcSize=12;" vertex="1" parent="1">
+          <mxGeometry x="1250" y="30" width="560" height="1260" as="geometry" />
+        </mxCell>
+        <mxCell id="c_title" value="C  RETRIEVAL AND EVIDENCE GATING" style="whiteSpace=wrap;html=1;fontFamily=Arial;fontSize=22;fontColor=#ffffff;fillColor=#b7791f;strokeColor=#b7791f;strokeWidth=2;align=center;verticalAlign=middle;rounded=1;arcSize=12;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="1275" y="55" width="510" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="d_panel" value="" style="whiteSpace=wrap;html=1;fontFamily=Arial;fontSize=22;fontColor=#17324d;fillColor=#fbf2f6;strokeColor=#b84c6a;strokeWidth=2;align=center;verticalAlign=middle;rounded=1;arcSize=12;" vertex="1" parent="1">
+          <mxGeometry x="1840" y="30" width="630" height="1260" as="geometry" />
+        </mxCell>
+        <mxCell id="d_title" value="D  EVIDENCE-GATED DIRECTED OUTPUT" style="whiteSpace=wrap;html=1;fontFamily=Arial;fontSize=22;fontColor=#ffffff;fillColor=#b84c6a;strokeColor=#b84c6a;strokeWidth=2;align=center;verticalAlign=middle;rounded=1;arcSize=12;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="1865" y="55" width="580" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="kg_hazard" value="&lt;b&gt;HAZARD&lt;/b&gt;&lt;br&gt;low adhesion" style="whiteSpace=wrap;html=1;fontFamily=Arial;fontSize=22;fontColor=#7c3448;fillColor=#ffffff;strokeColor=#b84c6a;strokeWidth=2;align=center;verticalAlign=middle;ellipse;" vertex="1" parent="1">
+          <mxGeometry x="80" y="195" width="190" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="kg_failure" value="&lt;b&gt;FAILURE&lt;/b&gt;&lt;br&gt;wheel slide" style="whiteSpace=wrap;html=1;fontFamily=Arial;fontSize=22;fontColor=#7a4e00;fillColor=#ffffff;strokeColor=#b7791f;strokeWidth=2;align=center;verticalAlign=middle;ellipse;" vertex="1" parent="1">
+          <mxGeometry x="350" y="195" width="190" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="kg_event" value="&lt;b&gt;EVENT&lt;/b&gt;&lt;br&gt;signal overrun" style="whiteSpace=wrap;html=1;fontFamily=Arial;fontSize=22;fontColor=#17324d;fillColor=#ffffff;strokeColor=#2f6f9f;strokeWidth=2;align=center;verticalAlign=middle;ellipse;" vertex="1" parent="1">
+          <mxGeometry x="215" y="430" width="190" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="kg_control" value="&lt;b&gt;CONTROL&lt;/b&gt;&lt;br&gt;sand application" style="whiteSpace=wrap;html=1;fontFamily=Arial;fontSize=22;fontColor=#216244;fillColor=#ffffff;strokeColor=#2f7d5b;strokeWidth=2;align=center;verticalAlign=middle;ellipse;" vertex="1" parent="1">
+          <mxGeometry x="60" y="680" width="210" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="kg_consequence" value="&lt;b&gt;CONSEQUENCE&lt;/b&gt;&lt;br&gt;collision risk" style="whiteSpace=wrap;html=1;fontFamily=Arial;fontSize=22;fontColor=#513c7a;fillColor=#ffffff;strokeColor=#7257a6;strokeWidth=2;align=center;verticalAlign=middle;ellipse;" vertex="1" parent="1">
+          <mxGeometry x="340" y="680" width="210" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="kg_records" value="&lt;b&gt;TYPED TRIPLES + PROVENANCE&lt;/b&gt;&lt;br&gt;(head, relation, tail, status)&lt;br&gt;document ID + segment ID + source span" style="whiteSpace=wrap;html=1;fontFamily=Arial;fontSize=22;fontColor=#216244;fillColor=#ffffff;strokeColor=#2f7d5b;strokeWidth=2;align=center;verticalAlign=middle;rounded=1;arcSize=12;" vertex="1" parent="1">
+          <mxGeometry x="100" y="960" width="420" height="175" as="geometry" />
+        </mxCell>
+        <mxCell id="kg_e1" value="contributes-to" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#b84c6a;strokeWidth=3;fontFamily=Arial;fontSize=20;fontStyle=1;labelBackgroundColor=none;exitX=0.5;exitY=1;entryX=0;entryY=0.5;" edge="1" parent="1" source="kg_hazard" target="kg_event">
+          <mxGeometry relative="1" as="geometry" x="-0.1" y="-34">
+            <mxPoint as="offset" />
+            <Array as="points">
+              <mxPoint x="175" y="360" />
+              <mxPoint x="175" y="480" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="kg_e2" value="causes" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#b7791f;strokeWidth=3;fontFamily=Arial;fontSize=20;fontStyle=1;labelBackgroundColor=none;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="kg_failure" target="kg_event">
+          <mxGeometry relative="1" as="geometry" x="0.1" y="34">
+            <mxPoint as="offset" />
+            <Array as="points">
+              <mxPoint x="445" y="390" />
+              <mxPoint x="310" y="390" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="kg_e3" value="mitigates" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#2f7d5b;strokeWidth=3;fontFamily=Arial;fontSize=20;fontStyle=1;labelBackgroundColor=none;exitX=0;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="kg_control" target="kg_hazard">
+          <mxGeometry relative="1" as="geometry" x="0.15" y="-60">
+            <mxPoint as="offset" />
+            <Array as="points">
+              <mxPoint x="45" y="730" />
+              <mxPoint x="45" y="245" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="kg_e4" value="leads-to" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#7257a6;strokeWidth=3;fontFamily=Arial;fontSize=20;fontStyle=1;labelBackgroundColor=none;exitX=1;exitY=0.5;entryX=1;entryY=0.5;" edge="1" parent="1" source="kg_event" target="kg_consequence">
+          <mxGeometry relative="1" as="geometry" x="0.2" y="34">
+            <mxPoint as="offset" />
+            <Array as="points">
+              <mxPoint x="570" y="480" />
+              <mxPoint x="570" y="730" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="kg_e5" value="evidence spans" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#2f6f9f;strokeWidth=3;fontFamily=Arial;fontSize=20;fontStyle=1;labelBackgroundColor=none;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="kg_event" target="kg_records">
+          <mxGeometry relative="1" as="geometry" x="-0.65" y="-80">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="graph_text" value="&lt;b&gt;GRAPH TEXT RECORDS&lt;/b&gt;&lt;br&gt;typed relations + provenance" style="whiteSpace=wrap;html=1;fontFamily=Arial;fontSize=22;fontColor=#216244;fillColor=#ffffff;strokeColor=#2f7d5b;strokeWidth=2;align=center;verticalAlign=middle;rounded=1;arcSize=12;" vertex="1" parent="1">
+          <mxGeometry x="660" y="200" width="230" height="145" as="geometry" />
+        </mxCell>
+        <mxCell id="source_window" value="&lt;b&gt;CURRENT SOURCE WINDOW&lt;/b&gt;&lt;br&gt;authoritative report text" style="whiteSpace=wrap;html=1;fontFamily=Arial;fontSize=22;fontColor=#17324d;fillColor=#ffffff;strokeColor=#2f6f9f;strokeWidth=2;align=center;verticalAlign=middle;rounded=1;arcSize=12;" vertex="1" parent="1">
+          <mxGeometry x="920" y="200" width="230" height="145" as="geometry" />
+        </mxCell>
+        <mxCell id="encoder" value="&lt;b&gt;FROZEN BGE-M3 ENCODER&lt;/b&gt;&lt;br&gt;multilingual vectorization" style="whiteSpace=wrap;html=1;fontFamily=Arial;fontSize=22;fontColor=#513c7a;fillColor=#f1ecfa;strokeColor=#7257a6;strokeWidth=3;align=center;verticalAlign=middle;shape=hexagon;perimeter=hexagonPerimeter2;fixedSize=1;" vertex="1" parent="1">
+          <mxGeometry x="760" y="445" width="320" height="140" as="geometry" />
+        </mxCell>
+        <mxCell id="matrix_h" value="&lt;b&gt;RELATION EMBEDDING MATRIX&lt;/b&gt;&lt;br&gt;H in R^(m x d)&lt;br&gt;[ h11  ...  h1d ]&lt;br&gt;[  ...  ...  ... ]&lt;br&gt;[ hm1  ...  hmd ]" style="whiteSpace=wrap;html=1;fontFamily=Arial;fontSize=22;fontColor=#513c7a;fillColor=#ffffff;strokeColor=#7257a6;strokeWidth=2;align=center;verticalAlign=middle;rounded=1;arcSize=12;" vertex="1" parent="1">
+          <mxGeometry x="660" y="720" width="260" height="260" as="geometry" />
+        </mxCell>
+        <mxCell id="query_q" value="&lt;b&gt;QUERY VECTOR&lt;/b&gt;&lt;br&gt;q in R^d&lt;br&gt;[ q1  ...  qd ]^T" style="whiteSpace=wrap;html=1;fontFamily=Arial;fontSize=22;fontColor=#17324d;fillColor=#ffffff;strokeColor=#2f6f9f;strokeWidth=2;align=center;verticalAlign=middle;rounded=1;arcSize=12;" vertex="1" parent="1">
+          <mxGeometry x="950" y="750" width="220" height="200" as="geometry" />
+        </mxCell>
+        <mxCell id="ab_records" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#2f7d5b;strokeWidth=3;fontFamily=Arial;fontSize=20;fontStyle=1;labelBackgroundColor=none;exitX=1;exitY=0.25;entryX=0;entryY=0.75;" edge="1" parent="1" source="kg_records" target="graph_text">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="600" y="1004" />
+              <mxPoint x="600" y="309" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="enc_graph" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#2f7d5b;strokeWidth=3;fontFamily=Arial;fontSize=20;fontStyle=1;labelBackgroundColor=none;exitX=0.5;exitY=1;entryX=0.3;entryY=0;" edge="1" parent="1" source="graph_text" target="encoder">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="enc_source" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#2f6f9f;strokeWidth=3;fontFamily=Arial;fontSize=20;fontStyle=1;labelBackgroundColor=none;exitX=0.5;exitY=1;entryX=0.7;entryY=0;" edge="1" parent="1" source="source_window" target="encoder">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="enc_matrix" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#7257a6;strokeWidth=3;fontFamily=Arial;fontSize=20;fontStyle=1;labelBackgroundColor=none;exitX=0.3;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="encoder" target="matrix_h">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="enc_query" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#2f6f9f;strokeWidth=3;fontFamily=Arial;fontSize=20;fontStyle=1;labelBackgroundColor=none;exitX=0.7;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="encoder" target="query_q">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="score" value="&lt;b&gt;SIMILARITY TRANSFORMATION&lt;/b&gt;&lt;br&gt;s = Hq  in R^m" style="whiteSpace=wrap;html=1;fontFamily=Arial;fontSize=22;fontColor=#513c7a;fillColor=#ffffff;strokeColor=#7257a6;strokeWidth=2;align=center;verticalAlign=middle;rounded=1;arcSize=12;" vertex="1" parent="1">
+          <mxGeometry x="1300" y="210" width="460" height="135" as="geometry" />
+        </mxCell>
+        <mxCell id="topk" value="&lt;b&gt;TOP-k RELATION PATTERNS&lt;/b&gt;&lt;br&gt;I_k = TopK(s; k)" style="whiteSpace=wrap;html=1;fontFamily=Arial;fontSize=22;fontColor=#7a4e00;fillColor=#ffffff;strokeColor=#b7791f;strokeWidth=2;align=center;verticalAlign=middle;rounded=1;arcSize=12;" vertex="1" parent="1">
+          <mxGeometry x="1300" y="455" width="460" height="135" as="geometry" />
+        </mxCell>
+        <mxCell id="source_evidence" value="&lt;b&gt;SOURCE EVIDENCE&lt;/b&gt;&lt;br&gt;segment IDs + spans" style="whiteSpace=wrap;html=1;fontFamily=Arial;fontSize=22;fontColor=#17324d;fillColor=#ffffff;strokeColor=#2f6f9f;strokeWidth=2;align=center;verticalAlign=middle;rounded=1;arcSize=12;" vertex="1" parent="1">
+          <mxGeometry x="1290" y="720" width="220" height="150" as="geometry" />
+        </mxCell>
+        <mxCell id="evidence_gate" value="&lt;b&gt;SOURCE-EVIDENCE FILTER&lt;/b&gt;&lt;br&gt;eligible graph hints" style="whiteSpace=wrap;html=1;fontFamily=Arial;fontSize=22;fontColor=#216244;fillColor=#eaf6ef;strokeColor=#2f7d5b;strokeWidth=2;align=center;verticalAlign=middle;rounded=1;arcSize=12;" vertex="1" parent="1">
+          <mxGeometry x="1540" y="720" width="230" height="150" as="geometry" />
+        </mxCell>
+        <mxCell id="bounded_context" value="&lt;b&gt;BOUNDED HRGE CONTEXT&lt;/b&gt;&lt;br&gt;ranked patterns are hints; source text is authoritative" style="whiteSpace=wrap;html=1;fontFamily=Arial;fontSize=22;fontColor=#7a4e00;fillColor=#ffffff;strokeColor=#b7791f;strokeWidth=2;align=center;verticalAlign=middle;rounded=1;arcSize=12;" vertex="1" parent="1">
+          <mxGeometry x="1300" y="1020" width="460" height="140" as="geometry" />
+        </mxCell>
+        <mxCell id="h_score" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#7257a6;strokeWidth=3;fontFamily=Arial;fontSize=20;fontStyle=1;labelBackgroundColor=none;exitX=1;exitY=0.3;entryX=0;entryY=0.35;" edge="1" parent="1" source="matrix_h" target="score">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="935" y="798" />
+              <mxPoint x="935" y="380" />
+              <mxPoint x="1190" y="380" />
+              <mxPoint x="1190" y="257" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="q_score" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#2f6f9f;strokeWidth=3;fontFamily=Arial;fontSize=20;fontStyle=1;labelBackgroundColor=none;exitX=1;exitY=0.65;entryX=0;entryY=0.75;" edge="1" parent="1" source="query_q" target="score">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1270" y="880" />
+              <mxPoint x="1270" y="311" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="rank" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#7257a6;strokeWidth=3;fontFamily=Arial;fontSize=20;fontStyle=1;labelBackgroundColor=none;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="score" target="topk">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="source_to_evidence" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#2f6f9f;strokeWidth=3;fontFamily=Arial;fontSize=20;fontStyle=1;labelBackgroundColor=none;exitX=0.9;exitY=1;entryX=0;entryY=0.5;" edge="1" parent="1" source="source_window" target="source_evidence">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1210" y="345" />
+              <mxPoint x="1210" y="795" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="patterns_to_gate" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#b7791f;strokeWidth=3;fontFamily=Arial;fontSize=20;fontStyle=1;labelBackgroundColor=none;exitX=0.65;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="topk" target="evidence_gate">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1599" y="655" />
+              <mxPoint x="1655" y="655" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="evidence_to_gate" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#2f7d5b;strokeWidth=3;fontFamily=Arial;fontSize=20;fontStyle=1;labelBackgroundColor=none;exitX=1;exitY=0.65;entryX=0;entryY=0.65;" edge="1" parent="1" source="source_evidence" target="evidence_gate">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="gate_to_context" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#2f7d5b;strokeWidth=3;fontFamily=Arial;fontSize=20;fontStyle=1;labelBackgroundColor=none;exitX=0.5;exitY=1;entryX=0.7;entryY=0;" edge="1" parent="1" source="evidence_gate" target="bounded_context">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="pge" value="&lt;b&gt;PGE EXTRACTOR&lt;/b&gt;&lt;br&gt;evidence-gated objects" style="whiteSpace=wrap;html=1;fontFamily=Arial;fontSize=22;fontColor=#513c7a;fillColor=#f1ecfa;strokeColor=#7257a6;strokeWidth=3;align=center;verticalAlign=middle;shape=hexagon;perimeter=hexagonPerimeter2;fixedSize=1;" vertex="1" parent="1">
+          <mxGeometry x="1880" y="190" width="550" height="145" as="geometry" />
+        </mxCell>
+        <mxCell id="out_hazard" value="&lt;b&gt;HAZARD&lt;/b&gt;&lt;br&gt;low adhesion" style="whiteSpace=wrap;html=1;fontFamily=Arial;fontSize=22;fontColor=#7c3448;fillColor=#ffffff;strokeColor=#b84c6a;strokeWidth=2;align=center;verticalAlign=middle;ellipse;" vertex="1" parent="1">
+          <mxGeometry x="1850" y="500" width="210" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="out_event" value="&lt;b&gt;EVENT&lt;/b&gt;&lt;br&gt;signal overrun" style="whiteSpace=wrap;html=1;fontFamily=Arial;fontSize=22;fontColor=#17324d;fillColor=#ffffff;strokeColor=#2f6f9f;strokeWidth=2;align=center;verticalAlign=middle;ellipse;" vertex="1" parent="1">
+          <mxGeometry x="2190" y="500" width="210" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="out_control" value="&lt;b&gt;CONTROL&lt;/b&gt;&lt;br&gt;sand application" style="whiteSpace=wrap;html=1;fontFamily=Arial;fontSize=22;fontColor=#216244;fillColor=#ffffff;strokeColor=#2f7d5b;strokeWidth=2;align=center;verticalAlign=middle;ellipse;" vertex="1" parent="1">
+          <mxGeometry x="1850" y="760" width="210" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="out_consequence" value="&lt;b&gt;CONSEQUENCE&lt;/b&gt;&lt;br&gt;collision risk" style="whiteSpace=wrap;html=1;fontFamily=Arial;fontSize=22;fontColor=#513c7a;fillColor=#ffffff;strokeColor=#7257a6;strokeWidth=2;align=center;verticalAlign=middle;ellipse;" vertex="1" parent="1">
+          <mxGeometry x="2190" y="760" width="210" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="out_evidence" value="&lt;b&gt;TRACEABLE OUTPUT&lt;/b&gt;&lt;br&gt;document ID + segment ID&lt;br&gt;evidence spans + claim status" style="whiteSpace=wrap;html=1;fontFamily=Arial;fontSize=22;fontColor=#216244;fillColor=#ffffff;strokeColor=#2f7d5b;strokeWidth=2;align=center;verticalAlign=middle;rounded=1;arcSize=12;" vertex="1" parent="1">
+          <mxGeometry x="1960" y="1040" width="400" height="145" as="geometry" />
+        </mxCell>
+        <mxCell id="context_to_pge" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#2f7d5b;strokeWidth=3;fontFamily=Arial;fontSize=20;fontStyle=1;labelBackgroundColor=none;exitX=1;exitY=0.5;entryX=0;entryY=0.75;" edge="1" parent="1" source="bounded_context" target="pge">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1825" y="1090" />
+              <mxPoint x="1825" y="299" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="pge_entities" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#7257a6;strokeWidth=3;fontFamily=Arial;fontSize=20;fontStyle=1;labelBackgroundColor=none;exitX=0.3;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="pge" target="out_hazard">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="pge_relations" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#b84c6a;strokeWidth=3;fontFamily=Arial;fontSize=20;fontStyle=1;labelBackgroundColor=none;exitX=0.75;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="pge" target="out_event">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="out_e1" value="contributes-to" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#b84c6a;strokeWidth=3;fontFamily=Arial;fontSize=20;fontStyle=1;labelBackgroundColor=none;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="out_hazard" target="out_event">
+          <mxGeometry relative="1" as="geometry" x="0.0" y="-34">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="out_e2" value="mitigates" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#2f7d5b;strokeWidth=3;fontFamily=Arial;fontSize=20;fontStyle=1;labelBackgroundColor=none;exitX=0.5;exitY=0;entryX=0.5;entryY=1;" edge="1" parent="1" source="out_control" target="out_hazard">
+          <mxGeometry relative="1" as="geometry" x="0.0" y="34">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="out_e3" value="leads-to" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#7257a6;strokeWidth=3;fontFamily=Arial;fontSize=20;fontStyle=1;labelBackgroundColor=none;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="out_event" target="out_consequence">
+          <mxGeometry relative="1" as="geometry" x="0.0" y="-34">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="out_e4" value="evidence" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#2f6f9f;strokeWidth=3;fontFamily=Arial;fontSize=20;fontStyle=1;labelBackgroundColor=none;exitX=1;exitY=0.5;entryX=1;entryY=0.5;" edge="1" parent="1" source="out_event" target="out_evidence">
+          <mxGeometry relative="1" as="geometry" x="0.2" y="-44">
+            <mxPoint as="offset" />
+            <Array as="points">
+              <mxPoint x="2445" y="550" />
+              <mxPoint x="2445" y="1112" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

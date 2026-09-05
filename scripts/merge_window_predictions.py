@@ -32,7 +32,7 @@ def merge_rows(rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
                 if key not in entities:
                     entity_id = f"E{len(entities) + 1}"
                     entity_ids[key] = entity_id
-                    entities[key] = {"id": entity_id, "text": key[0], "type": key[1]}
+                    entities[key] = {**entity, "id": entity_id, "text": key[0], "type": key[1]}
 
         relations: OrderedDict[tuple[str, str, str, str], dict[str, Any]] = OrderedDict()
         for row in group:
@@ -49,6 +49,7 @@ def merge_rows(rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
                 key = (source_key[0], relation.get("type", ""), target_key[0], claim_status)
                 if key not in relations:
                     relations[key] = {
+                        **relation,
                         "id": f"R{len(relations) + 1}",
                         "source_id": entity_ids[source_key],
                         "type": relation.get("type", ""),

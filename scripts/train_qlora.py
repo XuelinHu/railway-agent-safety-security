@@ -6,6 +6,9 @@ from __future__ import annotations
 import argparse
 import json
 import math
+import random
+import time
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
@@ -32,11 +35,25 @@ the closing brace of the compact object.
 """.strip()
 
 
+def compact_system(job: dict[str, Any]) -> str:
+    """Keep only the KG suffix when constructing the compact training prompt."""
+    kg_rules = job["system_instruction"].split("\n\nKG_RULES:", 1)
+    if len(kg_rules) == 2:
+        return f"{COMPACT_SYSTEM_INSTRUCTION}\n\nKG_RULES:{kg_rules[1]}\n\n{COMPACT_INSTRUCTION}"
+    return f"{job['system_instruction']}\n\n{COMPACT_INSTRUCTION}"
+
+
 def load_jsonl(path: Path) -> list[dict[str, Any]]:
     return [json.loads(line) for line in path.read_text(encoding="utf-8").splitlines() if line.strip()]
 
 
-def build_examples(gold: Path, index: Path, jobs: Path, compact_target: bool = False) -> list[dict[str, str]]:
+def build_examples(
+    gold: Path,
+    index: Path,
+    jobs: Path,
+    compact_target: bool = False,
+    use_job_instruction: bool = False,
+) -> list[dict[str, str]]:
     annotations = load_jsonl(gold)
     indexes = load_jsonl(index)
     jobs_by_id = {row["job_id"]: row for row in load_jsonl(jobs)}
@@ -49,7 +66,7 @@ def build_examples(gold: Path, index: Path, jobs: Path, compact_target: bool = F
             {
                 "document_id": job["document_id"],
                 "language": job["language"],
-                "teacher_model": "qlora-student",
+                "teacher_model": job.get("teacher_model", "qwen3-4b-qlora"),
                 "ontology": job["ontology"],
                 "segments": job["segments"],
             },
@@ -77,7 +94,10 @@ def build_examples(gold: Path, index: Path, jobs: Path, compact_target: bool = F
             target = json.dumps(compact, ensure_ascii=False)
         else:
             target = json.dumps(annotation, ensure_ascii=False)
-        system = COMPACT_SYSTEM_INSTRUCTION if compact_target else job["system_instruction"]
+        if compact_target and use_job_instruction:
+            system = compact_system(job)
+        else:
+            system = COMPACT_SYSTEM_INSTRUCTION if compact_target else job["system_instruction"]
         examples.append({"system": system, "user": user, "target": target})
     return examples
 
@@ -89,8 +109,20 @@ def main(args: argparse.Namespace) -> int:
     from torch.utils.data import DataLoader
     from transformers import AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig
 
-    examples = build_examples(args.gold, args.index, args.jobs, args.compact_target)
+    process_started = time.perf_counter()
+    started_at = datetime.now(timezone.utc).isoformat()
+    if not torch.cuda.is_available():
+        raise RuntimeError("QLoRA training requires CUDA")
+    torch.cuda.reset_peak_memory_stats()
+    examples = build_examples(
+        args.gold,
+        args.index,
+        args.jobs,
+        args.compact_target,
+        args.use_job_instruction,
+    )
     tokenizer = AutoTokenizer.from_pretrained(args.model_path, local_files_only=True, trust_remote_code=True)
+    torch.manual_seed(args.seed)
     if tokenizer.pad_token is None:
         tokenizer.pad_token = tokenizer.eos_token
     quantization = BitsAndBytesConfig(
@@ -108,6 +140,7 @@ def main(args: argparse.Namespace) -> int:
         torch_dtype=torch.bfloat16,
     )
     model = prepare_model_for_kbit_training(model)
+    model.config.use_cache = False
     model.gradient_checkpointing_enable()
     model = get_peft_model(
         model,
@@ -124,14 +157,20 @@ def main(args: argparse.Namespace) -> int:
 
     device = torch.device("cuda:0")
     encoded = []
+    prompt_token_count = 0
+    target_token_count = 0
     truncated_answers = 0
+    truncated_prompts = 0
+    skipped_overlength = 0
     for example in examples:
-        prompt = (
-            "<|im_start|>system\n"
-            + example["system"]
-            + "<|im_end|>\n<|im_start|>user\n"
-            + example["user"]
-            + "<|im_end|>\n<|im_start|>assistant\n"
+        prompt = tokenizer.apply_chat_template(
+            [
+                {"role": "system", "content": example["system"]},
+                {"role": "user", "content": example["user"]},
+            ],
+            tokenize=False,
+            add_generation_prompt=True,
+            enable_thinking=False,
         )
         full = prompt + example["target"] + "<|im_end|>"
         prompt_ids = tokenizer(prompt, add_special_tokens=False)["input_ids"]
@@ -143,16 +182,29 @@ def main(args: argparse.Namespace) -> int:
         prompt_budget = args.max_length - len(answer_ids)
         if prompt_budget < 1:
             continue
+        if len(prompt_ids) > prompt_budget and args.skip_overlength:
+            skipped_overlength += 1
+            continue
         # Keep the beginning of the prompt and the complete available answer so
         # truncation never creates a batch with zero supervised tokens.
+        if len(prompt_ids) > prompt_budget:
+            truncated_prompts += 1
         prompt_ids = prompt_ids[:prompt_budget]
         full_ids = prompt_ids + answer_ids
         labels = [-100] * len(prompt_ids) + answer_ids
         encoded.append({"input_ids": full_ids, "labels": labels})
+        prompt_token_count += len(prompt_ids)
+        target_token_count += len(answer_ids)
 
     if not encoded:
         raise ValueError("no train examples contain supervised answer tokens")
-    print(json.dumps({"prepared_examples": len(encoded), "max_sequence": max(len(row["input_ids"]) for row in encoded), "truncated_answers": truncated_answers}, ensure_ascii=False), flush=True)
+    print(json.dumps({
+        "prepared_examples": len(encoded),
+        "max_sequence": max(len(row["input_ids"]) for row in encoded),
+        "truncated_answers": truncated_answers,
+        "truncated_prompts": truncated_prompts,
+        "skipped_overlength": skipped_overlength,
+    }, ensure_ascii=False), flush=True)
 
     def collate(batch: list[dict[str, list[int]]]) -> dict[str, torch.Tensor]:
         max_len = max(len(row["input_ids"]) for row in batch)
@@ -165,11 +217,33 @@ def main(args: argparse.Namespace) -> int:
             "attention_mask": torch.tensor(attention, dtype=torch.long),
         }
 
-    loader = DataLoader(encoded, batch_size=args.batch_size, shuffle=True, collate_fn=collate)
+    generator = torch.Generator().manual_seed(args.seed)
+    shuffle = True
+    if args.bucket_by_length:
+        ordered = sorted(encoded, key=lambda row: len(row["input_ids"]), reverse=True)
+        buckets = [ordered[index : index + args.length_bucket_size] for index in range(0, len(ordered), args.length_bucket_size)]
+        rng = random.Random(args.seed)
+        for bucket in buckets:
+            rng.shuffle(bucket)
+        if len(buckets) > 1:
+            tail = buckets[1:]
+            rng.shuffle(tail)
+            buckets = [buckets[0], *tail]
+        encoded = [row for bucket in buckets for row in bucket]
+        shuffle = False
+    loader = DataLoader(
+        encoded,
+        batch_size=args.batch_size,
+        shuffle=shuffle,
+        collate_fn=collate,
+        generator=generator,
+    )
     optimizer = torch.optim.AdamW((p for p in model.parameters() if p.requires_grad), lr=args.learning_rate)
     accelerator = Accelerator(gradient_accumulation_steps=args.gradient_accumulation)
     model, optimizer, loader = accelerator.prepare(model, optimizer, loader)
     model.train()
+    torch.cuda.synchronize(device)
+    training_started = time.perf_counter()
     steps = 0
     losses = []
     for epoch in range(args.epochs):
@@ -185,19 +259,27 @@ def main(args: argparse.Namespace) -> int:
                     raise FloatingPointError("non-finite training loss; check truncation and labels")
                 accelerator.backward(loss)
                 optimizer.step()
-                optimizer.zero_grad()
+                optimizer.zero_grad(set_to_none=True)
             if accelerator.sync_gradients:
                 steps += 1
                 losses.append(float(loss.detach().cpu()))
                 if steps % 5 == 0:
                     print(json.dumps({"epoch": epoch + 1, "step": steps, "loss": round(losses[-1], 5)}, ensure_ascii=False), flush=True)
 
+    torch.cuda.synchronize(device)
+    training_seconds = time.perf_counter() - training_started
+
     args.output.mkdir(parents=True, exist_ok=True)
     accelerator.unwrap_model(model).save_pretrained(args.output)
     tokenizer.save_pretrained(args.output)
+    torch.cuda.synchronize(device)
+    wall_clock_seconds = time.perf_counter() - process_started
     metrics = {
+        "started_at_utc": started_at,
+        "finished_at_utc": datetime.now(timezone.utc).isoformat(),
         "base_model": str(args.model_path),
-        "train_examples": len(examples),
+        "source_examples": len(examples),
+        "train_examples": len(encoded),
         "epochs": args.epochs,
         "steps": steps,
         "final_loss": losses[-1] if losses else None,
@@ -206,7 +288,37 @@ def main(args: argparse.Namespace) -> int:
         "max_length": args.max_length,
         "lora_rank": args.lora_rank,
         "compact_target": args.compact_target,
+        "use_job_instruction": args.use_job_instruction,
+        "seed": args.seed,
+        "bucket_by_length": args.bucket_by_length,
         "truncated_answers_with_eos": truncated_answers,
+        "truncated_prompts": truncated_prompts,
+        "skipped_overlength": skipped_overlength,
+        "prompt_tokens": prompt_token_count,
+        "target_tokens": target_token_count,
+        "total_tokens": prompt_token_count + target_token_count,
+        "training_wall_clock_seconds": round(training_seconds, 3),
+        "process_wall_clock_seconds": round(wall_clock_seconds, 3),
+        "examples_per_training_second": round(len(encoded) / training_seconds, 6),
+        "tokens_per_training_second": round(
+            (prompt_token_count + target_token_count) / training_seconds, 3
+        ),
+        "device_name": torch.cuda.get_device_name(device),
+        "peak_cuda_memory_allocated_mib": round(
+            torch.cuda.max_memory_allocated(device) / (1024**2), 2
+        ),
+        "peak_cuda_memory_reserved_mib": round(
+            torch.cuda.max_memory_reserved(device) / (1024**2), 2
+        ),
+        "software": {
+            "python": __import__("sys").version.split()[0],
+            "torch": torch.__version__,
+            "transformers": __import__("transformers").__version__,
+            "peft": __import__("peft").__version__,
+            "accelerate": __import__("accelerate").__version__,
+            "bitsandbytes": __import__("bitsandbytes").__version__,
+            "cuda": torch.version.cuda,
+        },
     }
     (args.output / "training_metrics.json").write_text(json.dumps(metrics, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     print(json.dumps(metrics, ensure_ascii=False, indent=2))
@@ -227,7 +339,24 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--max-length", type=int, default=4096)
     parser.add_argument("--lora-rank", type=int, default=8)
     parser.add_argument("--lora-alpha", type=int, default=16)
+    parser.add_argument("--seed", type=int, default=42)
+    parser.add_argument(
+        "--bucket-by-length",
+        action="store_true",
+        help="Process the longest length bucket first and shuffle within/between buckets",
+    )
+    parser.add_argument("--length-bucket-size", type=int, default=32)
     parser.add_argument("--compact-target", action="store_true", help="Train a short entity/relation intermediate format")
+    parser.add_argument(
+        "--skip-overlength",
+        action="store_true",
+        help="Skip examples whose complete prompt and answer exceed max-length instead of truncating source context",
+    )
+    parser.add_argument(
+        "--use-job-instruction",
+        action="store_true",
+        help="Keep each job's system instruction, including KG constraints, for compact-target training",
+    )
     return parser.parse_args()
 
 

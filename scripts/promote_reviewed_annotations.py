@@ -21,7 +21,26 @@ def load_jsonl(path: Path) -> list[dict[str, Any]]:
 
 
 def canonical_text(value: str) -> str:
-    return re.sub(r"\s+", " ", value).strip().casefold()
+    text = re.sub(r"\s+", " ", value).strip().casefold()
+    outer_markup = {
+        "《": "》",
+        "（": "）",
+        "(": ")",
+        "【": "】",
+        "[": "]",
+        "<": ">",
+        "“": "”",
+        "「": "」",
+        "『": "』",
+    }
+    changed = True
+    while changed and len(text) >= 2:
+        changed = False
+        closing = outer_markup.get(text[0])
+        if closing and text.endswith(closing):
+            text = text[1:-1].strip()
+            changed = True
+    return text
 
 
 def concept_id(language: str, entity_type: str, name: str) -> str:
@@ -95,7 +114,7 @@ def build_graph(
         split = split_by_document[document_id]
         mention_by_source_id: dict[str, str] = {}
         for entity in annotation["entities"]:
-            name = entity.get("normalized_name") or entity["text"]
+            name = canonical_text(entity.get("normalized_name") or entity["text"])
             cid = concept_id(annotation["language"], entity["type"], name)
             mention_id = f"{job_id}:{entity['id']}"
             mention_by_source_id[entity["id"]] = mention_id
@@ -121,9 +140,11 @@ def build_graph(
                     "document_id": document_id,
                     "job_id": job_id,
                     "split": split,
+                    "language": annotation["language"],
                     "source_id": entity["id"],
                     "text": entity["text"],
                     "type": entity["type"],
+                    "canonical_name": name,
                     "normalized_name": entity.get("normalized_name"),
                     "confidence": entity["confidence"],
                     "evidence": entity["evidence"],
