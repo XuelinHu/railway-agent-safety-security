@@ -310,7 +310,8 @@ evaluate_split() {
   write_status running
   python3 "$bootstrap_script" \
     --left "$target/metrics/soe_span.json" --right "$target/metrics/pge_span.json" \
-    --iterations 20000 --seed 20260830 --output "$target/soe_vs_pge.json"
+    --iterations 20000 --seed 20260830 --dataset "$dataset" \
+    --output "$target/soe_vs_pge.json"
   python3 - "$target/complete.json" "$seed" "$dataset" "$split" <<'PY'
 import json
 import os

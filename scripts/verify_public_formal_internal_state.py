@@ -236,6 +236,7 @@ def validate_metric(path: Path, expected_ids: list[str], split: str) -> dict[str
     value = load_json(path)
     validate_finite(value, str(path))
     if path.name.endswith("_span.json"):
+        expected_selection = "validation" if split == "validation" else "explicit-non-validation-opt-in"
         if (
             value.get("metric") not in {
                 "strict-global-character-span-one-to-one",
@@ -244,7 +245,7 @@ def validate_metric(path: Path, expected_ids: list[str], split: str) -> dict[str
             or value.get("jobs") != len(expected_ids)
             or not isinstance(value.get("per_job"), dict)
             or set(value["per_job"]) != set(expected_ids)
-            or value.get("selection_split") != split
+            or value.get("selection_split") != expected_selection
         ):
             raise ValueError(f"strict metric denominator/protocol mismatch: {path}")
         expected_formal = split == "test"
@@ -307,7 +308,9 @@ def validate_complete_split(
         comparison.get("seed") != 20_260_830
         or comparison.get("iterations") != 20_000
         or comparison.get("dataset") != dataset
-        or comparison.get("selection_split") != split
+        or comparison.get("selection_split") != (
+            "validation" if split == "validation" else "explicit-non-validation-opt-in"
+        )
         or comparison.get("documents") != len(derived_ids)
     ):
         raise ValueError(f"paired comparison contract mismatch: {comparison_path}")

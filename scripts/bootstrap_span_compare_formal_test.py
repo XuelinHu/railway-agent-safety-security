@@ -86,6 +86,8 @@ def run(args: argparse.Namespace) -> int:
             for field in FIELDS
         },
     }
+    if args.dataset:
+        result["dataset"] = args.dataset
     for comparison in result["fields"].values():
         comparison["left"] = comparison.pop("baseline")
         comparison["right"] = comparison.pop("kg")
@@ -101,6 +103,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--left", type=Path, required=True)
     parser.add_argument("--right", type=Path, required=True)
     parser.add_argument("--output", type=Path, required=True)
+    parser.add_argument("--dataset")
     parser.add_argument("--iterations", type=int, default=20000)
     parser.add_argument("--seed", type=int, default=20260830)
     return parser.parse_args()
