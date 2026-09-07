@@ -1,54 +1,65 @@
-# JSSR manuscript workspace
+# ADE and CoNLL04 manuscript
 
-This directory is the writing workspace for the following target venue:
+The active paper evaluates **ADE and CoNLL04 only**. Its working title is:
 
-- Journal: *Journal of Safety Science and Resilience* (JSSR)
-- Special issue: *Agent for Safety and Security: Complex Network Modeling, Substructure Analysis, Risk Discovery, and Resilience Assessment*
-- Submission deadline: 28 February 2027
-- Submission selection: `SI: Agent for Safety and Security`
+> Provenance-Preserving Evidence-Gated Knowledge-Graph Augmentation for Auditable Entity–Relation Extraction
 
-## Working title
+The target journal remains *Journal of Safety Science and Resilience*. The
+motivation concerns auditable extraction and ADE's drug-safety relevance;
+CoNLL04 is a general-domain structural comparison, not a safety-outcome dataset.
 
-> Provenance-Preserving Evidence-Gated Knowledge-Graph Augmentation for Low-Resource Safety Information Extraction
+## Active files
 
-The title deliberately focuses on risk information extraction. Risk-substructure discovery, cascading-risk analysis, and resilience assessment should not be added to the title until graph-level experiments support those claims.
+- `elsarticle/manuscript.tex`: English anonymous manuscript.
+- `elsarticle/manuscript-zh.tex`: Chinese full-text checking version.
+- `elsarticle/title-page.tex`: separate author page with the matching title.
+- `elsarticle/references.bib`: cited literature, including benchmark and baseline sources.
+- `results/ade_conll04/`: source-hashed statistics, common-evaluator scores,
+  generated tables, bootstrap intervals, and exact-overlap sensitivity.
+- `figures/ade_conll04/`: label distribution, sentence-length distribution,
+  and the editable architecture adapted to the current benchmark protocol.
+- `../output/pdf/ade-conll04/`: current PDFs, figure files, captions, and review source ZIP.
+- [SUBMISSION_READINESS.md](SUBMISSION_READINESS.md): scope and final checks.
 
-## Files
-
-- `elsarticle.zip`: original Elsevier template archive obtained from the remote repository.
-- `elsarticle/manuscript.tex`: anonymous manuscript for double-blind review.
-- `elsarticle/title-page.tex`: author and affiliation page uploaded separately.
-- `elsarticle/references.bib`: BibTeX database.
-- `EXPERIMENT_PLAN.md`: required experiments, publication gates, and schedule.
-
-The extracted package documentation and LaTeX build products are ignored. The required class and numeric bibliography style are versioned with the manuscript.
-
-## Build
+## Rebuild
 
 ```bash
+python3 scripts/build_ade_conll04_paper.py
+python3 scripts/build_ade_conll04_diagram.py
+# Draw.io needs a working DISPLAY/XAUTHORITY or Xvfb session.
+python3 scripts/export_submission_artwork.py
 cd paper/elsarticle
-latexmk -pdf manuscript.tex
-latexmk -pdf title-page.tex
+latexmk -pdf -interaction=nonstopmode -halt-on-error manuscript.tex
+latexmk -xelatex -interaction=nonstopmode -halt-on-error manuscript-zh.tex
+latexmk -pdf -interaction=nonstopmode -halt-on-error title-page.tex
+cd ../..
+python3 scripts/package_paper_submission.py
+python3 scripts/render_paper_review.py
 ```
 
-Clean generated files with:
+The data builder reads completed, previously released predictions and labels.
+It does not train, infer, change thresholds, regenerate predictions, or mutate
+the original experiment directories. Bootstrap intervals are sentence-level
+fixed-prediction analyses, not estimates of training-seed variation.
 
-```bash
-latexmk -C manuscript.tex
-latexmk -C title-page.tex
-```
+## Version history and submission
 
-## Submission requirements
+The previous mixed-scope manuscripts and metadata are preserved under
+`archive/pre-ade-conll04-20260907/`; their PDFs and source package are in
+`../output/pdf/archive/pre-ade-conll04-20260907/`. Earlier root-level PDF names
+are historical, not the active two-benchmark delivery. Existing experiment
+records and original Draw.io files were not deleted.
 
-- Keep the review manuscript anonymous because JSSR uses double-blind review.
-- Upload the title page separately with all authors, affiliations, emails, and corresponding-author details.
-- Use numbered references in square brackets.
-- Upload editable source files and high-resolution figure files.
-- Select the special-issue article type in Editorial Manager.
-- Verify the current article processing charge before submission.
+Submit the anonymous manuscript and author page separately, with editable
+LaTeX, numbered references, and individual high-quality figures. Author
+information and declarations still require author confirmation. The scope was
+narrowed after results were available; the manuscript discloses that it is a
+focused retrospective analysis, not an exhaustive or preregistered domain survey.
 
-## Official references
+Official instructions:
+https://www.keaipublishing.com/en/journals/journal-of-safety-science-and-resilience/guide-for-authors/
 
-- Special issue: https://www.keaipublishing.com/en/journals/journal-of-safety-science-and-resilience/call-for-papers/special-issue-on-agent-for-safety-and-security-complex-network-modeling-substructure-analysis-risk-discovery-and-resilience-assessment/
-- Guide for Authors: https://www.keaipublishing.com/en/journals/journal-of-safety-science-and-resilience/guide-for-authors/
-- Submission system: https://www.editorialmanager.com/JNLSSR/default.aspx
+Submission system: https://www.editorialmanager.com/JNLSSR/default.aspx
+
+Select the intended special issue in the submission system and recheck the
+current deadline, scope, and APC before submission.

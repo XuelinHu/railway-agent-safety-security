@@ -11,6 +11,11 @@ outputs/
 tools/antiword/
 tools/catdoc/
 tools/*.deb
+tools/external-baselines/
+data/external/
+output/
+tmp/
+.playwright-mcp/
 *.parquet
 *.pkl
 *.pt
@@ -33,6 +38,7 @@ paper/elsarticle/*
 !paper/elsarticle/elsarticle.cls
 !paper/elsarticle/elsarticle-num.bst
 !paper/elsarticle/manuscript.tex
+!paper/elsarticle/manuscript-zh.tex
 !paper/elsarticle/title-page.tex
 !paper/elsarticle/references.bib
 paper/elsarticle/*.aux
@@ -44,3 +50,14 @@ paper/elsarticle/*.log
 paper/elsarticle/*.out
 paper/elsarticle/*.pdf
 paper/elsarticle/*.synctex.gz
+
+# Historical paper archives and superseded experiment dumps
+paper/archive/
+paper/results/api_validation_pilot_20260903/
+paper/results/document_level_metrics/
+paper/results/external_baselines_d100/
+paper/results/topk_d100_ablation/
+
+# Superseded multi-figure architecture exports (not referenced by the active manuscript)
+paper/figures/pge_*_submission.*
+scripts/build_submission_architecture.py

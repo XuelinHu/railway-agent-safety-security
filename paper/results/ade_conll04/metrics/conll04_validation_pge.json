@@ -1,0 +1,7033 @@
+{
+  "metric": "strict-source-character-span",
+  "selection_split": "validation",
+  "formal_test_read": false,
+  "jobs_gold": 231,
+  "jobs_predicted": 231,
+  "jobs_evaluated": 231,
+  "jobs_missing_predictions": 0,
+  "generation_success_rate": 1.0,
+  "entity_strict": {
+    "precision": 0.8497,
+    "recall": 0.785,
+    "f1": 0.8161,
+    "gold": 893,
+    "predicted": 825,
+    "correct": 701
+  },
+  "relation_strict": {
+    "precision": 0.6508,
+    "recall": 0.5598,
+    "f1": 0.6019,
+    "gold": 343,
+    "predicted": 295,
+    "correct": 192
+  },
+  "relation_with_claim_status": {
+    "precision": 0.6508,
+    "recall": 0.5598,
+    "f1": 0.6019,
+    "gold": 343,
+    "predicted": 295,
+    "correct": 192
+  },
+  "macro_by_job": {
+    "entity_strict": {
+      "precision": 0.8737,
+      "recall": 0.8215,
+      "f1": 0.8377
+    },
+    "relation_strict": {
+      "precision": 0.6988,
+      "recall": 0.6664,
+      "f1": 0.6612
+    },
+    "relation_with_claim_status": {
+      "precision": 0.6988,
+      "recall": 0.6664,
+      "f1": 0.6612
+    }
+  },
+  "resolution": {
+    "unresolved_gold_entities": 0,
+    "unresolved_predicted_entities": 0
+  },
+  "by_language": {
+    "en": {
+      "jobs": 231,
+      "entity_strict": {
+        "precision": 0.8497,
+        "recall": 0.785,
+        "f1": 0.8161,
+        "gold": 893,
+        "predicted": 825,
+        "correct": 701
+      },
+      "relation_strict": {
+        "precision": 0.6508,
+        "recall": 0.5598,
+        "f1": 0.6019,
+        "gold": 343,
+        "predicted": 295,
+        "correct": 192
+      },
+      "relation_with_claim_status": {
+        "precision": 0.6508,
+        "recall": 0.5598,
+        "f1": 0.6019,
+        "gold": 343,
+        "predicted": 295,
+        "correct": 192
+      },
+      "macro_by_job": {
+        "entity_strict": {
+          "precision": 0.8737,
+          "recall": 0.8215,
+          "f1": 0.8377
+        },
+        "relation_strict": {
+          "precision": 0.6988,
+          "recall": 0.6664,
+          "f1": 0.6612
+        },
+        "relation_with_claim_status": {
+          "precision": 0.6988,
+          "recall": 0.6664,
+          "f1": 0.6612
+        }
+      }
+    }
+  },
+  "per_job": {
+    "conll04_validation_5178_C1": {
+      "job_id": "conll04_validation_5178_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 2,
+        "predicted": 2,
+        "correct": 2
+      },
+      "relation_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      },
+      "relation_with_claim_status": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      }
+    },
+    "conll04_validation_1755_C1": {
+      "job_id": "conll04_validation_1755_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 1.0,
+        "recall": 0.4,
+        "f1": 0.5714,
+        "gold": 5,
+        "predicted": 2,
+        "correct": 2
+      },
+      "relation_strict": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 0
+      },
+      "relation_with_claim_status": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 0
+      }
+    },
+    "conll04_validation_4596_C1": {
+      "job_id": "conll04_validation_4596_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 2,
+        "predicted": 2,
+        "correct": 2
+      },
+      "relation_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      },
+      "relation_with_claim_status": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      }
+    },
+    "conll04_validation_2834_C1": {
+      "job_id": "conll04_validation_2834_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 1.0,
+        "recall": 0.6667,
+        "f1": 0.8,
+        "gold": 3,
+        "predicted": 2,
+        "correct": 2
+      },
+      "relation_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      },
+      "relation_with_claim_status": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      }
+    },
+    "conll04_validation_1771_C1": {
+      "job_id": "conll04_validation_1771_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 0.75,
+        "recall": 0.75,
+        "f1": 0.75,
+        "gold": 4,
+        "predicted": 4,
+        "correct": 3
+      },
+      "relation_strict": {
+        "precision": 0.5,
+        "recall": 0.6667,
+        "f1": 0.5714,
+        "gold": 3,
+        "predicted": 4,
+        "correct": 2
+      },
+      "relation_with_claim_status": {
+        "precision": 0.5,
+        "recall": 0.6667,
+        "f1": 0.5714,
+        "gold": 3,
+        "predicted": 4,
+        "correct": 2
+      }
+    },
+    "conll04_validation_1954_C1": {
+      "job_id": "conll04_validation_1954_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 0.6667,
+        "recall": 1.0,
+        "f1": 0.8,
+        "gold": 2,
+        "predicted": 3,
+        "correct": 2
+      },
+      "relation_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      },
+      "relation_with_claim_status": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      }
+    },
+    "conll04_validation_1846_C1": {
+      "job_id": "conll04_validation_1846_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 1.0,
+        "recall": 0.6,
+        "f1": 0.75,
+        "gold": 5,
+        "predicted": 3,
+        "correct": 3
+      },
+      "relation_strict": {
+        "precision": 0.3333,
+        "recall": 1.0,
+        "f1": 0.5,
+        "gold": 1,
+        "predicted": 3,
+        "correct": 1
+      },
+      "relation_with_claim_status": {
+        "precision": 0.3333,
+        "recall": 1.0,
+        "f1": 0.5,
+        "gold": 1,
+        "predicted": 3,
+        "correct": 1
+      }
+    },
+    "conll04_validation_3426_C1": {
+      "job_id": "conll04_validation_3426_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 1.0,
+        "recall": 0.5,
+        "f1": 0.6667,
+        "gold": 2,
+        "predicted": 1,
+        "correct": 1
+      },
+      "relation_strict": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "gold": 1,
+        "predicted": 0,
+        "correct": 0
+      },
+      "relation_with_claim_status": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "gold": 1,
+        "predicted": 0,
+        "correct": 0
+      }
+    },
+    "conll04_validation_554_C1": {
+      "job_id": "conll04_validation_554_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 0.75,
+        "recall": 1.0,
+        "f1": 0.8571,
+        "gold": 3,
+        "predicted": 4,
+        "correct": 3
+      },
+      "relation_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 3,
+        "predicted": 3,
+        "correct": 3
+      },
+      "relation_with_claim_status": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 3,
+        "predicted": 3,
+        "correct": 3
+      }
+    },
+    "conll04_validation_119_C1": {
+      "job_id": "conll04_validation_119_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 0.5,
+        "recall": 0.3333,
+        "f1": 0.4,
+        "gold": 3,
+        "predicted": 2,
+        "correct": 1
+      },
+      "relation_strict": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "gold": 3,
+        "predicted": 1,
+        "correct": 0
+      },
+      "relation_with_claim_status": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "gold": 3,
+        "predicted": 1,
+        "correct": 0
+      }
+    },
+    "conll04_validation_1189_C1": {
+      "job_id": "conll04_validation_1189_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 3,
+        "predicted": 3,
+        "correct": 3
+      },
+      "relation_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      },
+      "relation_with_claim_status": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      }
+    },
+    "conll04_validation_543_C1": {
+      "job_id": "conll04_validation_543_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 2,
+        "predicted": 2,
+        "correct": 2
+      },
+      "relation_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      },
+      "relation_with_claim_status": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      }
+    },
+    "conll04_validation_5050_C1": {
+      "job_id": "conll04_validation_5050_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 3,
+        "predicted": 3,
+        "correct": 3
+      },
+      "relation_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      },
+      "relation_with_claim_status": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      }
+    },
+    "conll04_validation_3998_C1": {
+      "job_id": "conll04_validation_3998_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 2,
+        "predicted": 2,
+        "correct": 2
+      },
+      "relation_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      },
+      "relation_with_claim_status": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      }
+    },
+    "conll04_validation_1462_C1": {
+      "job_id": "conll04_validation_1462_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 2,
+        "predicted": 2,
+        "correct": 2
+      },
+      "relation_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      },
+      "relation_with_claim_status": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      }
+    },
+    "conll04_validation_2575_C1": {
+      "job_id": "conll04_validation_2575_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 1.0,
+        "recall": 0.8,
+        "f1": 0.8889,
+        "gold": 5,
+        "predicted": 4,
+        "correct": 4
+      },
+      "relation_strict": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "gold": 1,
+        "predicted": 0,
+        "correct": 0
+      },
+      "relation_with_claim_status": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "gold": 1,
+        "predicted": 0,
+        "correct": 0
+      }
+    },
+    "conll04_validation_5084_C1": {
+      "job_id": "conll04_validation_5084_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 0.6667,
+        "recall": 1.0,
+        "f1": 0.8,
+        "gold": 2,
+        "predicted": 3,
+        "correct": 2
+      },
+      "relation_strict": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 0
+      },
+      "relation_with_claim_status": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 0
+      }
+    },
+    "conll04_validation_5290_C1": {
+      "job_id": "conll04_validation_5290_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 1.0,
+        "recall": 0.6667,
+        "f1": 0.8,
+        "gold": 3,
+        "predicted": 2,
+        "correct": 2
+      },
+      "relation_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      },
+      "relation_with_claim_status": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      }
+    },
+    "conll04_validation_86_C1": {
+      "job_id": "conll04_validation_86_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 3,
+        "predicted": 3,
+        "correct": 3
+      },
+      "relation_strict": {
+        "precision": 1.0,
+        "recall": 0.5,
+        "f1": 0.6667,
+        "gold": 2,
+        "predicted": 1,
+        "correct": 1
+      },
+      "relation_with_claim_status": {
+        "precision": 1.0,
+        "recall": 0.5,
+        "f1": 0.6667,
+        "gold": 2,
+        "predicted": 1,
+        "correct": 1
+      }
+    },
+    "conll04_validation_1233_C1": {
+      "job_id": "conll04_validation_1233_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 3,
+        "predicted": 3,
+        "correct": 3
+      },
+      "relation_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      },
+      "relation_with_claim_status": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      }
+    },
+    "conll04_validation_2781_C1": {
+      "job_id": "conll04_validation_2781_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 1.0,
+        "recall": 0.6667,
+        "f1": 0.8,
+        "gold": 3,
+        "predicted": 2,
+        "correct": 2
+      },
+      "relation_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      },
+      "relation_with_claim_status": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      }
+    },
+    "conll04_validation_5255_C1": {
+      "job_id": "conll04_validation_5255_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 2,
+        "predicted": 2,
+        "correct": 2
+      },
+      "relation_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      },
+      "relation_with_claim_status": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      }
+    },
+    "conll04_validation_5206_C1": {
+      "job_id": "conll04_validation_5206_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 1.0,
+        "recall": 0.375,
+        "f1": 0.5455,
+        "gold": 8,
+        "predicted": 3,
+        "correct": 3
+      },
+      "relation_strict": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 0
+      },
+      "relation_with_claim_status": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 0
+      }
+    },
+    "conll04_validation_3045_C1": {
+      "job_id": "conll04_validation_3045_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 0.6,
+        "recall": 0.5,
+        "f1": 0.5455,
+        "gold": 6,
+        "predicted": 5,
+        "correct": 3
+      },
+      "relation_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      },
+      "relation_with_claim_status": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      }
+    },
+    "conll04_validation_281_C1": {
+      "job_id": "conll04_validation_281_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 0.6667,
+        "recall": 1.0,
+        "f1": 0.8,
+        "gold": 2,
+        "predicted": 3,
+        "correct": 2
+      },
+      "relation_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      },
+      "relation_with_claim_status": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      }
+    },
+    "conll04_validation_212_C1": {
+      "job_id": "conll04_validation_212_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 0.6667,
+        "recall": 0.5,
+        "f1": 0.5714,
+        "gold": 4,
+        "predicted": 3,
+        "correct": 2
+      },
+      "relation_strict": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 0
+      },
+      "relation_with_claim_status": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 0
+      }
+    },
+    "conll04_validation_1322_C1": {
+      "job_id": "conll04_validation_1322_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 3,
+        "predicted": 3,
+        "correct": 3
+      },
+      "relation_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      },
+      "relation_with_claim_status": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      }
+    },
+    "conll04_validation_5412_C1": {
+      "job_id": "conll04_validation_5412_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 0.7143,
+        "recall": 0.7143,
+        "f1": 0.7143,
+        "gold": 7,
+        "predicted": 7,
+        "correct": 5
+      },
+      "relation_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      },
+      "relation_with_claim_status": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      }
+    },
+    "conll04_validation_1002_C1": {
+      "job_id": "conll04_validation_1002_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 3,
+        "predicted": 3,
+        "correct": 3
+      },
+      "relation_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 2,
+        "predicted": 2,
+        "correct": 2
+      },
+      "relation_with_claim_status": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 2,
+        "predicted": 2,
+        "correct": 2
+      }
+    },
+    "conll04_validation_2850_C1": {
+      "job_id": "conll04_validation_2850_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 0.6667,
+        "recall": 1.0,
+        "f1": 0.8,
+        "gold": 2,
+        "predicted": 3,
+        "correct": 2
+      },
+      "relation_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      },
+      "relation_with_claim_status": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      }
+    },
+    "conll04_validation_3797_C1": {
+      "job_id": "conll04_validation_3797_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 4,
+        "predicted": 4,
+        "correct": 4
+      },
+      "relation_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      },
+      "relation_with_claim_status": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      }
+    },
+    "conll04_validation_950_C1": {
+      "job_id": "conll04_validation_950_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 3,
+        "predicted": 3,
+        "correct": 3
+      },
+      "relation_strict": {
+        "precision": 1.0,
+        "recall": 0.3333,
+        "f1": 0.5,
+        "gold": 3,
+        "predicted": 1,
+        "correct": 1
+      },
+      "relation_with_claim_status": {
+        "precision": 1.0,
+        "recall": 0.3333,
+        "f1": 0.5,
+        "gold": 3,
+        "predicted": 1,
+        "correct": 1
+      }
+    },
+    "conll04_validation_5142_C1": {
+      "job_id": "conll04_validation_5142_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 3,
+        "predicted": 3,
+        "correct": 3
+      },
+      "relation_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      },
+      "relation_with_claim_status": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      }
+    },
+    "conll04_validation_141_C1": {
+      "job_id": "conll04_validation_141_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 3,
+        "predicted": 3,
+        "correct": 3
+      },
+      "relation_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 3,
+        "predicted": 3,
+        "correct": 3
+      },
+      "relation_with_claim_status": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 3,
+        "predicted": 3,
+        "correct": 3
+      }
+    },
+    "conll04_validation_4112_C1": {
+      "job_id": "conll04_validation_4112_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 0.5,
+        "recall": 0.5,
+        "f1": 0.5,
+        "gold": 2,
+        "predicted": 2,
+        "correct": 1
+      },
+      "relation_strict": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 0
+      },
+      "relation_with_claim_status": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 0
+      }
+    },
+    "conll04_validation_414_C1": {
+      "job_id": "conll04_validation_414_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 1.0,
+        "recall": 0.5,
+        "f1": 0.6667,
+        "gold": 6,
+        "predicted": 3,
+        "correct": 3
+      },
+      "relation_strict": {
+        "precision": 1.0,
+        "recall": 0.5,
+        "f1": 0.6667,
+        "gold": 2,
+        "predicted": 1,
+        "correct": 1
+      },
+      "relation_with_claim_status": {
+        "precision": 1.0,
+        "recall": 0.5,
+        "f1": 0.6667,
+        "gold": 2,
+        "predicted": 1,
+        "correct": 1
+      }
+    },
+    "conll04_validation_2643_C1": {
+      "job_id": "conll04_validation_2643_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 3,
+        "predicted": 3,
+        "correct": 3
+      },
+      "relation_strict": {
+        "precision": 1.0,
+        "recall": 0.3333,
+        "f1": 0.5,
+        "gold": 3,
+        "predicted": 1,
+        "correct": 1
+      },
+      "relation_with_claim_status": {
+        "precision": 1.0,
+        "recall": 0.3333,
+        "f1": 0.5,
+        "gold": 3,
+        "predicted": 1,
+        "correct": 1
+      }
+    },
+    "conll04_validation_3766_C1": {
+      "job_id": "conll04_validation_3766_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 0.7273,
+        "recall": 0.8889,
+        "f1": 0.8,
+        "gold": 9,
+        "predicted": 11,
+        "correct": 8
+      },
+      "relation_strict": {
+        "precision": 1.0,
+        "recall": 0.25,
+        "f1": 0.4,
+        "gold": 4,
+        "predicted": 1,
+        "correct": 1
+      },
+      "relation_with_claim_status": {
+        "precision": 1.0,
+        "recall": 0.25,
+        "f1": 0.4,
+        "gold": 4,
+        "predicted": 1,
+        "correct": 1
+      }
+    },
+    "conll04_validation_1402_C1": {
+      "job_id": "conll04_validation_1402_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 0.8333,
+        "recall": 1.0,
+        "f1": 0.9091,
+        "gold": 5,
+        "predicted": 6,
+        "correct": 5
+      },
+      "relation_strict": {
+        "precision": 0.6667,
+        "recall": 0.6667,
+        "f1": 0.6667,
+        "gold": 3,
+        "predicted": 3,
+        "correct": 2
+      },
+      "relation_with_claim_status": {
+        "precision": 0.6667,
+        "recall": 0.6667,
+        "f1": 0.6667,
+        "gold": 3,
+        "predicted": 3,
+        "correct": 2
+      }
+    },
+    "conll04_validation_2283_C1": {
+      "job_id": "conll04_validation_2283_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 4,
+        "predicted": 4,
+        "correct": 4
+      },
+      "relation_strict": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 0
+      },
+      "relation_with_claim_status": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 0
+      }
+    },
+    "conll04_validation_2412_C1": {
+      "job_id": "conll04_validation_2412_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 3,
+        "predicted": 3,
+        "correct": 3
+      },
+      "relation_strict": {
+        "precision": 0.3333,
+        "recall": 1.0,
+        "f1": 0.5,
+        "gold": 1,
+        "predicted": 3,
+        "correct": 1
+      },
+      "relation_with_claim_status": {
+        "precision": 0.3333,
+        "recall": 1.0,
+        "f1": 0.5,
+        "gold": 1,
+        "predicted": 3,
+        "correct": 1
+      }
+    },
+    "conll04_validation_5098_C1": {
+      "job_id": "conll04_validation_5098_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 0.6667,
+        "recall": 0.6667,
+        "f1": 0.6667,
+        "gold": 3,
+        "predicted": 3,
+        "correct": 2
+      },
+      "relation_strict": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 0
+      },
+      "relation_with_claim_status": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 0
+      }
+    },
+    "conll04_validation_2743_C1": {
+      "job_id": "conll04_validation_2743_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 0.6667,
+        "recall": 0.6667,
+        "f1": 0.6667,
+        "gold": 3,
+        "predicted": 3,
+        "correct": 2
+      },
+      "relation_strict": {
+        "precision": 0.5,
+        "recall": 1.0,
+        "f1": 0.6667,
+        "gold": 1,
+        "predicted": 2,
+        "correct": 1
+      },
+      "relation_with_claim_status": {
+        "precision": 0.5,
+        "recall": 1.0,
+        "f1": 0.6667,
+        "gold": 1,
+        "predicted": 2,
+        "correct": 1
+      }
+    },
+    "conll04_validation_2365_C1": {
+      "job_id": "conll04_validation_2365_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 2,
+        "predicted": 2,
+        "correct": 2
+      },
+      "relation_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      },
+      "relation_with_claim_status": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      }
+    },
+    "conll04_validation_908_C1": {
+      "job_id": "conll04_validation_908_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 0.75,
+        "recall": 0.6,
+        "f1": 0.6667,
+        "gold": 5,
+        "predicted": 4,
+        "correct": 3
+      },
+      "relation_strict": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "gold": 1,
+        "predicted": 3,
+        "correct": 0
+      },
+      "relation_with_claim_status": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "gold": 1,
+        "predicted": 3,
+        "correct": 0
+      }
+    },
+    "conll04_validation_5271_C1": {
+      "job_id": "conll04_validation_5271_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 1.0,
+        "recall": 0.6667,
+        "f1": 0.8,
+        "gold": 3,
+        "predicted": 2,
+        "correct": 2
+      },
+      "relation_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      },
+      "relation_with_claim_status": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      }
+    },
+    "conll04_validation_326_C1": {
+      "job_id": "conll04_validation_326_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 1.0,
+        "recall": 0.5,
+        "f1": 0.6667,
+        "gold": 2,
+        "predicted": 1,
+        "correct": 1
+      },
+      "relation_strict": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "gold": 1,
+        "predicted": 0,
+        "correct": 0
+      },
+      "relation_with_claim_status": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "gold": 1,
+        "predicted": 0,
+        "correct": 0
+      }
+    },
+    "conll04_validation_3320_C1": {
+      "job_id": "conll04_validation_3320_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 4,
+        "predicted": 4,
+        "correct": 4
+      },
+      "relation_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      },
+      "relation_with_claim_status": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      }
+    },
+    "conll04_validation_1138_C1": {
+      "job_id": "conll04_validation_1138_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 0.8,
+        "recall": 0.8,
+        "f1": 0.8,
+        "gold": 5,
+        "predicted": 5,
+        "correct": 4
+      },
+      "relation_strict": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "gold": 2,
+        "predicted": 2,
+        "correct": 0
+      },
+      "relation_with_claim_status": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "gold": 2,
+        "predicted": 2,
+        "correct": 0
+      }
+    },
+    "conll04_validation_1630_C1": {
+      "job_id": "conll04_validation_1630_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 5,
+        "predicted": 5,
+        "correct": 5
+      },
+      "relation_strict": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 0
+      },
+      "relation_with_claim_status": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 0
+      }
+    },
+    "conll04_validation_1003_C1": {
+      "job_id": "conll04_validation_1003_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 0.6,
+        "recall": 0.6,
+        "f1": 0.6,
+        "gold": 5,
+        "predicted": 5,
+        "correct": 3
+      },
+      "relation_strict": {
+        "precision": 0.3333,
+        "recall": 0.5,
+        "f1": 0.4,
+        "gold": 2,
+        "predicted": 3,
+        "correct": 1
+      },
+      "relation_with_claim_status": {
+        "precision": 0.3333,
+        "recall": 0.5,
+        "f1": 0.4,
+        "gold": 2,
+        "predicted": 3,
+        "correct": 1
+      }
+    },
+    "conll04_validation_2581_C1": {
+      "job_id": "conll04_validation_2581_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 0.5,
+        "recall": 0.5,
+        "f1": 0.5,
+        "gold": 4,
+        "predicted": 4,
+        "correct": 2
+      },
+      "relation_strict": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 0
+      },
+      "relation_with_claim_status": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 0
+      }
+    },
+    "conll04_validation_3048_C1": {
+      "job_id": "conll04_validation_3048_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 1.0,
+        "recall": 0.6,
+        "f1": 0.75,
+        "gold": 5,
+        "predicted": 3,
+        "correct": 3
+      },
+      "relation_strict": {
+        "precision": 1.0,
+        "recall": 0.3333,
+        "f1": 0.5,
+        "gold": 3,
+        "predicted": 1,
+        "correct": 1
+      },
+      "relation_with_claim_status": {
+        "precision": 1.0,
+        "recall": 0.3333,
+        "f1": 0.5,
+        "gold": 3,
+        "predicted": 1,
+        "correct": 1
+      }
+    },
+    "conll04_validation_4378_C1": {
+      "job_id": "conll04_validation_4378_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 0.8571,
+        "recall": 0.8571,
+        "f1": 0.8571,
+        "gold": 7,
+        "predicted": 7,
+        "correct": 6
+      },
+      "relation_strict": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "gold": 5,
+        "predicted": 1,
+        "correct": 0
+      },
+      "relation_with_claim_status": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "gold": 5,
+        "predicted": 1,
+        "correct": 0
+      }
+    },
+    "conll04_validation_5252_C1": {
+      "job_id": "conll04_validation_5252_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 0.5,
+        "recall": 0.6667,
+        "f1": 0.5714,
+        "gold": 3,
+        "predicted": 4,
+        "correct": 2
+      },
+      "relation_strict": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "gold": 1,
+        "predicted": 3,
+        "correct": 0
+      },
+      "relation_with_claim_status": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "gold": 1,
+        "predicted": 3,
+        "correct": 0
+      }
+    },
+    "conll04_validation_3234_C1": {
+      "job_id": "conll04_validation_3234_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 0.875,
+        "recall": 0.7,
+        "f1": 0.7778,
+        "gold": 10,
+        "predicted": 8,
+        "correct": 7
+      },
+      "relation_strict": {
+        "precision": 1.0,
+        "recall": 0.2,
+        "f1": 0.3333,
+        "gold": 5,
+        "predicted": 1,
+        "correct": 1
+      },
+      "relation_with_claim_status": {
+        "precision": 1.0,
+        "recall": 0.2,
+        "f1": 0.3333,
+        "gold": 5,
+        "predicted": 1,
+        "correct": 1
+      }
+    },
+    "conll04_validation_60_C1": {
+      "job_id": "conll04_validation_60_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 0.5714,
+        "recall": 0.6667,
+        "f1": 0.6154,
+        "gold": 6,
+        "predicted": 7,
+        "correct": 4
+      },
+      "relation_strict": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "gold": 2,
+        "predicted": 0,
+        "correct": 0
+      },
+      "relation_with_claim_status": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "gold": 2,
+        "predicted": 0,
+        "correct": 0
+      }
+    },
+    "conll04_validation_5570_C1": {
+      "job_id": "conll04_validation_5570_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 0.75,
+        "recall": 0.6,
+        "f1": 0.6667,
+        "gold": 5,
+        "predicted": 4,
+        "correct": 3
+      },
+      "relation_strict": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 0
+      },
+      "relation_with_claim_status": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 0
+      }
+    },
+    "conll04_validation_3820_C1": {
+      "job_id": "conll04_validation_3820_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 4,
+        "predicted": 4,
+        "correct": 4
+      },
+      "relation_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      },
+      "relation_with_claim_status": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      }
+    },
+    "conll04_validation_5033_C1": {
+      "job_id": "conll04_validation_5033_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 1.0,
+        "recall": 0.5,
+        "f1": 0.6667,
+        "gold": 4,
+        "predicted": 2,
+        "correct": 2
+      },
+      "relation_strict": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 0
+      },
+      "relation_with_claim_status": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 0
+      }
+    },
+    "conll04_validation_1558_C1": {
+      "job_id": "conll04_validation_1558_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 2,
+        "predicted": 2,
+        "correct": 2
+      },
+      "relation_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      },
+      "relation_with_claim_status": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      }
+    },
+    "conll04_validation_1363_C1": {
+      "job_id": "conll04_validation_1363_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 0.6667,
+        "recall": 0.6667,
+        "f1": 0.6667,
+        "gold": 6,
+        "predicted": 6,
+        "correct": 4
+      },
+      "relation_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      },
+      "relation_with_claim_status": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      }
+    },
+    "conll04_validation_361_C1": {
+      "job_id": "conll04_validation_361_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 0.8333,
+        "recall": 0.8333,
+        "f1": 0.8333,
+        "gold": 6,
+        "predicted": 6,
+        "correct": 5
+      },
+      "relation_strict": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "gold": 1,
+        "predicted": 3,
+        "correct": 0
+      },
+      "relation_with_claim_status": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "gold": 1,
+        "predicted": 3,
+        "correct": 0
+      }
+    },
+    "conll04_validation_1361_C1": {
+      "job_id": "conll04_validation_1361_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 0.6667,
+        "recall": 0.6667,
+        "f1": 0.6667,
+        "gold": 3,
+        "predicted": 3,
+        "correct": 2
+      },
+      "relation_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      },
+      "relation_with_claim_status": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      }
+    },
+    "conll04_validation_1750_C1": {
+      "job_id": "conll04_validation_1750_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 1.0,
+        "recall": 0.6667,
+        "f1": 0.8,
+        "gold": 3,
+        "predicted": 2,
+        "correct": 2
+      },
+      "relation_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      },
+      "relation_with_claim_status": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      }
+    },
+    "conll04_validation_627_C1": {
+      "job_id": "conll04_validation_627_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 0.6667,
+        "recall": 0.6667,
+        "f1": 0.6667,
+        "gold": 6,
+        "predicted": 6,
+        "correct": 4
+      },
+      "relation_strict": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 0
+      },
+      "relation_with_claim_status": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 0
+      }
+    },
+    "conll04_validation_5048_C1": {
+      "job_id": "conll04_validation_5048_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 1.0,
+        "recall": 0.75,
+        "f1": 0.8571,
+        "gold": 4,
+        "predicted": 3,
+        "correct": 3
+      },
+      "relation_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      },
+      "relation_with_claim_status": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      }
+    },
+    "conll04_validation_1674_C1": {
+      "job_id": "conll04_validation_1674_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 0.8,
+        "recall": 1.0,
+        "f1": 0.8889,
+        "gold": 4,
+        "predicted": 5,
+        "correct": 4
+      },
+      "relation_strict": {
+        "precision": 0.3333,
+        "recall": 1.0,
+        "f1": 0.5,
+        "gold": 1,
+        "predicted": 3,
+        "correct": 1
+      },
+      "relation_with_claim_status": {
+        "precision": 0.3333,
+        "recall": 1.0,
+        "f1": 0.5,
+        "gold": 1,
+        "predicted": 3,
+        "correct": 1
+      }
+    },
+    "conll04_validation_4295_C1": {
+      "job_id": "conll04_validation_4295_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 0.7143,
+        "recall": 0.625,
+        "f1": 0.6667,
+        "gold": 8,
+        "predicted": 7,
+        "correct": 5
+      },
+      "relation_strict": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "gold": 4,
+        "predicted": 1,
+        "correct": 0
+      },
+      "relation_with_claim_status": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "gold": 4,
+        "predicted": 1,
+        "correct": 0
+      }
+    },
+    "conll04_validation_5289_C1": {
+      "job_id": "conll04_validation_5289_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 3,
+        "predicted": 3,
+        "correct": 3
+      },
+      "relation_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      },
+      "relation_with_claim_status": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      }
+    },
+    "conll04_validation_4275_C1": {
+      "job_id": "conll04_validation_4275_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 0.3333,
+        "recall": 0.3333,
+        "f1": 0.3333,
+        "gold": 3,
+        "predicted": 3,
+        "correct": 1
+      },
+      "relation_strict": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 0
+      },
+      "relation_with_claim_status": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 0
+      }
+    },
+    "conll04_validation_2883_C1": {
+      "job_id": "conll04_validation_2883_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 0.75,
+        "recall": 0.75,
+        "f1": 0.75,
+        "gold": 4,
+        "predicted": 4,
+        "correct": 3
+      },
+      "relation_strict": {
+        "precision": 1.0,
+        "recall": 0.6667,
+        "f1": 0.8,
+        "gold": 3,
+        "predicted": 2,
+        "correct": 2
+      },
+      "relation_with_claim_status": {
+        "precision": 1.0,
+        "recall": 0.6667,
+        "f1": 0.8,
+        "gold": 3,
+        "predicted": 2,
+        "correct": 2
+      }
+    },
+    "conll04_validation_675_C1": {
+      "job_id": "conll04_validation_675_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 2,
+        "predicted": 2,
+        "correct": 2
+      },
+      "relation_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      },
+      "relation_with_claim_status": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      }
+    },
+    "conll04_validation_1703_C1": {
+      "job_id": "conll04_validation_1703_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 2,
+        "predicted": 2,
+        "correct": 2
+      },
+      "relation_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      },
+      "relation_with_claim_status": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      }
+    },
+    "conll04_validation_2759_C1": {
+      "job_id": "conll04_validation_2759_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 2,
+        "predicted": 2,
+        "correct": 2
+      },
+      "relation_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      },
+      "relation_with_claim_status": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      }
+    },
+    "conll04_validation_3732_C1": {
+      "job_id": "conll04_validation_3732_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 4,
+        "predicted": 4,
+        "correct": 4
+      },
+      "relation_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      },
+      "relation_with_claim_status": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      }
+    },
+    "conll04_validation_5192_C1": {
+      "job_id": "conll04_validation_5192_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 0.75,
+        "recall": 0.6,
+        "f1": 0.6667,
+        "gold": 5,
+        "predicted": 4,
+        "correct": 3
+      },
+      "relation_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      },
+      "relation_with_claim_status": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      }
+    },
+    "conll04_validation_1905_C1": {
+      "job_id": "conll04_validation_1905_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 3,
+        "predicted": 3,
+        "correct": 3
+      },
+      "relation_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      },
+      "relation_with_claim_status": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      }
+    },
+    "conll04_validation_2315_C1": {
+      "job_id": "conll04_validation_2315_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 0.25,
+        "recall": 0.3333,
+        "f1": 0.2857,
+        "gold": 3,
+        "predicted": 4,
+        "correct": 1
+      },
+      "relation_strict": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 0
+      },
+      "relation_with_claim_status": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 0
+      }
+    },
+    "conll04_validation_1069_C1": {
+      "job_id": "conll04_validation_1069_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 2,
+        "predicted": 2,
+        "correct": 2
+      },
+      "relation_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      },
+      "relation_with_claim_status": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      }
+    },
+    "conll04_validation_4188_C1": {
+      "job_id": "conll04_validation_4188_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 4,
+        "predicted": 4,
+        "correct": 4
+      },
+      "relation_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      },
+      "relation_with_claim_status": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      }
+    },
+    "conll04_validation_1348_C1": {
+      "job_id": "conll04_validation_1348_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 1.0,
+        "recall": 0.6667,
+        "f1": 0.8,
+        "gold": 3,
+        "predicted": 2,
+        "correct": 2
+      },
+      "relation_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      },
+      "relation_with_claim_status": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      }
+    },
+    "conll04_validation_467_C1": {
+      "job_id": "conll04_validation_467_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 0.5,
+        "recall": 0.6667,
+        "f1": 0.5714,
+        "gold": 3,
+        "predicted": 4,
+        "correct": 2
+      },
+      "relation_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      },
+      "relation_with_claim_status": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      }
+    },
+    "conll04_validation_1465_C1": {
+      "job_id": "conll04_validation_1465_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 2,
+        "predicted": 2,
+        "correct": 2
+      },
+      "relation_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      },
+      "relation_with_claim_status": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      }
+    },
+    "conll04_validation_1013_C1": {
+      "job_id": "conll04_validation_1013_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 4,
+        "predicted": 4,
+        "correct": 4
+      },
+      "relation_strict": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 0
+      },
+      "relation_with_claim_status": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 0
+      }
+    },
+    "conll04_validation_5134_C1": {
+      "job_id": "conll04_validation_5134_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 4,
+        "predicted": 4,
+        "correct": 4
+      },
+      "relation_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 2,
+        "predicted": 2,
+        "correct": 2
+      },
+      "relation_with_claim_status": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 2,
+        "predicted": 2,
+        "correct": 2
+      }
+    },
+    "conll04_validation_4309_C1": {
+      "job_id": "conll04_validation_4309_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 4,
+        "predicted": 4,
+        "correct": 4
+      },
+      "relation_strict": {
+        "precision": 0.5,
+        "recall": 1.0,
+        "f1": 0.6667,
+        "gold": 1,
+        "predicted": 2,
+        "correct": 1
+      },
+      "relation_with_claim_status": {
+        "precision": 0.5,
+        "recall": 1.0,
+        "f1": 0.6667,
+        "gold": 1,
+        "predicted": 2,
+        "correct": 1
+      }
+    },
+    "conll04_validation_5109_C1": {
+      "job_id": "conll04_validation_5109_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 3,
+        "predicted": 3,
+        "correct": 3
+      },
+      "relation_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      },
+      "relation_with_claim_status": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      }
+    },
+    "conll04_validation_5214_C1": {
+      "job_id": "conll04_validation_5214_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 8,
+        "predicted": 8,
+        "correct": 8
+      },
+      "relation_strict": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 0
+      },
+      "relation_with_claim_status": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 0
+      }
+    },
+    "conll04_validation_1623_C1": {
+      "job_id": "conll04_validation_1623_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 2,
+        "predicted": 2,
+        "correct": 2
+      },
+      "relation_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      },
+      "relation_with_claim_status": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      }
+    },
+    "conll04_validation_5015_C1": {
+      "job_id": "conll04_validation_5015_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 2,
+        "predicted": 2,
+        "correct": 2
+      },
+      "relation_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      },
+      "relation_with_claim_status": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      }
+    },
+    "conll04_validation_3941_C1": {
+      "job_id": "conll04_validation_3941_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 3,
+        "predicted": 3,
+        "correct": 3
+      },
+      "relation_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      },
+      "relation_with_claim_status": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      }
+    },
+    "conll04_validation_5347_C1": {
+      "job_id": "conll04_validation_5347_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 3,
+        "predicted": 3,
+        "correct": 3
+      },
+      "relation_strict": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "gold": 2,
+        "predicted": 1,
+        "correct": 0
+      },
+      "relation_with_claim_status": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "gold": 2,
+        "predicted": 1,
+        "correct": 0
+      }
+    },
+    "conll04_validation_5196_C1": {
+      "job_id": "conll04_validation_5196_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 1.0,
+        "recall": 0.8333,
+        "f1": 0.9091,
+        "gold": 6,
+        "predicted": 5,
+        "correct": 5
+      },
+      "relation_strict": {
+        "precision": 1.0,
+        "recall": 0.5,
+        "f1": 0.6667,
+        "gold": 2,
+        "predicted": 1,
+        "correct": 1
+      },
+      "relation_with_claim_status": {
+        "precision": 1.0,
+        "recall": 0.5,
+        "f1": 0.6667,
+        "gold": 2,
+        "predicted": 1,
+        "correct": 1
+      }
+    },
+    "conll04_validation_5161_C1": {
+      "job_id": "conll04_validation_5161_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 0.75,
+        "recall": 0.5,
+        "f1": 0.6,
+        "gold": 6,
+        "predicted": 4,
+        "correct": 3
+      },
+      "relation_strict": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "gold": 2,
+        "predicted": 1,
+        "correct": 0
+      },
+      "relation_with_claim_status": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "gold": 2,
+        "predicted": 1,
+        "correct": 0
+      }
+    },
+    "conll04_validation_945_C1": {
+      "job_id": "conll04_validation_945_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 2,
+        "predicted": 2,
+        "correct": 2
+      },
+      "relation_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      },
+      "relation_with_claim_status": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      }
+    },
+    "conll04_validation_5282_C1": {
+      "job_id": "conll04_validation_5282_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 2,
+        "predicted": 2,
+        "correct": 2
+      },
+      "relation_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      },
+      "relation_with_claim_status": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      }
+    },
+    "conll04_validation_5057_C1": {
+      "job_id": "conll04_validation_5057_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 0.75,
+        "recall": 0.75,
+        "f1": 0.75,
+        "gold": 4,
+        "predicted": 4,
+        "correct": 3
+      },
+      "relation_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      },
+      "relation_with_claim_status": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      }
+    },
+    "conll04_validation_3025_C1": {
+      "job_id": "conll04_validation_3025_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 1.0,
+        "recall": 0.5714,
+        "f1": 0.7273,
+        "gold": 7,
+        "predicted": 4,
+        "correct": 4
+      },
+      "relation_strict": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "gold": 1,
+        "predicted": 0,
+        "correct": 0
+      },
+      "relation_with_claim_status": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "gold": 1,
+        "predicted": 0,
+        "correct": 0
+      }
+    },
+    "conll04_validation_1574_C1": {
+      "job_id": "conll04_validation_1574_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 0.6667,
+        "recall": 0.6667,
+        "f1": 0.6667,
+        "gold": 3,
+        "predicted": 3,
+        "correct": 2
+      },
+      "relation_strict": {
+        "precision": 1.0,
+        "recall": 0.5,
+        "f1": 0.6667,
+        "gold": 2,
+        "predicted": 1,
+        "correct": 1
+      },
+      "relation_with_claim_status": {
+        "precision": 1.0,
+        "recall": 0.5,
+        "f1": 0.6667,
+        "gold": 2,
+        "predicted": 1,
+        "correct": 1
+      }
+    },
+    "conll04_validation_1395_C1": {
+      "job_id": "conll04_validation_1395_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 1.0,
+        "recall": 0.8,
+        "f1": 0.8889,
+        "gold": 5,
+        "predicted": 4,
+        "correct": 4
+      },
+      "relation_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      },
+      "relation_with_claim_status": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      }
+    },
+    "conll04_validation_3416_C1": {
+      "job_id": "conll04_validation_3416_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 1.0,
+        "recall": 0.5,
+        "f1": 0.6667,
+        "gold": 4,
+        "predicted": 2,
+        "correct": 2
+      },
+      "relation_strict": {
+        "precision": 1.0,
+        "recall": 0.5,
+        "f1": 0.6667,
+        "gold": 2,
+        "predicted": 1,
+        "correct": 1
+      },
+      "relation_with_claim_status": {
+        "precision": 1.0,
+        "recall": 0.5,
+        "f1": 0.6667,
+        "gold": 2,
+        "predicted": 1,
+        "correct": 1
+      }
+    },
+    "conll04_validation_3717_C1": {
+      "job_id": "conll04_validation_3717_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 5,
+        "predicted": 5,
+        "correct": 5
+      },
+      "relation_strict": {
+        "precision": 1.0,
+        "recall": 0.5,
+        "f1": 0.6667,
+        "gold": 2,
+        "predicted": 1,
+        "correct": 1
+      },
+      "relation_with_claim_status": {
+        "precision": 1.0,
+        "recall": 0.5,
+        "f1": 0.6667,
+        "gold": 2,
+        "predicted": 1,
+        "correct": 1
+      }
+    },
+    "conll04_validation_1393_C1": {
+      "job_id": "conll04_validation_1393_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 3,
+        "predicted": 3,
+        "correct": 3
+      },
+      "relation_strict": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "gold": 2,
+        "predicted": 0,
+        "correct": 0
+      },
+      "relation_with_claim_status": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "gold": 2,
+        "predicted": 0,
+        "correct": 0
+      }
+    },
+    "conll04_validation_2421_C1": {
+      "job_id": "conll04_validation_2421_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 0.75,
+        "recall": 0.5,
+        "f1": 0.6,
+        "gold": 6,
+        "predicted": 4,
+        "correct": 3
+      },
+      "relation_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      },
+      "relation_with_claim_status": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      }
+    },
+    "conll04_validation_5370_C1": {
+      "job_id": "conll04_validation_5370_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 0.8,
+        "recall": 0.8,
+        "f1": 0.8,
+        "gold": 5,
+        "predicted": 5,
+        "correct": 4
+      },
+      "relation_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      },
+      "relation_with_claim_status": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      }
+    },
+    "conll04_validation_207_C1": {
+      "job_id": "conll04_validation_207_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 3,
+        "predicted": 3,
+        "correct": 3
+      },
+      "relation_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      },
+      "relation_with_claim_status": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      }
+    },
+    "conll04_validation_5363_C1": {
+      "job_id": "conll04_validation_5363_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 2,
+        "predicted": 2,
+        "correct": 2
+      },
+      "relation_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      },
+      "relation_with_claim_status": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      }
+    },
+    "conll04_validation_1707_C1": {
+      "job_id": "conll04_validation_1707_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 3,
+        "predicted": 3,
+        "correct": 3
+      },
+      "relation_strict": {
+        "precision": 1.0,
+        "recall": 0.3333,
+        "f1": 0.5,
+        "gold": 3,
+        "predicted": 1,
+        "correct": 1
+      },
+      "relation_with_claim_status": {
+        "precision": 1.0,
+        "recall": 0.3333,
+        "f1": 0.5,
+        "gold": 3,
+        "predicted": 1,
+        "correct": 1
+      }
+    },
+    "conll04_validation_3791_C1": {
+      "job_id": "conll04_validation_3791_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 1.0,
+        "recall": 0.6667,
+        "f1": 0.8,
+        "gold": 3,
+        "predicted": 2,
+        "correct": 2
+      },
+      "relation_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      },
+      "relation_with_claim_status": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      }
+    },
+    "conll04_validation_5286_C1": {
+      "job_id": "conll04_validation_5286_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 3,
+        "predicted": 3,
+        "correct": 3
+      },
+      "relation_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      },
+      "relation_with_claim_status": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      }
+    },
+    "conll04_validation_5387_C1": {
+      "job_id": "conll04_validation_5387_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 2,
+        "predicted": 2,
+        "correct": 2
+      },
+      "relation_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      },
+      "relation_with_claim_status": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      }
+    },
+    "conll04_validation_1998_C1": {
+      "job_id": "conll04_validation_1998_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 0.6667,
+        "recall": 1.0,
+        "f1": 0.8,
+        "gold": 2,
+        "predicted": 3,
+        "correct": 2
+      },
+      "relation_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      },
+      "relation_with_claim_status": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      }
+    },
+    "conll04_validation_2997_C1": {
+      "job_id": "conll04_validation_2997_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 4,
+        "predicted": 4,
+        "correct": 4
+      },
+      "relation_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 4,
+        "predicted": 4,
+        "correct": 4
+      },
+      "relation_with_claim_status": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 4,
+        "predicted": 4,
+        "correct": 4
+      }
+    },
+    "conll04_validation_1864_C1": {
+      "job_id": "conll04_validation_1864_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 0.75,
+        "recall": 1.0,
+        "f1": 0.8571,
+        "gold": 3,
+        "predicted": 4,
+        "correct": 3
+      },
+      "relation_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      },
+      "relation_with_claim_status": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      }
+    },
+    "conll04_validation_2593_C1": {
+      "job_id": "conll04_validation_2593_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 0.5714,
+        "recall": 0.8,
+        "f1": 0.6667,
+        "gold": 5,
+        "predicted": 7,
+        "correct": 4
+      },
+      "relation_strict": {
+        "precision": 0.25,
+        "recall": 0.5,
+        "f1": 0.3333,
+        "gold": 4,
+        "predicted": 8,
+        "correct": 2
+      },
+      "relation_with_claim_status": {
+        "precision": 0.25,
+        "recall": 0.5,
+        "f1": 0.3333,
+        "gold": 4,
+        "predicted": 8,
+        "correct": 2
+      }
+    },
+    "conll04_validation_5398_C1": {
+      "job_id": "conll04_validation_5398_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 1.0,
+        "recall": 0.75,
+        "f1": 0.8571,
+        "gold": 4,
+        "predicted": 3,
+        "correct": 3
+      },
+      "relation_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      },
+      "relation_with_claim_status": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      }
+    },
+    "conll04_validation_853_C1": {
+      "job_id": "conll04_validation_853_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 0.8571,
+        "recall": 1.0,
+        "f1": 0.9231,
+        "gold": 6,
+        "predicted": 7,
+        "correct": 6
+      },
+      "relation_strict": {
+        "precision": 0.75,
+        "recall": 1.0,
+        "f1": 0.8571,
+        "gold": 3,
+        "predicted": 4,
+        "correct": 3
+      },
+      "relation_with_claim_status": {
+        "precision": 0.75,
+        "recall": 1.0,
+        "f1": 0.8571,
+        "gold": 3,
+        "predicted": 4,
+        "correct": 3
+      }
+    },
+    "conll04_validation_477_C1": {
+      "job_id": "conll04_validation_477_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 2,
+        "predicted": 2,
+        "correct": 2
+      },
+      "relation_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      },
+      "relation_with_claim_status": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      }
+    },
+    "conll04_validation_5389_C1": {
+      "job_id": "conll04_validation_5389_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 2,
+        "predicted": 2,
+        "correct": 2
+      },
+      "relation_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      },
+      "relation_with_claim_status": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      }
+    },
+    "conll04_validation_4387_C1": {
+      "job_id": "conll04_validation_4387_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 1.0,
+        "recall": 0.5,
+        "f1": 0.6667,
+        "gold": 4,
+        "predicted": 2,
+        "correct": 2
+      },
+      "relation_strict": {
+        "precision": 1.0,
+        "recall": 0.25,
+        "f1": 0.4,
+        "gold": 4,
+        "predicted": 1,
+        "correct": 1
+      },
+      "relation_with_claim_status": {
+        "precision": 1.0,
+        "recall": 0.25,
+        "f1": 0.4,
+        "gold": 4,
+        "predicted": 1,
+        "correct": 1
+      }
+    },
+    "conll04_validation_1153_C1": {
+      "job_id": "conll04_validation_1153_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 3,
+        "predicted": 3,
+        "correct": 3
+      },
+      "relation_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      },
+      "relation_with_claim_status": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      }
+    },
+    "conll04_validation_3298_C1": {
+      "job_id": "conll04_validation_3298_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 0.8,
+        "recall": 0.6667,
+        "f1": 0.7273,
+        "gold": 6,
+        "predicted": 5,
+        "correct": 4
+      },
+      "relation_strict": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "gold": 4,
+        "predicted": 3,
+        "correct": 0
+      },
+      "relation_with_claim_status": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "gold": 4,
+        "predicted": 3,
+        "correct": 0
+      }
+    },
+    "conll04_validation_5035_C1": {
+      "job_id": "conll04_validation_5035_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 3,
+        "predicted": 3,
+        "correct": 3
+      },
+      "relation_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      },
+      "relation_with_claim_status": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      }
+    },
+    "conll04_validation_2159_C1": {
+      "job_id": "conll04_validation_2159_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 3,
+        "predicted": 3,
+        "correct": 3
+      },
+      "relation_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      },
+      "relation_with_claim_status": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      }
+    },
+    "conll04_validation_650_C1": {
+      "job_id": "conll04_validation_650_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 3,
+        "predicted": 3,
+        "correct": 3
+      },
+      "relation_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      },
+      "relation_with_claim_status": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      }
+    },
+    "conll04_validation_2960_C1": {
+      "job_id": "conll04_validation_2960_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 0.5,
+        "recall": 0.6667,
+        "f1": 0.5714,
+        "gold": 3,
+        "predicted": 4,
+        "correct": 2
+      },
+      "relation_strict": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 0
+      },
+      "relation_with_claim_status": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 0
+      }
+    },
+    "conll04_validation_2939_C1": {
+      "job_id": "conll04_validation_2939_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 0.2,
+        "recall": 0.25,
+        "f1": 0.2222,
+        "gold": 4,
+        "predicted": 5,
+        "correct": 1
+      },
+      "relation_strict": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "gold": 3,
+        "predicted": 1,
+        "correct": 0
+      },
+      "relation_with_claim_status": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "gold": 3,
+        "predicted": 1,
+        "correct": 0
+      }
+    },
+    "conll04_validation_3708_C1": {
+      "job_id": "conll04_validation_3708_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 3,
+        "predicted": 3,
+        "correct": 3
+      },
+      "relation_strict": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "gold": 1,
+        "predicted": 0,
+        "correct": 0
+      },
+      "relation_with_claim_status": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "gold": 1,
+        "predicted": 0,
+        "correct": 0
+      }
+    },
+    "conll04_validation_2870_C1": {
+      "job_id": "conll04_validation_2870_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 0.6667,
+        "recall": 0.5,
+        "f1": 0.5714,
+        "gold": 4,
+        "predicted": 3,
+        "correct": 2
+      },
+      "relation_strict": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "gold": 3,
+        "predicted": 1,
+        "correct": 0
+      },
+      "relation_with_claim_status": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "gold": 3,
+        "predicted": 1,
+        "correct": 0
+      }
+    },
+    "conll04_validation_2574_C1": {
+      "job_id": "conll04_validation_2574_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 2,
+        "predicted": 2,
+        "correct": 2
+      },
+      "relation_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      },
+      "relation_with_claim_status": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      }
+    },
+    "conll04_validation_5203_C1": {
+      "job_id": "conll04_validation_5203_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 2,
+        "predicted": 2,
+        "correct": 2
+      },
+      "relation_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      },
+      "relation_with_claim_status": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      }
+    },
+    "conll04_validation_3908_C1": {
+      "job_id": "conll04_validation_3908_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 0.75,
+        "recall": 0.6,
+        "f1": 0.6667,
+        "gold": 10,
+        "predicted": 8,
+        "correct": 6
+      },
+      "relation_strict": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "gold": 5,
+        "predicted": 4,
+        "correct": 0
+      },
+      "relation_with_claim_status": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "gold": 5,
+        "predicted": 4,
+        "correct": 0
+      }
+    },
+    "conll04_validation_899_C1": {
+      "job_id": "conll04_validation_899_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 0.75,
+        "recall": 0.75,
+        "f1": 0.75,
+        "gold": 4,
+        "predicted": 4,
+        "correct": 3
+      },
+      "relation_strict": {
+        "precision": 0.3333,
+        "recall": 1.0,
+        "f1": 0.5,
+        "gold": 1,
+        "predicted": 3,
+        "correct": 1
+      },
+      "relation_with_claim_status": {
+        "precision": 0.3333,
+        "recall": 1.0,
+        "f1": 0.5,
+        "gold": 1,
+        "predicted": 3,
+        "correct": 1
+      }
+    },
+    "conll04_validation_412_C1": {
+      "job_id": "conll04_validation_412_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 0.8,
+        "recall": 0.8,
+        "f1": 0.8,
+        "gold": 5,
+        "predicted": 5,
+        "correct": 4
+      },
+      "relation_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      },
+      "relation_with_claim_status": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      }
+    },
+    "conll04_validation_989_C1": {
+      "job_id": "conll04_validation_989_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 3,
+        "predicted": 3,
+        "correct": 3
+      },
+      "relation_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      },
+      "relation_with_claim_status": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      }
+    },
+    "conll04_validation_276_C1": {
+      "job_id": "conll04_validation_276_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 0.75,
+        "recall": 0.75,
+        "f1": 0.75,
+        "gold": 4,
+        "predicted": 4,
+        "correct": 3
+      },
+      "relation_strict": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 0
+      },
+      "relation_with_claim_status": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 0
+      }
+    },
+    "conll04_validation_906_C1": {
+      "job_id": "conll04_validation_906_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 3,
+        "predicted": 3,
+        "correct": 3
+      },
+      "relation_strict": {
+        "precision": 1.0,
+        "recall": 0.3333,
+        "f1": 0.5,
+        "gold": 3,
+        "predicted": 1,
+        "correct": 1
+      },
+      "relation_with_claim_status": {
+        "precision": 1.0,
+        "recall": 0.3333,
+        "f1": 0.5,
+        "gold": 3,
+        "predicted": 1,
+        "correct": 1
+      }
+    },
+    "conll04_validation_3485_C1": {
+      "job_id": "conll04_validation_3485_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 1.0,
+        "recall": 0.75,
+        "f1": 0.8571,
+        "gold": 4,
+        "predicted": 3,
+        "correct": 3
+      },
+      "relation_strict": {
+        "precision": 1.0,
+        "recall": 0.5,
+        "f1": 0.6667,
+        "gold": 2,
+        "predicted": 1,
+        "correct": 1
+      },
+      "relation_with_claim_status": {
+        "precision": 1.0,
+        "recall": 0.5,
+        "f1": 0.6667,
+        "gold": 2,
+        "predicted": 1,
+        "correct": 1
+      }
+    },
+    "conll04_validation_161_C1": {
+      "job_id": "conll04_validation_161_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 0.8333,
+        "recall": 0.8333,
+        "f1": 0.8333,
+        "gold": 6,
+        "predicted": 6,
+        "correct": 5
+      },
+      "relation_strict": {
+        "precision": 0.5,
+        "recall": 1.0,
+        "f1": 0.6667,
+        "gold": 2,
+        "predicted": 4,
+        "correct": 2
+      },
+      "relation_with_claim_status": {
+        "precision": 0.5,
+        "recall": 1.0,
+        "f1": 0.6667,
+        "gold": 2,
+        "predicted": 4,
+        "correct": 2
+      }
+    },
+    "conll04_validation_5082_C1": {
+      "job_id": "conll04_validation_5082_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 0.4,
+        "recall": 0.4,
+        "f1": 0.4,
+        "gold": 5,
+        "predicted": 5,
+        "correct": 2
+      },
+      "relation_strict": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "gold": 2,
+        "predicted": 2,
+        "correct": 0
+      },
+      "relation_with_claim_status": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "gold": 2,
+        "predicted": 2,
+        "correct": 0
+      }
+    },
+    "conll04_validation_5114_C1": {
+      "job_id": "conll04_validation_5114_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 0.75,
+        "recall": 0.6,
+        "f1": 0.6667,
+        "gold": 5,
+        "predicted": 4,
+        "correct": 3
+      },
+      "relation_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      },
+      "relation_with_claim_status": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      }
+    },
+    "conll04_validation_4476_C1": {
+      "job_id": "conll04_validation_4476_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 4,
+        "predicted": 4,
+        "correct": 4
+      },
+      "relation_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      },
+      "relation_with_claim_status": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      }
+    },
+    "conll04_validation_278_C1": {
+      "job_id": "conll04_validation_278_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 3,
+        "predicted": 3,
+        "correct": 3
+      },
+      "relation_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      },
+      "relation_with_claim_status": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      }
+    },
+    "conll04_validation_2953_C1": {
+      "job_id": "conll04_validation_2953_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 1.0,
+        "recall": 0.8333,
+        "f1": 0.9091,
+        "gold": 6,
+        "predicted": 5,
+        "correct": 5
+      },
+      "relation_strict": {
+        "precision": 1.0,
+        "recall": 0.1667,
+        "f1": 0.2857,
+        "gold": 6,
+        "predicted": 1,
+        "correct": 1
+      },
+      "relation_with_claim_status": {
+        "precision": 1.0,
+        "recall": 0.1667,
+        "f1": 0.2857,
+        "gold": 6,
+        "predicted": 1,
+        "correct": 1
+      }
+    },
+    "conll04_validation_59_C1": {
+      "job_id": "conll04_validation_59_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 0.75,
+        "recall": 0.6,
+        "f1": 0.6667,
+        "gold": 5,
+        "predicted": 4,
+        "correct": 3
+      },
+      "relation_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      },
+      "relation_with_claim_status": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      }
+    },
+    "conll04_validation_5346_C1": {
+      "job_id": "conll04_validation_5346_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 0.5,
+        "recall": 0.5,
+        "f1": 0.5,
+        "gold": 2,
+        "predicted": 2,
+        "correct": 1
+      },
+      "relation_strict": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 0
+      },
+      "relation_with_claim_status": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 0
+      }
+    },
+    "conll04_validation_1491_C1": {
+      "job_id": "conll04_validation_1491_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 3,
+        "predicted": 3,
+        "correct": 3
+      },
+      "relation_strict": {
+        "precision": 1.0,
+        "recall": 0.3333,
+        "f1": 0.5,
+        "gold": 3,
+        "predicted": 1,
+        "correct": 1
+      },
+      "relation_with_claim_status": {
+        "precision": 1.0,
+        "recall": 0.3333,
+        "f1": 0.5,
+        "gold": 3,
+        "predicted": 1,
+        "correct": 1
+      }
+    },
+    "conll04_validation_2801_C1": {
+      "job_id": "conll04_validation_2801_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 4,
+        "predicted": 4,
+        "correct": 4
+      },
+      "relation_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      },
+      "relation_with_claim_status": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      }
+    },
+    "conll04_validation_5238_C1": {
+      "job_id": "conll04_validation_5238_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 1.0,
+        "recall": 0.6667,
+        "f1": 0.8,
+        "gold": 6,
+        "predicted": 4,
+        "correct": 4
+      },
+      "relation_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      },
+      "relation_with_claim_status": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      }
+    },
+    "conll04_validation_3244_C1": {
+      "job_id": "conll04_validation_3244_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 4,
+        "predicted": 4,
+        "correct": 4
+      },
+      "relation_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      },
+      "relation_with_claim_status": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      }
+    },
+    "conll04_validation_5285_C1": {
+      "job_id": "conll04_validation_5285_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 0.8,
+        "recall": 0.6667,
+        "f1": 0.7273,
+        "gold": 6,
+        "predicted": 5,
+        "correct": 4
+      },
+      "relation_strict": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 0
+      },
+      "relation_with_claim_status": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 0
+      }
+    },
+    "conll04_validation_3028_C1": {
+      "job_id": "conll04_validation_3028_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 1.0,
+        "recall": 0.8333,
+        "f1": 0.9091,
+        "gold": 6,
+        "predicted": 5,
+        "correct": 5
+      },
+      "relation_strict": {
+        "precision": 1.0,
+        "recall": 0.5,
+        "f1": 0.6667,
+        "gold": 2,
+        "predicted": 1,
+        "correct": 1
+      },
+      "relation_with_claim_status": {
+        "precision": 1.0,
+        "recall": 0.5,
+        "f1": 0.6667,
+        "gold": 2,
+        "predicted": 1,
+        "correct": 1
+      }
+    },
+    "conll04_validation_2078_C1": {
+      "job_id": "conll04_validation_2078_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 0.75,
+        "recall": 0.75,
+        "f1": 0.75,
+        "gold": 4,
+        "predicted": 4,
+        "correct": 3
+      },
+      "relation_strict": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 0
+      },
+      "relation_with_claim_status": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 0
+      }
+    },
+    "conll04_validation_958_C1": {
+      "job_id": "conll04_validation_958_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 2,
+        "predicted": 2,
+        "correct": 2
+      },
+      "relation_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      },
+      "relation_with_claim_status": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      }
+    },
+    "conll04_validation_582_C1": {
+      "job_id": "conll04_validation_582_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 3,
+        "predicted": 3,
+        "correct": 3
+      },
+      "relation_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      },
+      "relation_with_claim_status": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      }
+    },
+    "conll04_validation_5223_C1": {
+      "job_id": "conll04_validation_5223_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 0.6,
+        "recall": 0.6,
+        "f1": 0.6,
+        "gold": 5,
+        "predicted": 5,
+        "correct": 3
+      },
+      "relation_strict": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "gold": 1,
+        "predicted": 2,
+        "correct": 0
+      },
+      "relation_with_claim_status": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "gold": 1,
+        "predicted": 2,
+        "correct": 0
+      }
+    },
+    "conll04_validation_429_C1": {
+      "job_id": "conll04_validation_429_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 3,
+        "predicted": 3,
+        "correct": 3
+      },
+      "relation_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 2,
+        "predicted": 2,
+        "correct": 2
+      },
+      "relation_with_claim_status": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 2,
+        "predicted": 2,
+        "correct": 2
+      }
+    },
+    "conll04_validation_5199_C1": {
+      "job_id": "conll04_validation_5199_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 0.6667,
+        "recall": 0.5,
+        "f1": 0.5714,
+        "gold": 4,
+        "predicted": 3,
+        "correct": 2
+      },
+      "relation_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      },
+      "relation_with_claim_status": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      }
+    },
+    "conll04_validation_3129_C1": {
+      "job_id": "conll04_validation_3129_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 2,
+        "predicted": 2,
+        "correct": 2
+      },
+      "relation_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      },
+      "relation_with_claim_status": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      }
+    },
+    "conll04_validation_2848_C1": {
+      "job_id": "conll04_validation_2848_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 2,
+        "predicted": 2,
+        "correct": 2
+      },
+      "relation_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      },
+      "relation_with_claim_status": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      }
+    },
+    "conll04_validation_5096_C1": {
+      "job_id": "conll04_validation_5096_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 3,
+        "predicted": 3,
+        "correct": 3
+      },
+      "relation_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      },
+      "relation_with_claim_status": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      }
+    },
+    "conll04_validation_5070_C1": {
+      "job_id": "conll04_validation_5070_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 4,
+        "predicted": 4,
+        "correct": 4
+      },
+      "relation_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      },
+      "relation_with_claim_status": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      }
+    },
+    "conll04_validation_3110_C1": {
+      "job_id": "conll04_validation_3110_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 0.8333,
+        "recall": 0.7143,
+        "f1": 0.7692,
+        "gold": 7,
+        "predicted": 6,
+        "correct": 5
+      },
+      "relation_strict": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "gold": 1,
+        "predicted": 3,
+        "correct": 0
+      },
+      "relation_with_claim_status": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "gold": 1,
+        "predicted": 3,
+        "correct": 0
+      }
+    },
+    "conll04_validation_287_C1": {
+      "job_id": "conll04_validation_287_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 1.0,
+        "recall": 0.8,
+        "f1": 0.8889,
+        "gold": 5,
+        "predicted": 4,
+        "correct": 4
+      },
+      "relation_strict": {
+        "precision": 0.25,
+        "recall": 0.5,
+        "f1": 0.3333,
+        "gold": 2,
+        "predicted": 4,
+        "correct": 1
+      },
+      "relation_with_claim_status": {
+        "precision": 0.25,
+        "recall": 0.5,
+        "f1": 0.3333,
+        "gold": 2,
+        "predicted": 4,
+        "correct": 1
+      }
+    },
+    "conll04_validation_3211_C1": {
+      "job_id": "conll04_validation_3211_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 0.8,
+        "recall": 0.8,
+        "f1": 0.8,
+        "gold": 5,
+        "predicted": 5,
+        "correct": 4
+      },
+      "relation_strict": {
+        "precision": 1.0,
+        "recall": 0.5,
+        "f1": 0.6667,
+        "gold": 2,
+        "predicted": 1,
+        "correct": 1
+      },
+      "relation_with_claim_status": {
+        "precision": 1.0,
+        "recall": 0.5,
+        "f1": 0.6667,
+        "gold": 2,
+        "predicted": 1,
+        "correct": 1
+      }
+    },
+    "conll04_validation_3418_C1": {
+      "job_id": "conll04_validation_3418_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 2,
+        "predicted": 2,
+        "correct": 2
+      },
+      "relation_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      },
+      "relation_with_claim_status": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      }
+    },
+    "conll04_validation_5037_C1": {
+      "job_id": "conll04_validation_5037_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 5,
+        "predicted": 5,
+        "correct": 5
+      },
+      "relation_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      },
+      "relation_with_claim_status": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      }
+    },
+    "conll04_validation_5298_C1": {
+      "job_id": "conll04_validation_5298_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 3,
+        "predicted": 3,
+        "correct": 3
+      },
+      "relation_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      },
+      "relation_with_claim_status": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      }
+    },
+    "conll04_validation_1159_C1": {
+      "job_id": "conll04_validation_1159_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 0.6667,
+        "recall": 0.6667,
+        "f1": 0.6667,
+        "gold": 3,
+        "predicted": 3,
+        "correct": 2
+      },
+      "relation_strict": {
+        "precision": 0.5,
+        "recall": 1.0,
+        "f1": 0.6667,
+        "gold": 1,
+        "predicted": 2,
+        "correct": 1
+      },
+      "relation_with_claim_status": {
+        "precision": 0.5,
+        "recall": 1.0,
+        "f1": 0.6667,
+        "gold": 1,
+        "predicted": 2,
+        "correct": 1
+      }
+    },
+    "conll04_validation_2607_C1": {
+      "job_id": "conll04_validation_2607_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 3,
+        "predicted": 3,
+        "correct": 3
+      },
+      "relation_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 2,
+        "predicted": 2,
+        "correct": 2
+      },
+      "relation_with_claim_status": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 2,
+        "predicted": 2,
+        "correct": 2
+      }
+    },
+    "conll04_validation_5146_C1": {
+      "job_id": "conll04_validation_5146_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 3,
+        "predicted": 3,
+        "correct": 3
+      },
+      "relation_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      },
+      "relation_with_claim_status": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      }
+    },
+    "conll04_validation_1257_C1": {
+      "job_id": "conll04_validation_1257_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 12,
+        "predicted": 12,
+        "correct": 12
+      },
+      "relation_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      },
+      "relation_with_claim_status": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      }
+    },
+    "conll04_validation_2963_C1": {
+      "job_id": "conll04_validation_2963_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 0.6667,
+        "recall": 0.4,
+        "f1": 0.5,
+        "gold": 5,
+        "predicted": 3,
+        "correct": 2
+      },
+      "relation_strict": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "gold": 5,
+        "predicted": 1,
+        "correct": 0
+      },
+      "relation_with_claim_status": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "gold": 5,
+        "predicted": 1,
+        "correct": 0
+      }
+    },
+    "conll04_validation_3800_C1": {
+      "job_id": "conll04_validation_3800_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 0.5,
+        "recall": 0.5,
+        "f1": 0.5,
+        "gold": 4,
+        "predicted": 4,
+        "correct": 2
+      },
+      "relation_strict": {
+        "precision": 0.5,
+        "recall": 1.0,
+        "f1": 0.6667,
+        "gold": 1,
+        "predicted": 2,
+        "correct": 1
+      },
+      "relation_with_claim_status": {
+        "precision": 0.5,
+        "recall": 1.0,
+        "f1": 0.6667,
+        "gold": 1,
+        "predicted": 2,
+        "correct": 1
+      }
+    },
+    "conll04_validation_5065_C1": {
+      "job_id": "conll04_validation_5065_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 0.75,
+        "recall": 0.75,
+        "f1": 0.75,
+        "gold": 4,
+        "predicted": 4,
+        "correct": 3
+      },
+      "relation_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      },
+      "relation_with_claim_status": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      }
+    },
+    "conll04_validation_2988_C1": {
+      "job_id": "conll04_validation_2988_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 1.0,
+        "recall": 0.75,
+        "f1": 0.8571,
+        "gold": 4,
+        "predicted": 3,
+        "correct": 3
+      },
+      "relation_strict": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 0
+      },
+      "relation_with_claim_status": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 0
+      }
+    },
+    "conll04_validation_2311_C1": {
+      "job_id": "conll04_validation_2311_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 3,
+        "predicted": 3,
+        "correct": 3
+      },
+      "relation_strict": {
+        "precision": 0.3333,
+        "recall": 1.0,
+        "f1": 0.5,
+        "gold": 1,
+        "predicted": 3,
+        "correct": 1
+      },
+      "relation_with_claim_status": {
+        "precision": 0.3333,
+        "recall": 1.0,
+        "f1": 0.5,
+        "gold": 1,
+        "predicted": 3,
+        "correct": 1
+      }
+    },
+    "conll04_validation_5061_C1": {
+      "job_id": "conll04_validation_5061_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 3,
+        "predicted": 3,
+        "correct": 3
+      },
+      "relation_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      },
+      "relation_with_claim_status": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      }
+    },
+    "conll04_validation_3559_C1": {
+      "job_id": "conll04_validation_3559_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 0.8333,
+        "recall": 0.8333,
+        "f1": 0.8333,
+        "gold": 6,
+        "predicted": 6,
+        "correct": 5
+      },
+      "relation_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      },
+      "relation_with_claim_status": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      }
+    },
+    "conll04_validation_533_C1": {
+      "job_id": "conll04_validation_533_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 3,
+        "predicted": 3,
+        "correct": 3
+      },
+      "relation_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      },
+      "relation_with_claim_status": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      }
+    },
+    "conll04_validation_5316_C1": {
+      "job_id": "conll04_validation_5316_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 3,
+        "predicted": 3,
+        "correct": 3
+      },
+      "relation_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      },
+      "relation_with_claim_status": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      }
+    },
+    "conll04_validation_3704_C1": {
+      "job_id": "conll04_validation_3704_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 2,
+        "predicted": 2,
+        "correct": 2
+      },
+      "relation_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      },
+      "relation_with_claim_status": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      }
+    },
+    "conll04_validation_5374_C1": {
+      "job_id": "conll04_validation_5374_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 3,
+        "predicted": 3,
+        "correct": 3
+      },
+      "relation_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      },
+      "relation_with_claim_status": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      }
+    },
+    "conll04_validation_1367_C1": {
+      "job_id": "conll04_validation_1367_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 0.6,
+        "recall": 0.75,
+        "f1": 0.6667,
+        "gold": 4,
+        "predicted": 5,
+        "correct": 3
+      },
+      "relation_strict": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "gold": 1,
+        "predicted": 2,
+        "correct": 0
+      },
+      "relation_with_claim_status": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "gold": 1,
+        "predicted": 2,
+        "correct": 0
+      }
+    },
+    "conll04_validation_4593_C1": {
+      "job_id": "conll04_validation_4593_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 0.6667,
+        "recall": 1.0,
+        "f1": 0.8,
+        "gold": 2,
+        "predicted": 3,
+        "correct": 2
+      },
+      "relation_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      },
+      "relation_with_claim_status": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      }
+    },
+    "conll04_validation_2785_C1": {
+      "job_id": "conll04_validation_2785_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 0.8,
+        "recall": 0.8,
+        "f1": 0.8,
+        "gold": 5,
+        "predicted": 5,
+        "correct": 4
+      },
+      "relation_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      },
+      "relation_with_claim_status": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      }
+    },
+    "conll04_validation_2669_C1": {
+      "job_id": "conll04_validation_2669_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 3,
+        "predicted": 3,
+        "correct": 3
+      },
+      "relation_strict": {
+        "precision": 1.0,
+        "recall": 0.3333,
+        "f1": 0.5,
+        "gold": 3,
+        "predicted": 1,
+        "correct": 1
+      },
+      "relation_with_claim_status": {
+        "precision": 1.0,
+        "recall": 0.3333,
+        "f1": 0.5,
+        "gold": 3,
+        "predicted": 1,
+        "correct": 1
+      }
+    },
+    "conll04_validation_2660_C1": {
+      "job_id": "conll04_validation_2660_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 2,
+        "predicted": 2,
+        "correct": 2
+      },
+      "relation_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      },
+      "relation_with_claim_status": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      }
+    },
+    "conll04_validation_5175_C1": {
+      "job_id": "conll04_validation_5175_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 0.6667,
+        "recall": 0.4444,
+        "f1": 0.5333,
+        "gold": 9,
+        "predicted": 6,
+        "correct": 4
+      },
+      "relation_strict": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "gold": 1,
+        "predicted": 0,
+        "correct": 0
+      },
+      "relation_with_claim_status": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "gold": 1,
+        "predicted": 0,
+        "correct": 0
+      }
+    },
+    "conll04_validation_1895_C1": {
+      "job_id": "conll04_validation_1895_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 0.375,
+        "recall": 0.4286,
+        "f1": 0.4,
+        "gold": 7,
+        "predicted": 8,
+        "correct": 3
+      },
+      "relation_strict": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "gold": 7,
+        "predicted": 2,
+        "correct": 0
+      },
+      "relation_with_claim_status": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "gold": 7,
+        "predicted": 2,
+        "correct": 0
+      }
+    },
+    "conll04_validation_3887_C1": {
+      "job_id": "conll04_validation_3887_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 0.8333,
+        "recall": 0.8333,
+        "f1": 0.8333,
+        "gold": 6,
+        "predicted": 6,
+        "correct": 5
+      },
+      "relation_strict": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 0
+      },
+      "relation_with_claim_status": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 0
+      }
+    },
+    "conll04_validation_470_C1": {
+      "job_id": "conll04_validation_470_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 1.0,
+        "recall": 0.4286,
+        "f1": 0.6,
+        "gold": 7,
+        "predicted": 3,
+        "correct": 3
+      },
+      "relation_strict": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 0
+      },
+      "relation_with_claim_status": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 0
+      }
+    },
+    "conll04_validation_5151_C1": {
+      "job_id": "conll04_validation_5151_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 5,
+        "predicted": 5,
+        "correct": 5
+      },
+      "relation_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      },
+      "relation_with_claim_status": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      }
+    },
+    "conll04_validation_1784_C1": {
+      "job_id": "conll04_validation_1784_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 2,
+        "predicted": 2,
+        "correct": 2
+      },
+      "relation_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      },
+      "relation_with_claim_status": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      }
+    },
+    "conll04_validation_1612_C1": {
+      "job_id": "conll04_validation_1612_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 3,
+        "predicted": 3,
+        "correct": 3
+      },
+      "relation_strict": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "gold": 1,
+        "predicted": 0,
+        "correct": 0
+      },
+      "relation_with_claim_status": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "gold": 1,
+        "predicted": 0,
+        "correct": 0
+      }
+    },
+    "conll04_validation_5241_C1": {
+      "job_id": "conll04_validation_5241_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 0.6667,
+        "recall": 0.5,
+        "f1": 0.5714,
+        "gold": 4,
+        "predicted": 3,
+        "correct": 2
+      },
+      "relation_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      },
+      "relation_with_claim_status": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      }
+    },
+    "conll04_validation_3703_C1": {
+      "job_id": "conll04_validation_3703_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 0.8,
+        "recall": 1.0,
+        "f1": 0.8889,
+        "gold": 4,
+        "predicted": 5,
+        "correct": 4
+      },
+      "relation_strict": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 0
+      },
+      "relation_with_claim_status": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 0
+      }
+    },
+    "conll04_validation_1827_C1": {
+      "job_id": "conll04_validation_1827_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 1.0,
+        "recall": 0.75,
+        "f1": 0.8571,
+        "gold": 4,
+        "predicted": 3,
+        "correct": 3
+      },
+      "relation_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      },
+      "relation_with_claim_status": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      }
+    },
+    "conll04_validation_5131_C1": {
+      "job_id": "conll04_validation_5131_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 0.5,
+        "recall": 0.5,
+        "f1": 0.5,
+        "gold": 2,
+        "predicted": 2,
+        "correct": 1
+      },
+      "relation_strict": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 0
+      },
+      "relation_with_claim_status": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 0
+      }
+    },
+    "conll04_validation_5253_C1": {
+      "job_id": "conll04_validation_5253_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 0.75,
+        "recall": 0.6,
+        "f1": 0.6667,
+        "gold": 5,
+        "predicted": 4,
+        "correct": 3
+      },
+      "relation_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      },
+      "relation_with_claim_status": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      }
+    },
+    "conll04_validation_1315_C1": {
+      "job_id": "conll04_validation_1315_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 2,
+        "predicted": 2,
+        "correct": 2
+      },
+      "relation_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      },
+      "relation_with_claim_status": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      }
+    },
+    "conll04_validation_1031_C1": {
+      "job_id": "conll04_validation_1031_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "gold": 7,
+        "predicted": 3,
+        "correct": 0
+      },
+      "relation_strict": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "gold": 3,
+        "predicted": 3,
+        "correct": 0
+      },
+      "relation_with_claim_status": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "gold": 3,
+        "predicted": 3,
+        "correct": 0
+      }
+    },
+    "conll04_validation_1254_C1": {
+      "job_id": "conll04_validation_1254_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 3,
+        "predicted": 3,
+        "correct": 3
+      },
+      "relation_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      },
+      "relation_with_claim_status": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      }
+    },
+    "conll04_validation_1191_C1": {
+      "job_id": "conll04_validation_1191_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 2,
+        "predicted": 2,
+        "correct": 2
+      },
+      "relation_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      },
+      "relation_with_claim_status": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      }
+    },
+    "conll04_validation_3184_C1": {
+      "job_id": "conll04_validation_3184_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 2,
+        "predicted": 2,
+        "correct": 2
+      },
+      "relation_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      },
+      "relation_with_claim_status": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      }
+    },
+    "conll04_validation_4161_C1": {
+      "job_id": "conll04_validation_4161_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 1.0,
+        "recall": 0.6667,
+        "f1": 0.8,
+        "gold": 3,
+        "predicted": 2,
+        "correct": 2
+      },
+      "relation_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      },
+      "relation_with_claim_status": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      }
+    },
+    "conll04_validation_5067_C1": {
+      "job_id": "conll04_validation_5067_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 2,
+        "predicted": 2,
+        "correct": 2
+      },
+      "relation_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      },
+      "relation_with_claim_status": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      }
+    },
+    "conll04_validation_5318_C1": {
+      "job_id": "conll04_validation_5318_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 0.5,
+        "recall": 0.4286,
+        "f1": 0.4615,
+        "gold": 7,
+        "predicted": 6,
+        "correct": 3
+      },
+      "relation_strict": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "gold": 1,
+        "predicted": 2,
+        "correct": 0
+      },
+      "relation_with_claim_status": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "gold": 1,
+        "predicted": 2,
+        "correct": 0
+      }
+    },
+    "conll04_validation_1916_C1": {
+      "job_id": "conll04_validation_1916_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 1.0,
+        "recall": 0.8333,
+        "f1": 0.9091,
+        "gold": 6,
+        "predicted": 5,
+        "correct": 5
+      },
+      "relation_strict": {
+        "precision": 1.0,
+        "recall": 0.6667,
+        "f1": 0.8,
+        "gold": 6,
+        "predicted": 4,
+        "correct": 4
+      },
+      "relation_with_claim_status": {
+        "precision": 1.0,
+        "recall": 0.6667,
+        "f1": 0.8,
+        "gold": 6,
+        "predicted": 4,
+        "correct": 4
+      }
+    },
+    "conll04_validation_3322_C1": {
+      "job_id": "conll04_validation_3322_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 0.8,
+        "recall": 0.5,
+        "f1": 0.6154,
+        "gold": 8,
+        "predicted": 5,
+        "correct": 4
+      },
+      "relation_strict": {
+        "precision": 1.0,
+        "recall": 0.3333,
+        "f1": 0.5,
+        "gold": 3,
+        "predicted": 1,
+        "correct": 1
+      },
+      "relation_with_claim_status": {
+        "precision": 1.0,
+        "recall": 0.3333,
+        "f1": 0.5,
+        "gold": 3,
+        "predicted": 1,
+        "correct": 1
+      }
+    },
+    "conll04_validation_3626_C1": {
+      "job_id": "conll04_validation_3626_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 2,
+        "predicted": 2,
+        "correct": 2
+      },
+      "relation_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      },
+      "relation_with_claim_status": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      }
+    },
+    "conll04_validation_5159_C1": {
+      "job_id": "conll04_validation_5159_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 4,
+        "predicted": 4,
+        "correct": 4
+      },
+      "relation_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      },
+      "relation_with_claim_status": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      }
+    },
+    "conll04_validation_1858_C1": {
+      "job_id": "conll04_validation_1858_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 3,
+        "predicted": 3,
+        "correct": 3
+      },
+      "relation_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      },
+      "relation_with_claim_status": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      }
+    },
+    "conll04_validation_2940_C1": {
+      "job_id": "conll04_validation_2940_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 2,
+        "predicted": 2,
+        "correct": 2
+      },
+      "relation_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      },
+      "relation_with_claim_status": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      }
+    },
+    "conll04_validation_5107_C1": {
+      "job_id": "conll04_validation_5107_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 0.8,
+        "recall": 1.0,
+        "f1": 0.8889,
+        "gold": 4,
+        "predicted": 5,
+        "correct": 4
+      },
+      "relation_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      },
+      "relation_with_claim_status": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      }
+    },
+    "conll04_validation_5337_C1": {
+      "job_id": "conll04_validation_5337_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 1.0,
+        "recall": 0.6667,
+        "f1": 0.8,
+        "gold": 3,
+        "predicted": 2,
+        "correct": 2
+      },
+      "relation_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      },
+      "relation_with_claim_status": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      }
+    },
+    "conll04_validation_5153_C1": {
+      "job_id": "conll04_validation_5153_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 7,
+        "predicted": 7,
+        "correct": 7
+      },
+      "relation_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      },
+      "relation_with_claim_status": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      }
+    },
+    "conll04_validation_2460_C1": {
+      "job_id": "conll04_validation_2460_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 1.0,
+        "recall": 0.6667,
+        "f1": 0.8,
+        "gold": 3,
+        "predicted": 2,
+        "correct": 2
+      },
+      "relation_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      },
+      "relation_with_claim_status": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      }
+    },
+    "conll04_validation_1854_C1": {
+      "job_id": "conll04_validation_1854_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 3,
+        "predicted": 3,
+        "correct": 3
+      },
+      "relation_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      },
+      "relation_with_claim_status": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      }
+    },
+    "conll04_validation_3421_C1": {
+      "job_id": "conll04_validation_3421_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 1.0,
+        "recall": 0.6667,
+        "f1": 0.8,
+        "gold": 3,
+        "predicted": 2,
+        "correct": 2
+      },
+      "relation_strict": {
+        "precision": 1.0,
+        "recall": 0.5,
+        "f1": 0.6667,
+        "gold": 2,
+        "predicted": 1,
+        "correct": 1
+      },
+      "relation_with_claim_status": {
+        "precision": 1.0,
+        "recall": 0.5,
+        "f1": 0.6667,
+        "gold": 2,
+        "predicted": 1,
+        "correct": 1
+      }
+    },
+    "conll04_validation_587_C1": {
+      "job_id": "conll04_validation_587_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 3,
+        "predicted": 3,
+        "correct": 3
+      },
+      "relation_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      },
+      "relation_with_claim_status": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      }
+    },
+    "conll04_validation_2341_C1": {
+      "job_id": "conll04_validation_2341_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "gold": 2,
+        "predicted": 2,
+        "correct": 0
+      },
+      "relation_strict": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 0
+      },
+      "relation_with_claim_status": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 0
+      }
+    },
+    "conll04_validation_2829_C1": {
+      "job_id": "conll04_validation_2829_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 4,
+        "predicted": 4,
+        "correct": 4
+      },
+      "relation_strict": {
+        "precision": 0.5,
+        "recall": 1.0,
+        "f1": 0.6667,
+        "gold": 1,
+        "predicted": 2,
+        "correct": 1
+      },
+      "relation_with_claim_status": {
+        "precision": 0.5,
+        "recall": 1.0,
+        "f1": 0.6667,
+        "gold": 1,
+        "predicted": 2,
+        "correct": 1
+      }
+    },
+    "conll04_validation_4423_C1": {
+      "job_id": "conll04_validation_4423_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 2,
+        "predicted": 2,
+        "correct": 2
+      },
+      "relation_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      },
+      "relation_with_claim_status": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      }
+    },
+    "conll04_validation_5032_C1": {
+      "job_id": "conll04_validation_5032_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 0.75,
+        "recall": 0.75,
+        "f1": 0.75,
+        "gold": 4,
+        "predicted": 4,
+        "correct": 3
+      },
+      "relation_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      },
+      "relation_with_claim_status": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      }
+    },
+    "conll04_validation_5180_C1": {
+      "job_id": "conll04_validation_5180_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 1.0,
+        "recall": 0.75,
+        "f1": 0.8571,
+        "gold": 4,
+        "predicted": 3,
+        "correct": 3
+      },
+      "relation_strict": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "gold": 1,
+        "predicted": 0,
+        "correct": 0
+      },
+      "relation_with_claim_status": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "gold": 1,
+        "predicted": 0,
+        "correct": 0
+      }
+    },
+    "conll04_validation_2377_C1": {
+      "job_id": "conll04_validation_2377_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 5,
+        "predicted": 5,
+        "correct": 5
+      },
+      "relation_strict": {
+        "precision": 1.0,
+        "recall": 0.25,
+        "f1": 0.4,
+        "gold": 4,
+        "predicted": 1,
+        "correct": 1
+      },
+      "relation_with_claim_status": {
+        "precision": 1.0,
+        "recall": 0.25,
+        "f1": 0.4,
+        "gold": 4,
+        "predicted": 1,
+        "correct": 1
+      }
+    },
+    "conll04_validation_3893_C1": {
+      "job_id": "conll04_validation_3893_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 4,
+        "predicted": 4,
+        "correct": 4
+      },
+      "relation_strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      },
+      "relation_with_claim_status": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1
+      }
+    },
+    "conll04_validation_2293_C1": {
+      "job_id": "conll04_validation_2293_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 0.75,
+        "recall": 0.75,
+        "f1": 0.75,
+        "gold": 4,
+        "predicted": 4,
+        "correct": 3
+      },
+      "relation_strict": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 0
+      },
+      "relation_with_claim_status": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 0
+      }
+    },
+    "conll04_validation_2675_C1": {
+      "job_id": "conll04_validation_2675_C1",
+      "language": "en",
+      "unresolved_gold_entities": 0,
+      "unresolved_predicted_entities": 0,
+      "entity_strict": {
+        "precision": 0.5,
+        "recall": 0.5,
+        "f1": 0.5,
+        "gold": 2,
+        "predicted": 2,
+        "correct": 1
+      },
+      "relation_strict": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 0
+      },
+      "relation_with_claim_status": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "gold": 1,
+        "predicted": 1,
+        "correct": 0
+      }
+    }
+  }
+}

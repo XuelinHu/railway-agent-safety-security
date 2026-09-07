@@ -1,0 +1,7 @@
+dataset,system,entity_count,relation_count,entity_evidence_present_count,entity_evidence_valid_count,relation_evidence_present_count,relation_evidence_valid_count,unsupported_claim_count,invalid_relation_count,invalid_relation_rate
+ade,soe,1028,610,1028,1028,610,610,0,31,0.0508
+ade,hrge,1026,625,1026,1026,625,625,0,0,0.0
+ade,pge,1012,600,1012,1012,600,600,0,0,0.0
+conll04,soe,1032,436,1032,1032,436,436,0,16,0.0367
+conll04,hrge,1072,413,1072,1072,413,413,0,3,0.0073
+conll04,pge,1010,392,1010,1010,392,392,0,0,0.0

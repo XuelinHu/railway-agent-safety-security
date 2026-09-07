@@ -1,0 +1,45 @@
+{
+  "datasets": {
+    "ade": {
+      "train": 3461,
+      "validation": 384
+    },
+    "conll04": {
+      "train": 922,
+      "validation": 231
+    }
+  },
+  "training_seed": 42,
+  "qwen_family": "Qwen3-4B",
+  "qwen_revision": "1cfa9a7208912126459214e8b04321603b3df60c",
+  "bge_m3_revision": "5617a9f61b028005a4858fdac845db406aefb181",
+  "training": {
+    "branches": [
+      "EAE",
+      "HRGE"
+    ],
+    "epochs": 1,
+    "batch_size": 1,
+    "gradient_accumulation": 4,
+    "learning_rate": 0.0002,
+    "max_length": 4096,
+    "lora_rank": 8,
+    "lora_alpha": 16,
+    "lora_dropout": 0.05,
+    "quantization": "NF4-double-quantization",
+    "compact_target": true,
+    "use_job_instruction": true,
+    "gpu_policy": "exclusive",
+    "require_zero_prompt_truncation": true,
+    "require_zero_answer_truncation": true
+  },
+  "inference": {
+    "workers": 2,
+    "max_input_tokens": 4096,
+    "max_new_tokens": 1024,
+    "max_seconds_per_job": 90,
+    "missing_prediction_policy": "materialize-empty-after-terminal-failure"
+  },
+  "scope": "retrospective two-benchmark reporting; frozen model predictions",
+  "primary_evaluator": "strict-source-character-span with set deduplication"
+}
