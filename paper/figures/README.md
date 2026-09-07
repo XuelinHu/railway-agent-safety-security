@@ -14,10 +14,3 @@ The files under `ade_conll04/` follow their first appearance in the manuscript:
 | 03 | `03-pge-architecture` | Provenance-gated extraction architecture | Draw.io, SVG, PDF, PNG |
 
 The English and Chinese manuscripts use the same filenames and order.
-
-## Historical assets
-
-Files under `archive/` belong to earlier manuscript scopes or superseded visual
-drafts. They use descriptive basenames without active figure numbers. The
-`doubao-architecture-source`, `doubao-architecture-v2`, and
-`doubao-architecture-final` families preserve the three historical stages.

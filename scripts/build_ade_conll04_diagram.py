@@ -1,6 +1,9 @@
 #!/usr/bin/env python3
 """Publication-sized two-benchmark view of the existing PGE architecture."""
-from build_paper_diagrams import Diagram
+try:
+    from .diagram_utils import Diagram
+except ImportError:  # direct execution: python scripts/build_ade_conll04_diagram.py
+    from diagram_utils import Diagram
 
 
 def main():
