@@ -1,0 +1,17 @@
+# Minimal isolated runtime for the frozen OneKE checkpoint path used by the
+# public validation runner.  Web UI, Neo4j, document loaders, and vLLM are not
+# imported by this runner and are intentionally excluded.
+torch==2.4.0
+transformers==4.44.0
+accelerate==1.1.1
+bitsandbytes==0.45.0
+huggingface-hub==0.26.5
+tokenizers==0.19.1
+safetensors==0.4.5
+sentencepiece==0.2.0
+numpy==1.26.4
+protobuf==5.29.3
+packaging==24.2
+regex==2024.11.6
+requests==2.32.3
+tqdm==4.67.1
