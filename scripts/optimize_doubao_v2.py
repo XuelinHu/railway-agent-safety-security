@@ -7,7 +7,7 @@ from pathlib import Path
 
 
 FIGURES = Path(__file__).resolve().parents[1] / "paper" / "figures"
-TARGET = FIGURES / "doubao-img-V2.drawio"
+TARGET = FIGURES / "archive/doubao-architecture-v2.drawio"
 
 
 def parse_style(raw: str | None) -> dict[str, str | None]:

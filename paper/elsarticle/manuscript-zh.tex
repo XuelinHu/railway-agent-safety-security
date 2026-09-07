@@ -141,7 +141,7 @@ ADE包含\texttt{Drug}、\texttt{Adverse-Effect}两种实体，以及
 实体配对仍需解决。CoNLL04的关系集合与实体角色更加多样。因此，ADE取得较高
 总体F1不意味着药物安全推理天然比通用推理容易，二者的监督抽取任务规模与结构不同。
 \begin{figure}[htbp]
-\centering\includegraphics[width=\textwidth]{../figures/ade_conll04/label_distribution.pdf}
+\centering\includegraphics[width=\textwidth]{../figures/ade_conll04/01-label-distribution.pdf}
 \caption{训练标注分布。每个子图分别以对应实体或关系总数为分母，不将两种对象
 混合计数。颜色与填充纹理同时用于区分两个基准。}
 \label{fig:labels}
@@ -157,7 +157,7 @@ ADE的97与CoNLL04的118。
 以大量无关句为主的部署文本流上的误报表现。本文保留给定基准组成，没有为所报告
 测试额外构造无关系负例句。
 \begin{figure}[htbp]
-\centering\includegraphics[width=\textwidth]{../figures/ade_conll04/length_distribution.pdf}
+\centering\includegraphics[width=\textwidth]{../figures/ade_conll04/02-sentence-length-distribution.pdf}
 \caption{各划分的经验累计句长分布。长度来自确定性重建文本，句级输入未采用
 标注辅助的窗口选择。}
 \label{fig:lengths}
@@ -201,7 +201,7 @@ HRGE实体与端点过滤后的原始HRGE关系组合。PGE（溯源门控抽取
 与端点过滤后的验证关系组合。这三者是确定性后处理变体，而非额外训练网络。
 部署PGE需要EAE与HRGE候选，SOE只作为比较分支，不参与融合。
 \begin{figure}[htbp]
-\centering\includegraphics[width=\textwidth]{../figures/ade_conll04/architecture.pdf}
+\centering\includegraphics[width=\textwidth]{../figures/ade_conll04/03-pge-architecture.pdf}
 \caption{双基准实验架构。各数据集训练图谱提供候选上下文，当前句子提供证据。
 三个独立适配器采用相同骨干配置。实体接受要求任一信号成立，关系验证要求全部
 检查通过；PGE只保留端点存活的验证关系。虚线框表示比较路径，门控不是学习式网络。}

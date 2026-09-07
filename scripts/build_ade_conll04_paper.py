@@ -235,7 +235,7 @@ def main():
             ax.set_xlim(0,116);ax.set_xticks([0,25,50,75,100]);ax.set_xlabel('Training annotations (%)')
             ax.set_title(f"({chr(97+row*2+col)}) {NAMES[ds]} {kind} labels",loc='left')
             for i,v in enumerate(vals):ax.text(v+1.2,i,f'{v:.1f}',va='center',fontsize=9)
-    for ext in ('pdf','png'):fig.savefig(FIG/f'label_distribution.{ext}',bbox_inches='tight')
+    for ext in ('pdf','png'):fig.savefig(FIG/f'01-label-distribution.{ext}',bbox_inches='tight')
     plt.close(fig)
     fig,axs=plt.subplots(1,2,figsize=(6.7,2.85),layout='constrained')
     for i,ds in enumerate(DATASETS):
@@ -245,7 +245,7 @@ def main():
             ax.step(x,y,where='post',label=split.title(),color=color,linestyle=style,linewidth=1.7)
         ax.set_title(f'({chr(97+i)}) {NAMES[ds]}',loc='left');ax.set_xlabel('Reconstructed token count')
         ax.set_ylabel('Cumulative fraction');ax.legend(loc='lower right',frameon=False)
-    for ext in ('pdf','png'):fig.savefig(FIG/f'length_distribution.{ext}',bbox_inches='tight')
+    for ext in ('pdf','png'):fig.savefig(FIG/f'02-sentence-length-distribution.{ext}',bbox_inches='tight')
     plt.close(fig)
     print(json.dumps({'statistics':stats,'test':{d:{s:{f:results[d]['test'][s][f]['f1'] for f in ('entity_strict','relation_strict')} for s in results[d]['test']} for d in DATASETS},'sensitivity':sensitivity},indent=2))
 

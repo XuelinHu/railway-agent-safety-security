@@ -394,7 +394,7 @@ def plot_low_resource(summary: list[dict[str, Any]], figure_dir: Path) -> None:
     fig.legend(handles, labels, loc="upper center", ncol=3, frameon=False, bbox_to_anchor=(0.5, 1.01))
     fig.tight_layout(rect=(0, 0, 1, 0.92), w_pad=2.2)
     for suffix in ("pdf", "png"):
-        fig.savefig(figure_dir / f"low_resource_scaling.{suffix}", bbox_inches="tight", dpi=300)
+        fig.savefig(figure_dir / f"low-resource-scaling.{suffix}", bbox_inches="tight", dpi=300)
     plt.close(fig)
 
 
@@ -458,7 +458,7 @@ def plot_training_loss(
     fig.legend(handles, labels, loc="upper center", ncol=3, frameon=False, bbox_to_anchor=(0.5, 1.005))
     fig.tight_layout(rect=(0, 0, 1, 0.95), h_pad=2.0, w_pad=1.6)
     for suffix in ("pdf", "png"):
-        fig.savefig(figure_dir / f"training_loss.{suffix}", bbox_inches="tight", dpi=300)
+        fig.savefig(figure_dir / f"training-loss.{suffix}", bbox_inches="tight", dpi=300)
     plt.close(fig)
 
 
@@ -513,7 +513,7 @@ def plot_constraint_compliance(summary: list[dict[str, Any]], figure_dir: Path) 
     axis.legend(frameon=False, ncol=2, loc="upper right")
     fig.tight_layout()
     for suffix in ("pdf", "png"):
-        fig.savefig(figure_dir / f"constraint_compliance_effects.{suffix}", bbox_inches="tight", dpi=300)
+        fig.savefig(figure_dir / f"constraint-compliance-effects.{suffix}", bbox_inches="tight", dpi=300)
     plt.close(fig)
 
 
@@ -574,7 +574,7 @@ def main() -> None:
         type=Path,
         default=Path("paper/results/document_level_metrics"),
     )
-    parser.add_argument("--figure-dir", type=Path, default=Path("paper/figures"))
+    parser.add_argument("--figure-dir", type=Path, default=Path("paper/figures/archive"))
     args = parser.parse_args()
 
     args.results_dir.mkdir(parents=True, exist_ok=True)

@@ -328,7 +328,7 @@ def build_system_architecture() -> None:
     d.edge("d3", "d_verified", "d_gate", "endpoints", color=GREEN, extra="exitX=0.7;exitY=1;entryX=0.7;entryY=0", label_offset=42)
     d.edge("d4", "d_gate", "d_fusion", "raw", color=PURPLE, extra="exitX=0.25;exitY=1;entryX=0.35;entryY=0", label_offset=-38)
     d.edge("d5", "d_gate", "d_provenance", "verified", color=PURPLE, extra="exitX=0.75;exitY=1;entryX=0.65;entryY=0", label_offset=38)
-    d.write("system_architecture.drawio")
+    d.write("archive/system-architecture.drawio")
 
 
 def build_model_innovation() -> None:
@@ -369,7 +369,7 @@ def build_model_innovation() -> None:
     d.edge("out2", "e_fusion", "provenance_output", "", color=PURPLE, width=3, extra="exitX=1;exitY=0.55;entryX=0.25;entryY=0", points=[(1090, 1098), (1090, 1180), (1455, 1180)])
     d.edge("out3", "r_verified", "provenance_output", "R_EVGE", color=RED, width=3, extra="exitX=0.5;exitY=1;entryX=0.75;entryY=0", points=[(1392, 1160), (1805, 1160)], label_position=0.2, label_offset=-34)
     d.edge("raw_out", "raw", "fusion_output", "", color=AMBER, width=2, extra="exitX=0;exitY=0.5;entryX=0;entryY=0.5", points=[(20, 517), (20, 1265)])
-    d.write("model_innovation.drawio")
+    d.write("archive/model-innovation.drawio")
 
 
 def build_kg_construction() -> None:
@@ -418,7 +418,7 @@ def build_kg_construction() -> None:
     d.edge("d1", "d_caps", "d_recall", "", color=RED, extra="exitX=1;exitY=0.5;entryX=1;entryY=0.3", points=[(2350, 250), (2350, 687)])
     d.edge("d2", "d_exact", "d_use", "", color=BLUE, extra="exitX=0.3;exitY=1;entryX=0.3;entryY=0", points=[(1760, 585), (1760, 835), (1945, 835)])
     d.edge("d3", "d_recall", "d_use", "", color=GREEN, extra="exitX=0.7;exitY=1;entryX=0.7;entryY=0")
-    d.write("kg_construction_process.drawio")
+    d.write("archive/kg-construction-process.drawio")
 
 
 def build_representation_flow() -> None:
@@ -515,7 +515,7 @@ def build_representation_flow() -> None:
     d.edge("out_e2", "out_control", "out_hazard", "mitigates", color=GREEN, width=3, extra="exitX=0.5;exitY=0;entryX=0.5;entryY=1", label_offset=34)
     d.edge("out_e3", "out_event", "out_consequence", "leads-to", color=PURPLE, width=3, extra="exitX=0.5;exitY=1;entryX=0.5;entryY=0", label_offset=-34)
     d.edge("out_e4", "out_event", "out_evidence", "evidence", color=BLUE, width=3, extra="exitX=1;exitY=0.5;entryX=1;entryY=0.5", points=[(2445, 550), (2445, 1112)], label_position=0.2, label_offset=-44)
-    d.write("representation_flow.drawio")
+    d.write("archive/representation-flow.drawio")
 
 
 def main() -> None:

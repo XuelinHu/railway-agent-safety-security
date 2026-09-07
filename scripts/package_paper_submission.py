@@ -12,6 +12,11 @@ from pypdf import PdfReader
 ROOT = Path(__file__).resolve().parents[1]
 TEX = ROOT / "paper/elsarticle"
 OUT = ROOT / "output/pdf/ade-conll04"
+EXPECTED_FIGURES = [
+    "../figures/ade_conll04/01-label-distribution.pdf",
+    "../figures/ade_conll04/02-sentence-length-distribution.pdf",
+    "../figures/ade_conll04/03-pge-architecture.pdf",
+]
 
 
 def captions(text):
@@ -67,6 +72,11 @@ def main():
 
     text = (TEX / "manuscript.tex").read_text()
     figure_paths = re.findall(r"\\includegraphics\[[^]]*\]\{([^}]+)\}", text)
+    if figure_paths != EXPECTED_FIGURES:
+        raise RuntimeError(
+            "Manuscript figures do not match the numbered figure inventory: "
+            f"{figure_paths}"
+        )
     figure_captions = captions(text)
     assert len(figure_paths) == len(figure_captions) == 3
     caption_source = "\n\n".join(

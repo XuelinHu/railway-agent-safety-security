@@ -205,7 +205,7 @@ evidence that drug-safety reasoning is inherently easier than general-domain
 reasoning; the supervised extraction tasks differ in structure and size.
 
 \begin{figure}[htbp]
-\centering\includegraphics[width=\textwidth]{../figures/ade_conll04/label_distribution.pdf}
+\centering\includegraphics[width=\textwidth]{../figures/ade_conll04/01-label-distribution.pdf}
 \caption{Training annotation distributions. Each panel uses its own entity or
 relation total as the denominator; entity and relation percentages are not
 pooled. Different colors and hatching distinguish the two benchmarks.}
@@ -227,7 +227,7 @@ no relevant relations. We retain the supplied benchmark composition and do
 not create additional negative sentences for the reported tests.
 
 \begin{figure}[htbp]
-\centering\includegraphics[width=\textwidth]{../figures/ade_conll04/length_distribution.pdf}
+\centering\includegraphics[width=\textwidth]{../figures/ade_conll04/02-sentence-length-distribution.pdf}
 \caption{Empirical cumulative sentence-length distributions by partition.
 Length is computed on deterministically reconstructed text; no label-informed
 window selection is used for these sentence-level inputs.}
@@ -288,7 +288,7 @@ trained networks. In deployment PGE needs EAE and HRGE candidates; SOE is a
 comparison branch and does not participate in fusion.
 
 \begin{figure}[htbp]
-\centering\includegraphics[width=\textwidth]{../figures/ade_conll04/architecture.pdf}
+\centering\includegraphics[width=\textwidth]{../figures/ade_conll04/03-pge-architecture.pdf}
 \caption{Two-benchmark architecture. Dataset-specific training graphs supply
 candidate context; the current sentence supplies evidence. Three independent
 adapters share the backbone configuration. Entity acceptance uses any of the

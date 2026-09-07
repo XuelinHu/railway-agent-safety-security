@@ -86,7 +86,7 @@ def audit(path: Path) -> list[str]:
         if len(edge_ids) > 1:
             errors.append(f"duplicate port {port}: {', '.join(edge_ids)}")
 
-    if path.name == "system_architecture.drawio":
+    if path.name == "system-architecture.drawio":
         module_a_outputs = [
             cell.get("id", "<unknown>")
             for cell in root.iter("mxCell")
@@ -103,7 +103,11 @@ def audit(path: Path) -> list[str]:
 
 
 def main() -> int:
-    paths = sorted(FIGURES.glob("*.drawio"))
+    paths = sorted(
+        path
+        for path in (FIGURES / "archive").glob("*.drawio")
+        if not path.name.startswith("doubao-architecture-")
+    )
     if not paths:
         print(f"No Draw.io files found under {FIGURES}", file=sys.stderr)
         return 1

@@ -35,7 +35,7 @@ def main():
     edge('entity_pge','entity','pge',points=[(560,825),(620,825)],extra='exitX=0.7;exitY=1;entryX=0.22;entryY=0;')
     edge('relation_pge','relation','pge',extra='exitX=0.5;exitY=1;entryX=0.7;entryY=0;')
     box('audit','<b>Audit records accompany predictions</b><br>Source spans, relation direction, provenance and acceptance/rejection signals<br>Rules establish structural admissibility, not semantic truth or clinical causality',20,1000,960,100)
-    d.write('ade_conll04/architecture.drawio')
+    d.write('ade_conll04/03-pge-architecture.drawio')
 
 
 if __name__=='__main__':main()

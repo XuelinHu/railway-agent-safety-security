@@ -6,7 +6,7 @@ import xml.etree.ElementTree as ET
 from pathlib import Path
 
 
-path = Path('paper/figures/doubao-img-V2.drawio')
+path = Path('paper/figures/archive/doubao-architecture-v2.drawio')
 root = ET.parse(path).getroot()
 cells = [c for c in root.findall('.//mxCell') if c.get('id')]
 
@@ -73,7 +73,7 @@ print('edge style fs', Counter(style(c.get('style')).get('fontSize') for c in es
 print('edge label styles', Counter((style(c.get('style')).get('fontSize'), style(c.get('style')).get('fontColor'), style(c.get('style')).get('labelBackgroundColor'), style(c.get('style')).get('labelBorderColor')) for c in es if c.get('value')))
 
 print('\nSVG TEXT IMAGE BOUNDS')
-svg_path = Path('paper/figures/doubao-img-V2.svg')
+svg_path = Path('paper/figures/archive/doubao-architecture-v2.svg')
 if svg_path.exists():
     sr = ET.parse(svg_path).getroot()
     ns = {'s': 'http://www.w3.org/2000/svg'}
