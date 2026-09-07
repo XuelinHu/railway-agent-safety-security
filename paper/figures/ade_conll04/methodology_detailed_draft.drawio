@@ -1,0 +1,139 @@
+<?xml version='1.0' encoding='utf-8'?>
+<mxfile host="app.diagrams.net" modified="2026-09-01T02:20:00.000Z" agent="Codex" version="24.7.17">
+  <diagram id="methodology-detailed" name="Detailed Qwen3-4B methodology">
+    <mxGraphModel dx="1900" dy="1100" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1900" pageHeight="1100" math="1" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="canvas" value="" style="whiteSpace=wrap;html=1;fontFamily=Arial;fontSize=22;fontColor=#17324d;fillColor=#ffffff;strokeColor=#ffffff;strokeWidth=0;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="0" y="0" width="1900" height="1100" as="geometry" />
+        </mxCell>
+        <mxCell id="title" value="&lt;b&gt;Detailed Methodology: Source-Grounded Qwen3-4B + QLoRA Extraction&lt;/b&gt;" style="whiteSpace=wrap;html=1;fontFamily=Arial;fontSize=22;fontColor=#17324d;fillColor=#ffffff;strokeColor=#ffffff;strokeWidth=2;align=center;verticalAlign=middle;rounded=1;arcSize=12;fontStyle=1;fontSize=22;" vertex="1" parent="1">
+          <mxGeometry x="40" y="20" width="1820" height="55" as="geometry" />
+        </mxCell>
+        <mxCell id="subtitle" value="All examples are copied from released ADE/CoNLL04 benchmark records." style="whiteSpace=wrap;html=1;fontFamily=Arial;fontSize=22;fontColor=#17324d;fillColor=#ffffff;strokeColor=#ffffff;strokeWidth=2;align=center;verticalAlign=middle;rounded=1;arcSize=12;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="430" y="75" width="1040" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="input" value="&lt;b&gt;REAL ADE TEST SENTENCE&lt;/b&gt;&lt;br&gt;We report a case of fulminant hepatic failure&lt;br&gt;associated with didanosine ...&lt;br&gt;&lt;br&gt;Tokens: 0 We · 1 report · 2 a · 3 case · 4 of&lt;br&gt;5 fulminant · 6 hepatic · 7 failure · 8 associated · 9 with · 10 didanosine" style="whiteSpace=wrap;html=1;fontFamily=Arial;fontSize=22;fontColor=#17324d;fillColor=#fcecef;strokeColor=#b84c6a;strokeWidth=2;align=center;verticalAlign=middle;rounded=1;arcSize=12;fontStyle=1;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="40" y="130" width="380" height="175" as="geometry" />
+        </mxCell>
+        <mxCell id="anchor" value="&lt;b&gt;SOURCE ANCHORING&lt;/b&gt;&lt;br&gt;We report a case of&lt;br&gt;[fulminant hepatic failure] associated with [didanosine]&lt;br&gt;&lt;br&gt;Adverse-Effect span = [20,45)&lt;br&gt;Drug span = [62,72)&lt;br&gt;Copied text; deterministic offset reconstruction" style="whiteSpace=wrap;html=1;fontFamily=Arial;fontSize=22;fontColor=#17324d;fillColor=#fff7e6;strokeColor=#c9892f;strokeWidth=2;align=center;verticalAlign=middle;rounded=1;arcSize=12;fontStyle=1;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="40" y="335" width="380" height="180" as="geometry" />
+        </mxCell>
+        <mxCell id="input_anchor" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#17324d;strokeWidth=2;fontFamily=Arial;fontSize=20;fontStyle=1;labelBackgroundColor=none;" edge="1" parent="1" source="input" target="anchor">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="kg" value="&lt;b&gt;DATASET-SPECIFIC TRAINING KG (ADE)&lt;/b&gt;&lt;br&gt;&lt;font color=&quot;#526777&quot;&gt;Nodes and directed edges are derived only from training annotations.&lt;/font&gt;" style="whiteSpace=wrap;html=1;fontFamily=Arial;fontSize=22;fontColor=#17324d;fillColor=#fcecef;strokeColor=#b84c6a;strokeWidth=2;align=center;verticalAlign=middle;rounded=1;arcSize=12;fontStyle=1;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="40" y="550" width="380" height="300" as="geometry" />
+        </mxCell>
+        <mxCell id="n1" value="heart&lt;br&gt;block&lt;br&gt;&lt;font color=&quot;#b84c6a&quot;&gt;Adverse-Effect&lt;/font&gt;" style="whiteSpace=wrap;html=1;fontFamily=Arial;fontSize=22;fontColor=#17324d;fillColor=#ffffff;strokeColor=#b84c6a;strokeWidth=2;align=center;verticalAlign=middle;rounded=1;arcSize=12;fontStyle=1;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="80" y="630" width="105" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="n2" value="CHB&lt;br&gt;&lt;font color=&quot;#b84c6a&quot;&gt;Adverse-Effect&lt;/font&gt;" style="whiteSpace=wrap;html=1;fontFamily=Arial;fontSize=22;fontColor=#17324d;fillColor=#ffffff;strokeColor=#b84c6a;strokeWidth=2;align=center;verticalAlign=middle;rounded=1;arcSize=12;fontStyle=1;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="255" y="630" width="105" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="n3" value="disopyramide&lt;br&gt;phosphate&lt;br&gt;&lt;font color=&quot;#2f6f9f&quot;&gt;Drug&lt;/font&gt;" style="whiteSpace=wrap;html=1;fontFamily=Arial;fontSize=22;fontColor=#17324d;fillColor=#ffffff;strokeColor=#2f6f9f;strokeWidth=2;align=center;verticalAlign=middle;rounded=1;arcSize=12;fontStyle=1;fontSize=9;" vertex="1" parent="1">
+          <mxGeometry x="80" y="735" width="105" height="75" as="geometry" />
+        </mxCell>
+        <mxCell id="n4" value="Norpace&lt;br&gt;&lt;font color=&quot;#2f6f9f&quot;&gt;Drug&lt;/font&gt;" style="whiteSpace=wrap;html=1;fontFamily=Arial;fontSize=22;fontColor=#17324d;fillColor=#ffffff;strokeColor=#2f6f9f;strokeWidth=2;align=center;verticalAlign=middle;rounded=1;arcSize=12;fontStyle=1;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="255" y="735" width="105" height="75" as="geometry" />
+        </mxCell>
+        <mxCell id="kg_e1" value="Adverse-Effect" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#b84c6a;strokeWidth=2;fontFamily=Arial;fontSize=20;fontStyle=1;labelBackgroundColor=none;" edge="1" parent="1" source="n1" target="n3">
+          <mxGeometry relative="1" as="geometry" x="0.0" y="-28">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="kg_e2" value="Adverse-Effect" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#b84c6a;strokeWidth=2;fontFamily=Arial;fontSize=20;fontStyle=1;labelBackgroundColor=none;" edge="1" parent="1" source="n1" target="n4">
+          <mxGeometry relative="1" as="geometry" x="0.0" y="-28">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="kg_e3" value="Adverse-Effect" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#b84c6a;strokeWidth=2;fontFamily=Arial;fontSize=20;fontStyle=1;labelBackgroundColor=none;" edge="1" parent="1" source="n2" target="n3">
+          <mxGeometry relative="1" as="geometry" x="0.0" y="-28">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="kg_e4" value="Adverse-Effect" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#b84c6a;strokeWidth=2;fontFamily=Arial;fontSize=20;fontStyle=1;labelBackgroundColor=none;" edge="1" parent="1" source="n2" target="n4">
+          <mxGeometry relative="1" as="geometry" x="0.0" y="-28">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="kg_ev" value="&lt;font color=&quot;#526777&quot;&gt;Evidence: “developed complete heart block (CHB) following administration of&lt;br&gt;disopyramide phosphate (Norpace)”&lt;/font&gt;" style="whiteSpace=wrap;html=1;fontFamily=Arial;fontSize=22;fontColor=#17324d;fillColor=#fcecef;strokeColor=#b84c6a;strokeWidth=2;align=center;verticalAlign=middle;rounded=1;arcSize=12;fontSize=9;" vertex="1" parent="1">
+          <mxGeometry x="58" y="815" width="345" height="28" as="geometry" />
+        </mxCell>
+        <mxCell id="anchor_kg" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#c9892f;strokeWidth=2;fontFamily=Arial;fontSize=20;fontStyle=1;labelBackgroundColor=none;dashed=1;dashPattern=8 6;" edge="1" parent="1" source="anchor" target="kg">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="model" value="&lt;b&gt;FROZEN QWEN3-4B TRANSFORMER BACKBONE&lt;/b&gt;&lt;br&gt;&lt;br&gt;Embedding: \(X=E[\mathrm{token IDs}],\;X\in\mathbb{R}^{n\times d}\)&lt;br&gt;RMSNorm \rightarrow Q/K/V projections&lt;br&gt;\(Q=XW_q+XA_qB_q,\;K=XW_k+XA_kB_k,\;V=XW_v+XA_vB_v\)&lt;br&gt;&lt;br&gt;Self-attention: \(S=\mathrm{softmax}(QK^{\top}/\sqrt{d_k}),\;H=SV\)&lt;br&gt;Output projection: \(Y=HW_o+HA_oB_o+\mathrm{residual}\)&lt;br&gt;&lt;br&gt;Gated FFN (SwiGLU): \(U=XW_u+XA_uB_u,\;G=XW_g+XA_gB_g\)&lt;br&gt;\(Z=\mathrm{SiLU}(G)\odot U\)&lt;br&gt;Down projection: \(O=ZW_d+ZA_dB_d+\mathrm{residual}\)&lt;br&gt;&lt;br&gt;Next Transformer block (repeated \(L\) times)" style="whiteSpace=wrap;html=1;fontFamily=Arial;fontSize=22;fontColor=#17324d;fillColor=#eaf2fb;strokeColor=#2f6f9f;strokeWidth=2;align=center;verticalAlign=middle;rounded=1;arcSize=12;fontStyle=1;fontSize=12;math=1;" vertex="1" parent="1">
+          <mxGeometry x="460" y="130" width="760" height="405" as="geometry" />
+        </mxCell>
+        <mxCell id="anchor_model" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#17324d;strokeWidth=2;fontFamily=Arial;fontSize=20;fontStyle=1;labelBackgroundColor=none;" edge="1" parent="1" source="anchor" target="model">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="kg_model" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#b84c6a;strokeWidth=2;fontFamily=Arial;fontSize=20;fontStyle=1;labelBackgroundColor=none;dashed=1;dashPattern=8 6;" edge="1" parent="1" source="kg" target="model">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="lora" value="&lt;b&gt;QLoRA update for every adapted matrix&lt;/b&gt;&lt;br&gt;\(W\prime=W+(\alpha/r)BA\)&lt;br&gt;&lt;font color=&quot;#526777&quot;&gt;W is frozen; only low-rank A and B receive gradients&lt;/font&gt;&lt;br&gt;Attention: \(W_q,W_k,W_v,W_o\) &amp;nbsp;&amp;nbsp; FFN: \(W_{gate},W_{up},W_{down}\)" style="whiteSpace=wrap;html=1;fontFamily=Arial;fontSize=22;fontColor=#17324d;fillColor=#fff7e6;strokeColor=#c9892f;strokeWidth=2;align=center;verticalAlign=middle;rounded=1;arcSize=12;fontStyle=1;fontSize=12;math=1;" vertex="1" parent="1">
+          <mxGeometry x="460" y="555" width="760" height="92" as="geometry" />
+        </mxCell>
+        <mxCell id="model_lora" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#c9892f;strokeWidth=2;fontFamily=Arial;fontSize=20;fontStyle=1;labelBackgroundColor=none;dashed=1;dashPattern=8 6;" edge="1" parent="1" source="model" target="lora">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="soe" value="&lt;b&gt;SOE — Source-Only Extraction&lt;/b&gt;&lt;br&gt;source + ontology only&lt;br&gt;&lt;font face=&quot;Courier New&quot;&gt;{entities:[...], relations:[...]}&lt;/font&gt;" style="whiteSpace=wrap;html=1;fontFamily=Arial;fontSize=22;fontColor=#17324d;fillColor=#f1ecfa;strokeColor=#7257a6;strokeWidth=2;align=center;verticalAlign=middle;rounded=1;arcSize=12;dashed=1;dashPattern=8 6;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="470" y="680" width="225" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="soe_down" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#7257a6;strokeWidth=2;fontFamily=Arial;fontSize=20;fontStyle=1;labelBackgroundColor=none;dashed=1;dashPattern=8 6;" edge="1" parent="1" source="model" target="soe">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="eae" value="&lt;b&gt;EAE — Exact-Anchor Extraction&lt;/b&gt;&lt;br&gt;source + exact concept hints&lt;br&gt;&lt;font face=&quot;Courier New&quot;&gt;{entity:{text:&quot;didanosine&quot;, type:&quot;Drug&quot;}}&lt;/font&gt;" style="whiteSpace=wrap;html=1;fontFamily=Arial;fontSize=22;fontColor=#17324d;fillColor=#f1ecfa;strokeColor=#7257a6;strokeWidth=2;align=center;verticalAlign=middle;rounded=1;arcSize=12;dashed=1;dashPattern=8 6;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="720" y="680" width="225" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="eae_down" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#7257a6;strokeWidth=2;fontFamily=Arial;fontSize=20;fontStyle=1;labelBackgroundColor=none;dashed=1;dashPattern=8 6;" edge="1" parent="1" source="model" target="eae">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="hrge" value="&lt;b&gt;HRGE — High-Recall Graph Extraction&lt;/b&gt;&lt;br&gt;source + anchors + edge priors&lt;br&gt;&lt;font face=&quot;Courier New&quot;&gt;{relation:{source:&quot;effect&quot;, target:&quot;drug&quot;, evidence:&quot;...&quot;}}&lt;/font&gt;" style="whiteSpace=wrap;html=1;fontFamily=Arial;fontSize=22;fontColor=#17324d;fillColor=#f1ecfa;strokeColor=#7257a6;strokeWidth=2;align=center;verticalAlign=middle;rounded=1;arcSize=12;dashed=1;dashPattern=8 6;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="970" y="680" width="225" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="hrge_down" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#7257a6;strokeWidth=2;fontFamily=Arial;fontSize=20;fontStyle=1;labelBackgroundColor=none;dashed=1;dashPattern=8 6;" edge="1" parent="1" source="model" target="hrge">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="branch_note" value="three learned QLoRA adapters" style="whiteSpace=wrap;html=1;fontFamily=Arial;fontSize=22;fontColor=#17324d;fillColor=#ffffff;strokeColor=#ffffff;strokeWidth=2;align=center;verticalAlign=middle;rounded=1;arcSize=12;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="730" y="790" width="250" height="28" as="geometry" />
+        </mxCell>
+        <mxCell id="gates" value="&lt;b&gt;DETERMINISTIC EVIDENCE GATES (NOT NEURAL LAYERS)&lt;/b&gt;&lt;br&gt;Entity: EAE agreement OR valid HRGE anchor OR verified endpoint&lt;br&gt;Relation: valid references AND legal type signature AND explicit status AND common source evidence&lt;br&gt;&lt;font color=&quot;#526777&quot;&gt;Rule-based verification; not a graph neural network&lt;/font&gt;" style="whiteSpace=wrap;html=1;fontFamily=Arial;fontSize=22;fontColor=#17324d;fillColor=#eaf6ef;strokeColor=#2f7d5b;strokeWidth=2;align=center;verticalAlign=middle;rounded=1;arcSize=12;fontStyle=1;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="460" y="835" width="760" height="125" as="geometry" />
+        </mxCell>
+        <mxCell id="soe_gate" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#7257a6;strokeWidth=2;fontFamily=Arial;fontSize=20;fontStyle=1;labelBackgroundColor=none;" edge="1" parent="1" source="soe" target="gates">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="eae_gate" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#7257a6;strokeWidth=2;fontFamily=Arial;fontSize=20;fontStyle=1;labelBackgroundColor=none;" edge="1" parent="1" source="eae" target="gates">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="hrge_gate" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#7257a6;strokeWidth=2;fontFamily=Arial;fontSize=20;fontStyle=1;labelBackgroundColor=none;" edge="1" parent="1" source="hrge" target="gates">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="out" value="&lt;b&gt;OUTPUT KNOWLEDGE GRAPH (GRAPH DATA, NOT A GNN)&lt;/b&gt;&lt;br&gt;&lt;br&gt;ADE:&lt;br&gt;[fulminant hepatic failure]&lt;font color=&quot;#b84c6a&quot;&gt;Adverse-Effect&lt;/font&gt;  ── &lt;b&gt;Adverse-Effect&lt;/b&gt; ──▶  [didanosine]&lt;font color=&quot;#2f6f9f&quot;&gt;Drug&lt;/font&gt;&lt;br&gt;&lt;br&gt;CoNLL04:&lt;br&gt;[John Wilkes Booth]&lt;font color=&quot;#2f6f9f&quot;&gt;Peop&lt;/font&gt;  ── &lt;b&gt;Kill&lt;/b&gt; ──▶  [President Abraham Lincoln]&lt;font color=&quot;#2f6f9f&quot;&gt;Peop&lt;/font&gt;&lt;br&gt;&lt;br&gt;&lt;font color=&quot;#526777&quot;&gt;Nodes: surface text, type, span · Edges: direction, evidence, provenance&lt;/font&gt;" style="whiteSpace=wrap;html=1;fontFamily=Arial;fontSize=22;fontColor=#17324d;fillColor=#eaf6ef;strokeColor=#2f7d5b;strokeWidth=2;align=center;verticalAlign=middle;rounded=1;arcSize=12;fontStyle=1;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="1260" y="130" width="600" height="300" as="geometry" />
+        </mxCell>
+        <mxCell id="gates_out" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#2f7d5b;strokeWidth=2;fontFamily=Arial;fontSize=20;fontStyle=1;labelBackgroundColor=none;" edge="1" parent="1" source="gates" target="out">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="audit" value="&lt;b&gt;AUDIT RECORD (AUTOMATIC)&lt;/b&gt;&lt;br&gt;Evidence quote · character offsets · entity types&lt;br&gt;Relation direction · provenance · accept/reject signal · rejection reason&lt;br&gt;&lt;br&gt;&lt;font color=&quot;#526777&quot;&gt;Optional human spot-check; no manual review of every prediction required.&lt;/font&gt;" style="whiteSpace=wrap;html=1;fontFamily=Arial;fontSize=22;fontColor=#17324d;fillColor=#fff7e6;strokeColor=#c9892f;strokeWidth=2;align=center;verticalAlign=middle;rounded=1;arcSize=12;fontStyle=1;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="1260" y="500" width="600" height="155" as="geometry" />
+        </mxCell>
+        <mxCell id="out_audit" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#c9892f;strokeWidth=2;fontFamily=Arial;fontSize=20;fontStyle=1;labelBackgroundColor=none;dashed=1;dashPattern=8 6;" edge="1" parent="1" source="out" target="audit">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="pge" value="&lt;b&gt;PGE OUTPUT&lt;/b&gt;&lt;br&gt;accepted spans + typed directed relations&lt;br&gt;with provenance linked back to source text" style="whiteSpace=wrap;html=1;fontFamily=Arial;fontSize=22;fontColor=#17324d;fillColor=#eaf6ef;strokeColor=#2f7d5b;strokeWidth=2;align=center;verticalAlign=middle;rounded=1;arcSize=12;fontStyle=1;fontSize=13;" vertex="1" parent="1">
+          <mxGeometry x="1260" y="740" width="600" height="115" as="geometry" />
+        </mxCell>
+        <mxCell id="gates_pge" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#2f7d5b;strokeWidth=2;fontFamily=Arial;fontSize=20;fontStyle=1;labelBackgroundColor=none;" edge="1" parent="1" source="gates" target="pge">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="legend" value="Blue = frozen Transformer computation &amp;nbsp;&amp;nbsp; Purple = trainable LoRA adapters &amp;nbsp;&amp;nbsp; Green = verified graph output &amp;nbsp;&amp;nbsp; Gold = deterministic audit / offsets" style="whiteSpace=wrap;html=1;fontFamily=Arial;fontSize=22;fontColor=#17324d;fillColor=#ffffff;strokeColor=#ffffff;strokeWidth=2;align=center;verticalAlign=middle;rounded=1;arcSize=12;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="500" y="1010" width="900" height="28" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

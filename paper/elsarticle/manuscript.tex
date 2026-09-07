@@ -11,24 +11,30 @@
 \title{Provenance-Preserving Evidence-Gated Knowledge-Graph Augmentation for Auditable Entity--Relation Extraction}
 \author{Anonymous Authors}
 \begin{abstract}
-Converting text into structured knowledge requires both accurate extraction and
-an explicit connection between predicted relations and their source evidence.
-Knowledge graphs can supply domain context, but a retrieved association is not
-necessarily a fact stated in the current sentence. This study proposes a
-provenance-preserving, evidence-gated framework that separates graph-informed
-candidate generation from output acceptance. A training-only graph provides
-bounded concept and relation hints to compact generative extractors, while
-deterministic span reconstruction, entity selection, and relation verification
-produce an evidence-linked assertion graph. Evaluation on ADE and CoNLL04
-examines drug--adverse-effect extraction and general-domain entity--relation
-extraction within a shared character-span evaluation protocol. Dataset
-statistics characterize label concentration, sentence length, and split
-composition before the model comparisons. The completed test runs show higher
-relation F1 than the matched source-only generator on both benchmarks, with
-improved relation precision and explicit records of gate decisions. The
-findings demonstrate a practical mechanism for controlling graph augmentation
-and organizing source-grounded predictions for human review, while separating
-structural admissibility from semantic correctness.
+\textbf{Introduction:} Graph-augmented extraction can retrieve useful
+associations, but a retrieved association is not necessarily a fact stated in
+the current sentence. Fluent generators also make it difficult to trace a
+predicted relation to its source span and to audit why it was accepted. This
+gap is consequential when extracted assertions are used in safety-related
+knowledge systems.\\
+\textbf{Methods:} We develop a provenance-preserving, evidence-gated
+framework that separates graph-informed candidate generation from output
+acceptance. A graph derived only from training annotations supplies bounded
+concept and relation hints to QLoRA-adapted Qwen3-4B extractors. Deterministic
+span reconstruction, entity acceptance, and relation verification then retain
+only source-linked, type-compatible assertions. We evaluate the framework on
+ADE and CoNLL04 using a shared strict character-span protocol and report the
+underlying dataset distributions.\\
+\textbf{Results:} The completed test comparisons show that the provenance-gated
+system improves relation F1 over its matched source-only generator on both
+benchmarks and records explicit acceptance decisions. The relation improvement
+is retained for the reported CoNLL04 sensitivity analysis after exact
+train--test text overlaps are excluded.\\
+\textbf{Discussion:} The results support controlled graph augmentation as an
+auditable extraction layer for human review. The gates establish structural
+admissibility and source linkage, not semantic truth, clinical causality, or
+universal accuracy dominance; the strongest supervised baseline remains
+competitive in overall extraction F1.
 \end{abstract}
 \begin{keyword}
 entity and relation extraction \sep knowledge graph \sep provenance
@@ -196,7 +202,7 @@ more intuitive drug-to-effect direction. CoNLL04 contains \texttt{Loc},
 \texttt{Live\_In}, and \texttt{Located\_In} relations.
 
 Figure~\ref{fig:labels} shows the training-label distributions, and
-\ref{app:labels} lists exact label counts for every partition.
+Table~\ref{tab:labels} lists exact label counts for every partition.
 The single ADE relation label eliminates inter-class relation confusion but
 does not eliminate endpoint detection, direction, or false-pair errors.
 CoNLL04 introduces a broader relation inventory and more heterogeneous entity
@@ -211,6 +217,13 @@ relation total as the denominator; entity and relation percentages are not
 pooled. Different colors and hatching distinguish the two benchmarks.}
 \label{fig:labels}
 \end{figure}
+
+\begin{table}[htbp]
+\centering\small\setlength{\tabcolsep}{4pt}
+\caption{Exact entity and relation annotation counts in the imported files.}
+\label{tab:labels}
+\input{../results/ade_conll04/label_counts.tex}
+\end{table}
 
 \subsection{Sentence lengths and coverage}
 The mean training lengths are 21.17 reconstructed tokens for ADE and 28.77 for
@@ -666,18 +679,6 @@ figure preparation, and manuscript organization. The authors are responsible
 for reviewing the resulting material and for the final content. The language
 models evaluated as research systems are described separately in the Methods.
 
-\appendix
-\section{Label counts by partition}
-\label{app:labels}
-Table~\ref{tab:labels} provides the counts underlying the distribution analysis.
-Entity and relation labels with the same string in ADE belong to different
-annotation inventories and must not be combined.
-\begin{table}[htbp]
-\centering\small\setlength{\tabcolsep}{4pt}
-\caption{Exact entity and relation annotation counts in the imported files.}
-\label{tab:labels}
-\input{../results/ade_conll04/label_counts.tex}
-\end{table}
 \bibliographystyle{elsarticle-num}
 \bibliography{references}
 \end{document}
