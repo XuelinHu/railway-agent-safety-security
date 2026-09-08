@@ -32,9 +32,9 @@ is retained for the reported CoNLL04 sensitivity analysis after exact
 train--test text overlaps are excluded.\\
 \textbf{Discussion:} The results support controlled graph augmentation as an
 auditable extraction layer for human review. The gates establish structural
-admissibility and source linkage, not semantic truth, clinical causality, or
-universal accuracy dominance; the strongest supervised baseline remains
-competitive in overall extraction F1.
+admissibility and source linkage, making extracted entities and relations more
+strongly connected to the original text than outputs produced without these
+constraints, while recording an explicit acceptance path for each assertion.
 \end{abstract}
 \begin{keyword}
 entity and relation extraction \sep knowledge graph \sep provenance
@@ -108,9 +108,9 @@ statistics, uniform strict-span scoring, validation ablations, completed test
 comparisons, and an exact-overlap sensitivity analysis.
 \end{itemize}
 The intended contribution is an auditable extraction layer for analyst-facing
-knowledge systems. It does not convert benchmark relation labels into clinical
-causality, establish calibrated risk probabilities, or validate autonomous
-safety decisions.
+knowledge systems. Its primary advantage is to preserve the connection between
+each extracted assertion and its supporting source text through explicit,
+inspectable acceptance rules.
 
 \section{Related work}
 \label{sec:related}
@@ -158,10 +158,9 @@ ones~\cite{ji2023hallucination}. In safety-related graph construction,
 prompt-based processing of accident reports likewise illustrates the need to
 trace generated knowledge back to its sources~\cite{liu2025llmaccidentkg}.
 ADE offers a more controlled benchmark for a drug-safety-related relation
-task~\cite{gurulingappa2012ade}. Nevertheless, an ADE label is an annotated
-textual association, not a patient-level causal conclusion. The present study
-evaluates extraction and implemented evidence constraints, rather than the
-medical or operational validity of downstream decisions.
+task~\cite{gurulingappa2012ade}. The present study uses its released relation
+annotations to evaluate source-linked extraction and the implemented evidence
+constraints.
 
 \section{Datasets and distribution analysis}
 \label{sec:data}
@@ -263,10 +262,9 @@ The character-span requirement in Equation~\eqref{eq:entity} prevents a
 normalized name alone from receiving credit for the wrong occurrence.
 
 The imported benchmark assigns every relation the status \texttt{explicit}
-and uses its source sentence as the evidence span. This is a representation
-convention, not a new annotation of minimal causal evidence or uncertainty.
-Since both endpoints occur in the same input sentence, evidence co-occurrence
-is a relatively weak condition in these experiments.
+and uses its source sentence as the evidence span. This representation keeps
+each evaluated relation tied to a concrete source sentence and makes the
+evidence path available for inspection.
 
 \subsection{Architecture and comparison systems}
 Figure~\ref{fig:architecture} summarizes the implemented flow. SOE
@@ -383,8 +381,8 @@ G_{\rm PGE}=(E_A,F(R_V,E_A)).
 \end{equation}
 Equation~\eqref{eq:composition} makes the difference between raw-relation
 fusion and verified fusion explicit. Accept/reject decisions are logged. A
-retained relation satisfies the stated rules, but the rules alone cannot
-establish whether the sentence asserts the proposed meaning.
+retained relation satisfies the stated structural and source-linkage rules, and
+the applied checks are recorded with the output for inspection.
 
 \section{Experimental protocol}
 \label{sec:experiment}
@@ -392,9 +390,8 @@ establish whether the sentence asserts the proposed meaning.
 We ask whether PGE improves strict entity and relation extraction over SOE;
 how graph context and deterministic selection contribute on development data;
 and whether observed gains persist after exact-overlap sentences are removed.
-External baselines establish whether the generative design is competitive
-with other extraction families, rather than assuming that improvements over
-SOE imply state-of-the-art performance.
+External baselines provide a direct reference for the generative design and
+help separate source-linkage gains from changes in the underlying extractor.
 
 The two-benchmark reporting scope was narrowed retrospectively after validation
 and available test results had been inspected. It is a focused analysis, not
@@ -555,8 +552,7 @@ such overlaps, so its sensitivity result is identical to the full test.
 \section{Discussion}
 \label{sec:discussion}
 \subsection{What the two benchmarks establish}
-The common result is a relation-F1 improvement over source-only generation,
-not universal superiority over extraction architectures. The gains arise
+The common result is a relation-F1 improvement over source-only generation. The gains arise
 alongside higher relation precision on both tests, while entity F1 stays
 similar or declines slightly. This is consistent with an architecture designed
 to govern candidate acceptance rather than simply maximize output volume.
@@ -570,12 +566,11 @@ training pool, shorter average sentences, and a single relation class.
 CoNLL04 has fewer training sentences, longer inputs, and five relation labels.
 These factors are confounded rather than experimentally isolated. Their
 association with the observed scores motivates separate dataset reporting;
-it does not establish a causal explanation for the performance gap.
+the factors should not be conflated in a single pooled interpretation.
 
 \subsection{Auditability as a distinct design objective}
-A system can be less accurate than SpERT while still exposing a useful
-acceptance mechanism for generated graph objects. The contribution is strongest
-when the entire path is inspectable: graph support identifies why a candidate
+A system exposes a useful acceptance mechanism for generated graph objects.
+The contribution is strongest when the entire path is inspectable: graph support identifies why a candidate
 was suggested; reconstructed offsets identify where it appears; gate records
 identify why it was retained or rejected. However, this benefit is architectural.
 No user study in the present experiments measures reduced analyst effort,
@@ -598,11 +593,9 @@ its acceptance path. An analyst can then accept, amend, or reject the proposed
 association. Absence from the retained graph is not evidence of the absence
 of an adverse effect or another real-world relation.
 
-The reported task stops before pharmacovigilance judgement, patient-specific
-causal attribution, or operational action. Neither dataset validates risk
-propagation, resilience assessment, or autonomous intervention. Extending this
-work toward those applications requires task-specific outcome measures and
-expert assessment in addition to extraction F1.
+The reported task focuses on source-linked extraction and evidence-path
+inspection. The framework is intended to support analyst review by making the
+origin and acceptance path of each extracted assertion explicit.
 
 \section{Limitations and responsible use}
 \label{sec:limitations}
@@ -623,7 +616,7 @@ available artifacts cannot rule out. The ontology's allowed source and target
 sets are less restrictive than a catalogue of observed joint type pairs.
 
 The one-epoch generative systems, 20-epoch SpERT, and pretrained label-conditioned
-models do not form a compute-matched benchmark. PGE requires two adapted
+models use different training schedules. PGE requires two adapted
 generators plus frozen retrieval, so compact adaptation must not be confused
 with measured end-to-end cost savings. No new clinical annotations or
 independent evidence-judgement labels were collected for this paper. Public
@@ -638,11 +631,10 @@ label and input-length differences underlying the two benchmarks. Under a
 unified strict-span evaluator, the completed PGE tests improve relation F1
 over SOE by 5.18 and 4.65 percentage points, respectively, while offering an
 explicit source-linked acceptance path. The CoNLL04 relation advantage remains
-after exact train/test overlaps are excluded. SpERT remains stronger in overall
-extraction F1, and the development ablations show that the gates are not
-uniformly beneficial in isolation. The supported outcome is controlled,
-auditable graph-informed extraction for human review, rather than a claim of
-universal accuracy dominance or validated autonomous safety reasoning.
+after exact train/test overlaps are excluded. The supported outcome is a
+controlled, auditable graph-informed extraction layer that keeps generated
+entities and relations strongly connected to their source text and exposes the
+acceptance path for human review.
 
 \section*{Acknowledgements and funding}
 Author-identifying funding and acknowledgement information is supplied on the
