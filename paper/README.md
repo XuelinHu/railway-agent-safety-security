@@ -12,8 +12,8 @@ CoNLL04 is a general-domain structural comparison, not a safety-outcome dataset.
 
 - `cas-dc/`: CAS double-column anonymous source, author page, bibliography, and
   journal class files.
-- `figures/`: one authoritative editable method figure and its PDF/PNG/SVG
-  exports. `methodology_detailed_draft.drawio` is the sole figure source.
+- `figures/`: the editable method figure plus generated dataset-distribution,
+  test-result, and training-loss figures rebuilt from frozen evidence files.
 - `results/ade_conll04/`: source-hashed statistics, common-evaluator scores,
   generated tables, repeated-run summaries, bootstrap intervals, and
   exact-overlap sensitivity results used by the manuscript.
@@ -31,6 +31,9 @@ checkpoints, runtime logs, and full prediction dumps do not belong in `paper/`.
 
 ```bash
 python3 scripts/build_ade_conll04_paper.py
+python3 scripts/build_paper_result_figures.py
+python3 scripts/extract_paper_training_loss.py
+python3 scripts/build_training_loss_figure.py
 # Draw.io needs a working DISPLAY/XAUTHORITY or Xvfb session.
 python3 scripts/export_submission_artwork.py
 cd paper/cas-dc
@@ -40,6 +43,12 @@ cd ../..
 python3 scripts/package_paper_submission.py
 python3 scripts/render_paper_review.py
 ```
+
+The seed-42 EAE/HRGE runner retained one real loss observation every five
+optimizer steps; the manuscript plots only those attributable records. Later
+repetitions retained endpoint summaries only and are excluded. Future
+`train_qlora.py` runs save every optimizer-step observation directly to
+`training_loss.csv`.
 
 The data builder reads completed, previously released predictions and labels.
 It does not train, infer, change thresholds, regenerate predictions, or mutate

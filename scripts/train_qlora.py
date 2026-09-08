@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import argparse
+import csv
 import json
 import math
 import random
@@ -246,6 +247,7 @@ def main(args: argparse.Namespace) -> int:
     training_started = time.perf_counter()
     steps = 0
     losses = []
+    loss_history = []
     for epoch in range(args.epochs):
         for batch in loader:
             with accelerator.accumulate(model):
@@ -263,6 +265,12 @@ def main(args: argparse.Namespace) -> int:
             if accelerator.sync_gradients:
                 steps += 1
                 losses.append(float(loss.detach().cpu()))
+                loss_history.append({
+                    "epoch": epoch + 1,
+                    "step": steps,
+                    "loss": losses[-1],
+                    "learning_rate": optimizer.param_groups[0]["lr"],
+                })
                 if steps % 5 == 0:
                     print(json.dumps({"epoch": epoch + 1, "step": steps, "loss": round(losses[-1], 5)}, ensure_ascii=False), flush=True)
 
@@ -321,6 +329,15 @@ def main(args: argparse.Namespace) -> int:
         },
     }
     (args.output / "training_metrics.json").write_text(json.dumps(metrics, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    # Keep every optimizer-step observation for traceable training curves.
+    with (args.output / "training_loss.csv").open("w", newline="", encoding="utf-8") as handle:
+        writer = csv.DictWriter(
+            handle,
+            fieldnames=("epoch", "step", "loss", "learning_rate"),
+            lineterminator="\n",
+        )
+        writer.writeheader()
+        writer.writerows(loss_history)
     print(json.dumps(metrics, ensure_ascii=False, indent=2))
     return 0
 

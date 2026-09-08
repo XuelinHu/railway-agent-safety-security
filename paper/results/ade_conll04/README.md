@@ -12,8 +12,11 @@ are read-only; no prediction or trained model was changed during preparation.
 - `results_snapshot.json`, `test_results.tex`, `validation_ablation.tex`: reported results.
 - `repeated_run_stability.json`, `repeated_run_stability.tex`: the completed
   two-run stability check used in the revised results section.
-- `training_loss_availability.md`: audit of the unavailable per-step loss
-  sequence; no synthetic training-loss curve is reported.
+- `training_loss_seed42.csv`, `training_loss_seed42_provenance.json`: audited
+  EAE/HRGE observations recovered from the seed-42 runner log, plus its hash
+  and adapter-level matching metadata.
+- `training_loss_availability.md`: scope and limitations of the loss figure;
+  no missing optimizer steps or endpoint-only runs are reconstructed.
 - `evaluator_reconciliation.json`: original and common-evaluator SOE/PGE counts.
 - `paired_test_bootstrap.json`: 20,000 paired sentence resamples on fixed predictions.
 - `overlap_sensitivity.json`: fixed-prediction scores excluding exact train/test overlaps.
@@ -39,6 +42,8 @@ Regenerate from the repository root:
 
 ```bash
 python3 scripts/build_ade_conll04_paper.py
+python3 scripts/extract_paper_training_loss.py
+python3 scripts/build_training_loss_figure.py
 ```
 
 Requires the original local prediction/data artifacts and Python with NumPy,

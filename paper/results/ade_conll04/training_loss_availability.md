@@ -1,13 +1,20 @@
 # Training-loss availability audit
 
-The seed-2026 and seed-3407 QLoRA adapters for ADE and CoNLL04 contain
-`training_metrics.json` with `mean_loss` and `final_loss`. They do not contain
-the per-step loss sequence. Although `scripts/train_qlora.py` prints one loss
-value every five optimizer steps, the formal matrix did not retain the
-corresponding training stdout logs.
+The primary seed-42 EAE and HRGE training runner retained one stdout loss
+observation every five optimizer steps for ADE and CoNLL04. The extraction
+script matches each logged block to its adapter `training_metrics.json` by the
+exact `started_at_utc` value and verifies its total-step and final-loss
+metadata. The source-log SHA-256 and per-adapter observation counts are stored
+in `training_loss_seed42_provenance.json`; the extracted observations are in
+`training_loss_seed42.csv`.
 
-Consequently, a training-loss trajectory cannot be reconstructed faithfully
-from the preserved artifacts. No interpolated or synthetic loss curve is used
-in the manuscript. The endpoint summaries remain available for execution
-audit, but mean loss and final loss are not plotted as if they were successive
-training observations.
+The logging interval means that four optimizer steps between adjacent points
+were never recorded. They are not reconstructed or interpolated. The plotted
+trailing mean is computed only from observed values, while raw observations
+remain visible. SOE and the two additional training repetitions do not have
+equivalently attributable step histories and are therefore excluded from the
+loss figure; their mean/final loss values are not presented as trajectories.
+
+For future runs, `scripts/train_qlora.py` saves every optimizer-step loss to
+`training_loss.csv` directly. This avoids dependence on captured stdout and
+supports complete, traceable curves.

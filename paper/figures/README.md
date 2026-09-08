@@ -1,10 +1,20 @@
-# Paper figure
+# Paper figures
 
-The manuscript uses one figure only:
+The manuscript uses four figures:
 
-| Source | PDF | PNG | SVG |
-|---|---|---|---|
-| `methodology_detailed_draft.drawio` | `methodology_detailed_draft.pdf` | `methodology_detailed_draft.png` | `methodology_detailed_draft.svg` |
+| Purpose | Reproducible source | PDF | PNG | SVG |
+|---|---|---|---|---|
+| Dataset and sentence-length distributions | `../../scripts/build_paper_result_figures.py` | `dataset_distribution.pdf` | `dataset_distribution.png` | -- |
+| Method architecture | `methodology_detailed_draft.drawio` | `methodology_detailed_draft.pdf` | `methodology_detailed_draft.png` | `methodology_detailed_draft.svg` |
+| Frozen test-result analysis | `../../scripts/build_paper_result_figures.py` | `result_analysis.pdf` | `result_analysis.png` | -- |
+| Audited seed-42 training loss | `../../scripts/extract_paper_training_loss.py`, `../../scripts/build_training_loss_figure.py` | `training_loss.pdf` | `training_loss.png` | -- |
 
 The editable Draw.io source is the authoritative figure source for the current
-English and Chinese manuscripts.
+architecture. The distribution and result figures are generated directly from
+the frozen CSV/JSON evidence and must not be edited by hand.
+
+The loss figure contains only the attributable seed-42 EAE/HRGE observations
+logged every five optimizer steps. It does not infer the four unlogged steps
+between observations or mix endpoint-only repeated runs into the curves.
+Future QLoRA runs also write `training_loss.csv` directly, avoiding dependence
+on captured stdout.

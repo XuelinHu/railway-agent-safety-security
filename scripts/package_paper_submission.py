@@ -13,14 +13,17 @@ ROOT = Path(__file__).resolve().parents[1]
 TEX = ROOT / "paper/cas-dc"
 OUT = ROOT / "output/pdf/ade-conll04"
 EXPECTED_FIGURES = [
+    "../figures/dataset_distribution.pdf",
     "../figures/methodology_detailed_draft.pdf",
+    "../figures/result_analysis.pdf",
+    "../figures/training_loss.pdf",
 ]
 
 
 def captions(text):
     """Extract figure captions, respecting nested TeX braces."""
     result = []
-    for figure in re.findall(r"\\begin\{figure\}.*?\\end\{figure\}", text, re.S):
+    for figure in re.findall(r"\\begin\{figure\*?\}.*?\\end\{figure\*?\}", text, re.S):
         start = figure.index(r"\caption{") + len(r"\caption{")
         depth, end = 1, start
         while depth:
@@ -34,6 +37,20 @@ def captions(text):
     return result
 
 
+def reject_layout_overflows(log: str, source: str, stem: str) -> None:
+    """Reject real overflows while allowing CAS's empty highlights-sheet box."""
+    overflows = re.findall(r"Overfull \\hbox .*? at line (\d+)", log)
+    if not overflows:
+        return
+    maketitle_line = next(
+        index for index, line in enumerate(source.splitlines(), 1)
+        if r"\maketitle" in line and not line.lstrip().startswith("%")
+    )
+    if stem == "manuscript" and all(int(line) == maketitle_line for line in overflows):
+        return
+    raise RuntimeError(f"{stem}: Overfull hbox at source line(s) {', '.join(overflows)}")
+
+
 def main():
     OUT.mkdir(parents=True, exist_ok=True)
     report = {"datasets": ["ade", "conll04"], "study_uses_released_test_results": True,
@@ -41,11 +58,13 @@ def main():
     for stem, target in (("manuscript", "manuscript"),
                          ("title-page", "title-page")):
         log = (TEX / f"{stem}.log").read_text()
-        for problem in ("Overfull", "There were undefined references",
+        source = TEX / f"{stem}.tex"
+        source_text = source.read_text()
+        reject_layout_overflows(log, source_text, stem)
+        for problem in ("There were undefined references",
                         "There were undefined citations", "! LaTeX Error"):
             if problem in log:
                 raise RuntimeError(f"{stem}: {problem}")
-        source = TEX / f"{stem}.tex"
         if (TEX / f"{stem}.pdf").stat().st_mtime < source.stat().st_mtime:
             raise RuntimeError(f"Recompile {stem} before packaging")
         document = PdfReader(TEX / f"{stem}.pdf")
@@ -53,7 +72,7 @@ def main():
         if "??" in plain or "\ufffd" in plain:
             raise RuntimeError(f"Unresolved PDF text in {stem}")
         if stem != "title-page":
-            text = source.read_text()
+            text = source_text
             labels = re.findall(r"\\label\{([^}]+)\}", text)
             refs = re.findall(r"\\(?:eqref|ref)\{([^}]+)\}", text)
             assert len(labels) == len(set(labels)), "duplicate labels"
@@ -75,7 +94,7 @@ def main():
             f"{figure_paths}"
         )
     figure_captions = captions(text)
-    assert len(figure_paths) == len(figure_captions) == 1
+    assert len(figure_paths) == len(figure_captions) == len(EXPECTED_FIGURES)
     caption_source = "\n\n".join(
         f"\\noindent\\textbf{{Figure {i}.}} {caption}\\par"
         for i, caption in enumerate(figure_captions, 1))
@@ -104,10 +123,16 @@ def main():
         for rel in re.findall(r"\\input\{([^}]+)\}", text):
             path = (TEX / rel).resolve()
             archive.write(path, str(path.relative_to(ROOT)))
+        for name in ('build_paper_result_figures.py',
+                     'extract_paper_training_loss.py',
+                     'build_training_loss_figure.py'):
+            path = ROOT / 'scripts' / name
+            archive.write(path, str(path.relative_to(ROOT)))
         for name in ('dataset_statistics.csv','label_distribution.csv','results_snapshot.json',
                      'evaluator_reconciliation.json','paired_test_bootstrap.json','overlap_sensitivity.json',
                      'source_hashes.json','test_evidence.csv','protocol_snapshot.json',
-                     'repeated_run_stability.json','training_loss_availability.md'):
+                     'repeated_run_stability.json','training_loss_availability.md',
+                     'training_loss_seed42.csv','training_loss_seed42_provenance.json'):
             path = ROOT / 'paper/results/ade_conll04' / name
             archive.write(path,str(path.relative_to(ROOT)))
         archive.write(OUT / "figure-captions.tex", "figure-captions.tex")
@@ -121,12 +146,14 @@ def main():
         shutil.copy2(source, word_out / source.name)
     figure_out = OUT / "figures"
     figure_out.mkdir(parents=True, exist_ok=True)
-    for suffix in (".drawio", ".pdf", ".png", ".svg"):
-        source = ROOT / "paper/figures" / f"methodology_detailed_draft{suffix}"
-        if source.exists():
-            shutil.copy2(source, figure_out / source.name)
+    for rel in figure_paths:
+        stem = Path(rel).stem
+        for suffix in (".drawio", ".pdf", ".png", ".svg"):
+            source = ROOT / "paper/figures" / f"{stem}{suffix}"
+            if source.exists():
+                shutil.copy2(source, figure_out / source.name)
     report["figure_count"] = len(figure_paths)
-    report["table_count"] = len(re.findall(r"\\begin\{table\}", text))
+    report["table_count"] = len(re.findall(r"\\begin\{table\*?\}", text))
     report["visual_review_required"] = True
     (OUT / "submission-build-checks.json").write_text(json.dumps(report, indent=2) + "\n")
     print(json.dumps(report, indent=2))

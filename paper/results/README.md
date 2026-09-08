@@ -22,6 +22,8 @@ All files consumed directly by `paper/cas-dc/manuscript.tex` are under
   dataset-distribution inputs.
 - `training_loss_availability.md`: audit explaining why no synthetic loss
   trajectory is reported for the additional runs.
+- `training_loss_seed42.csv` and `training_loss_seed42_provenance.json`:
+  attributable seed-42 EAE/HRGE loss observations and source-log provenance.
 
 The LaTeX source should reference only the generated `.tex` tables in this
 directory. JSON/CSV files are audit sources and are not pasted into the paper.
