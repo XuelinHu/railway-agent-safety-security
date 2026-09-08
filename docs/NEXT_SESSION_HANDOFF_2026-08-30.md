@@ -338,7 +338,7 @@ reporting.
 
 ### Phase A: freeze the claim and protocol
 
-Deliverable: `paper/PROTOCOL_FREEZE.md`.
+Deliverable: `docs/legacy-experiments/PROTOCOL_FREEZE.md`.
 
 Tasks:
 
@@ -519,17 +519,17 @@ Active source of truth:
 - `docs/annotation-guidelines.md`
 - `docs/paper-metadata.md`
 - `paper/elsarticle/manuscript.tex`
-- `paper/PROTOCOL_FREEZE.md`
-- `paper/D100_EXECUTION_GATE.md`
-- `paper/PROTOCOL_V2_AMENDMENT.md`
+- `docs/legacy-experiments/PROTOCOL_FREEZE.md`
+- `docs/legacy-experiments/D100_EXECUTION_GATE.md`
+- `docs/legacy-experiments/PROTOCOL_V2_AMENDMENT.md`
 - `configs/low_resource_protocol_v2.yaml`
-- `paper/D100_V2_EXECUTION_GATE.md`
+- `docs/legacy-experiments/D100_V2_EXECUTION_GATE.md`
 
 Reference/provenance, not primary result sources:
 
 - `docs/SESSION_HANDOFF_2026-08-30.md`
-- `paper/EXPERIMENT_PLAN.md`
-- `paper/RESULTS_DRAFT.md`
+- `docs/legacy-experiments/EXPERIMENT_PLAN.md`
+- `removed historical results draft`
 - `docs/preannotation-gate-report.md`
 - `docs/research-requirements.md`
 
@@ -579,7 +579,7 @@ Phase A-C 已完成。Phase B 的两份真实人工复核仍待完成。Protocol
 
 Protocol v2 使用统一 `max_length=4096`、3,840-token 窗口构造上限、句子/段落感知切分、实体与关系证据保护、跨窗口关系 rescue windows，以及 `PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True`。权威窗口是 windowed_train_v6（1,266 个窗口，4,335/4,335 实体和 1,510/1,510 关系全覆盖）与 windowed_validation_v6（491 个窗口，1,001/1,001 实体和 343/343 关系全覆盖）。不要用 v3/v4/v5 中间窗口替代 v6。
 
-首行 `lr_v2_d100_seed20260830_baseline` 已成功：1,266/1,266 样本、317 steps、零 prompt/answer truncation、零 overlength skip，峰值整卡显存 15,155 MiB。权威审计是 paper/D100_V2_EXECUTION_GATE.md 和 data/processed/experiments/formal/low_resource_v2/d100_execution_gate.json。
+首行 `lr_v2_d100_seed20260830_baseline` 已成功：1,266/1,266 样本、317 steps、零 prompt/answer truncation、零 overlength skip，峰值整卡显存 15,155 MiB。权威审计是 docs/legacy-experiments/D100_V2_EXECUTION_GATE.md 和 data/processed/experiments/formal/low_resource_v2/d100_execution_gate.json。
 
 接下来不要只给建议，请继续 protocol v2 的剩余 d100 行：
 1. 先检查 `systemctl --user status railway-low-resource-v2-d100.service`、GPU 和 machine gate audit；若该 unit 仍为 active，绝不能启动第二个控制器，只监控现有进程；
@@ -598,7 +598,7 @@ Implemented on 2026-08-30 without reading formal test rows and without starting
 model training. Frozen validation source windows were used only to materialize
 budget-specific prompts; validation scores were not used for subset selection:
 
-- Phase A protocol is frozen in `paper/PROTOCOL_FREEZE.md` and
+- Phase A protocol is frozen in `docs/legacy-experiments/PROTOCOL_FREEZE.md` and
   `configs/low_resource_protocol_v1.yaml`. It fixes the four RQs, three seeds,
   36 trainable runs, 12 deterministic derivation groups, hyperparameters,
   metrics, bootstrap policy, failure handling, telemetry, output naming, and
@@ -665,7 +665,7 @@ implementation-hash, and CUDA preflight checks.
   unstarted.
 - The machine audit is
   `data/processed/experiments/formal/low_resource_v1/d100_execution_gate.json`;
-  the readable report is `paper/D100_EXECUTION_GATE.md`. The audit records one
+  the readable report is `docs/legacy-experiments/D100_EXECUTION_GATE.md`. The audit records one
   `failed_terminal` row, eight `not_started` rows, two attempts, and zero
   remaining rows launched.
 - Verification after the audit: 49 tests, audit-script `py_compile`, full
@@ -685,7 +685,7 @@ Protocol v2 was frozen and its first d100 row was executed on 2026-08-30 without
 reading formal test or calculating validation metrics. Its machine-readable
 configuration is `configs/low_resource_protocol_v2.yaml` (SHA-256
 `7ad5473c4dabbf7f3355ebf575209b041df9f47566e04c663ed6dc9a867405e5`), and
-the human-readable change record is `paper/PROTOCOL_V2_AMENDMENT.md`. Protocol
+the human-readable change record is `docs/legacy-experiments/PROTOCOL_V2_AMENDMENT.md`. Protocol
 v1 and all its failure artifacts remain unchanged.
 
 - Training uses a uniform hard `max_length` of 4,096 for every system and seed.
@@ -717,7 +717,7 @@ v1 and all its failure artifacts remain unchanged.
   is the source of truth for live progress. d10/d25/d50 remain blocked until
   all nine d100 rows pass artifact and telemetry checks.
 
-The authoritative progress report is `paper/D100_V2_EXECUTION_GATE.md`; the
+The authoritative progress report is `docs/legacy-experiments/D100_V2_EXECUTION_GATE.md`; the
 machine audit is
 `data/processed/experiments/formal/low_resource_v2/d100_execution_gate.json`.
 Any substantive change to the frozen v2 configuration or its registered

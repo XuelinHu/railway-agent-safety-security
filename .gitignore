@@ -20,6 +20,24 @@ tmp/
 *.pkl
 *.pt
 *.ckpt
+*.pth
+*.safetensors
+*.bin
+*.onnx
+*.joblib
+
+# Large run artifacts and local caches
+checkpoints/
+wandb/
+mlruns/
+lightning_logs/
+tensorboard/
+events.out.tfevents.*
+*.npy
+*.npz
+*.arrow
+*.h5
+*.hdf5
 
 # Secrets and local configuration
 .env
@@ -30,8 +48,16 @@ tmp/
 .idea/
 .vscode/
 *.swp
+*.swo
+*.tmp
+*.bak
+.DS_Store
 Thumbs.db
 Desktop.ini
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.cache/
 
 # LaTeX build products and extracted template documentation
 paper/elsarticle/*
@@ -50,6 +76,24 @@ paper/elsarticle/*.log
 paper/elsarticle/*.out
 paper/elsarticle/*.pdf
 paper/elsarticle/*.synctex.gz
+paper/elsarticle/*.synctex
+paper/elsarticle/*.xdv
+paper/elsarticle/*.toc
+paper/elsarticle/*.lof
+paper/elsarticle/*.lot
+paper/elsarticle/*.nav
+paper/elsarticle/*.snm
+paper/elsarticle/*.vrb
+paper/elsarticle/*.spl
+paper/elsarticle/missfont.log
+
+# Editor-generated figure and Office backups
+*.drawio.bkp
+.~lock.*
+~$*.docx
+
+# Locally downloaded template bundles
+paper/elsarticle.zip
 
 # Historical paper archives and superseded experiment dumps
 paper/archive/
@@ -61,3 +105,7 @@ paper/results/topk_d100_ablation/
 # Superseded multi-figure architecture exports (not referenced by the active manuscript)
 paper/figures/pge_*_submission.*
 scripts/build_submission_architecture.py
+
+# Hugging Face snapshot staging and upload logs
+tmp/hf-*/
+*.hf-upload.log

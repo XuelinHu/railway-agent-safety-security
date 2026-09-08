@@ -62,4 +62,6 @@ The frozen teacher-prompt A/B evidence and batch cost estimate are recorded in [
 
 The historical Chinese teacher review queues are retained under `data/processed/experiments/`; the 291 records from the unified queue were human-confirmed and merged into the current gold set.
 
-The JSSR special-issue manuscript workspace is in [`paper/`](paper/README.md). Required publication experiments and the schedule to the 28 February 2027 deadline are defined in [`paper/EXPERIMENT_PLAN.md`](paper/EXPERIMENT_PLAN.md).
+The active ADE/CoNLL04 manuscript workspace and reproducibility map are in
+[`paper/`](paper/README.md). Superseded low-resource protocol records are kept
+separately under [`docs/legacy-experiments/`](docs/legacy-experiments/README.md).

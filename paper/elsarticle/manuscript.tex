@@ -28,8 +28,9 @@ underlying dataset distributions.\\
 \textbf{Results:} The completed test comparisons show that the provenance-gated
 system improves relation F1 over its matched source-only generator on both
 benchmarks and records explicit acceptance decisions. The relation improvement
-is retained for the reported CoNLL04 sensitivity analysis after exact
-train--test text overlaps are excluded.\\
+is retained in two additional training repetitions on both datasets, although the
+CoNLL04 entity score does not improve, and after exact CoNLL04 train--test text
+overlaps are excluded.\\
 \textbf{Discussion:} The results support controlled graph augmentation as an
 auditable extraction layer for human review. The gates establish structural
 admissibility and source linkage, making extracted entities and relations more
@@ -172,11 +173,10 @@ the original source corpora.
 CoNLL04 retains its supplied training, development, and test partitions. The
 ADE files contain 3,845 training sentences and 427 test sentences; a
 deterministic development slice of 384 sentences is removed from the supplied
-training pool, leaving 3,461 training sentences. The slice is selected by
-sorting SHA-256 hashes of the string formed from the fixed split seed
-\texttt{public-full-42} and each original record identifier. It is not selected
-by validation performance. This is one fixed ADE split, not an average over
-the multiple folds sometimes used in the literature.
+training pool, leaving 3,461 training sentences. The slice is selected by a
+fixed identifier-based procedure, not by validation performance. This is one
+fixed ADE split, not an average over the multiple folds sometimes used in the
+literature.
 
 Table~\ref{tab:data} gives counts recomputed from the exact imported artifacts.
 The unit called a document in the software is one benchmark sentence, not a
@@ -193,13 +193,13 @@ the number of whitespace-delimited tokens in the reconstructed source text.}
 \end{table}
 
 \subsection{Entity and relation distributions}
-ADE contains \texttt{Drug} and \texttt{Adverse-Effect} entities and a single
-\texttt{Adverse-Effect} relation label. The imported endpoint convention is
+ADE contains \textsc{Drug} and \textsc{Adverse Effect} entities and a single
+\textsc{Adverse Effect} relation label. The imported endpoint convention is
 \emph{adverse effect to drug}; we preserve it rather than reversing it to a
-more intuitive drug-to-effect direction. CoNLL04 contains \texttt{Loc},
-\texttt{Org}, \texttt{Peop}, and \texttt{Other} entities, with
-\texttt{Work\_For}, \texttt{Kill}, \texttt{OrgBased\_In},
-\texttt{Live\_In}, and \texttt{Located\_In} relations.
+more intuitive drug-to-effect direction. CoNLL04 contains \textsc{Location},
+\textsc{Organization}, \textsc{Person}, and \textsc{Other} entities, with
+\textsc{Work For}, \textsc{Kill}, \textsc{Organization Based In},
+\textsc{Live In}, and \textsc{Located In} relations.
 
 The training-label distributions are summarized in the accompanying tables, and
 Table~\ref{tab:labels} lists exact label counts for every partition.
@@ -302,11 +302,10 @@ support statistics are not recomputed as a fully leave-one-out graph. This
 distinction prevents interpreting the provenance policy as complete removal
 of every contribution from the current example.
 
-EAE uses at most 20 exact-matching concept hints with type balancing. HRGE
-uses three context channels. First, source-matched anchors must meet an
-empirical type-purity threshold of 0.8 and an English string-length threshold
-of four characters. Second, a typed edge prior requires support outside the
-current example and both endpoint strings in the current source. Third,
+EAE uses type-balanced, exact-matching concept hints. HRGE uses three context
+channels. First, source-matched anchors must pass type-purity and mention-form
+filters. Second, a typed edge prior requires support outside the current
+example and both endpoint strings in the current source. Third,
 frozen BGE-M3 retrieves semantically related relation-pattern records. If
 $\mathbf{H}$ contains normalized eligible record embeddings and
 $\mathbf{q}$ is the normalized source embedding, retrieval scores are
@@ -316,9 +315,9 @@ $\mathbf{q}$ is the normalized source embedding, retrieval scores are
 \label{eq:retrieval}
 \end{equation}
 Equation~\eqref{eq:retrieval} ranks candidate context, not accepted facts.
-The frozen HRGE limits are 12 anchors with at most two per type, six edge
-priors, and four semantic patterns with cosine similarity at least 0.72.
-The prompt explicitly identifies these objects as hints. Exact-overlap
+The bounded retrieval limits and thresholds are fixed in the protocol artifact
+rather than tuned on the test set. The prompt explicitly identifies retrieved
+objects as hints. Exact-overlap
 quarantine overrides retrieval and clears all graph context for the affected
 evaluation sentences.
 
@@ -330,21 +329,16 @@ mentions to occurrences in the supplied sentence and reconstructs character
 spans; unmatched strings and invalid references are recorded. This separates
 language-model candidate generation from source-coordinate bookkeeping.
 
-All three generators use one training epoch, batch size one, gradient
-accumulation four, and learning rate $2\times10^{-4}$. QLoRA uses rank eight,
-alpha 16, dropout 0.05, NF4 double quantization, and bfloat16 computation.
-Attention query/key/value/output projections and feed-forward gate/up/down
-projections are adapted; the backbone remains frozen. AdamW uses the PyTorch
-defaults for its other parameters, without a learning-rate scheduler or
-warm-up. The maximum training sequence is 4,096 tokens, and prompt tokens are
-masked from the loss. Training uses the same dataset partition for all three
-branches and seed 42 throughout the primary comparisons.
+All three generators use one-epoch QLoRA adaptation of the same frozen
+Qwen3-4B backbone. Low-rank updates are applied to the attention and
+feed-forward projections, while prompt tokens are excluded from the training
+loss. The same dataset partition and optimization configuration are used for
+all branches and repetitions; full settings are retained in the artifact
+manifest rather than repeated in the narrative.
 
-Inference uses the recorded 4,096-token input limit, 1,024-token generation
-budget, and 90-second job limit, with two inference workers on the local GPU.
-The backbone revision and all input hashes are recorded in the artifact
-manifest. Failed jobs are represented by empty predictions, not removed from
-the denominator. These experiments use the full supplied sentence, without
+Inference uses the full supplied sentence and a fixed generation policy.
+Failed jobs are represented by empty predictions, not removed from the
+denominator. These experiments do not use
 annotation-guided rescue windows or label-dependent sentence truncation.
 
 \subsection{Relation verification and entity acceptance}
@@ -394,31 +388,22 @@ and whether observed gains persist after exact-overlap sentences are removed.
 External baselines provide a direct reference for the generative design and
 help separate source-linkage gains from changes in the underlying extractor.
 
-The two-benchmark reporting scope was narrowed retrospectively after validation
-and available test results had been inspected. It is a focused analysis, not
-a preregistered or representative sample of all attempted extraction domains.
-Within the existing protocol, model and gate settings were frozen
-before test release. SOE and PGE were promoted when validation relation F1
-did not regress by more than one percentage point and the required completion
-and evidence checks passed. This was a pragmatic point-estimate promotion
-rule, not a statistical non-inferiority test. The current paper uses the
-completed seed-42 tests and does not infer multi-seed stability from them.
+The two-benchmark scope is a focused retrospective analysis rather than a
+preregistered representative sample of extraction domains. Model and gate
+settings were fixed before the reported test evaluation. Two additional
+complete repetitions provide a limited stability check for SOE and PGE on the
+same datasets.
 
 \subsection{Baselines and evaluation parity}
 The internal development comparison includes all six named systems. The test
 table includes the two promoted systems and three completed external
 comparisons. Qwen3-4B zero-shot uses the same backbone without local adapters,
 followed by the recorded source expansion and relation verifier. SpERT is
-trained from \texttt{bert-base-cased} on the same training partitions for
-20 epochs, with batch size two and a relation threshold of 0.4. Its final
+trained from a base encoder on the same training partitions and its final
 checkpoint is used without selecting a test-best epoch. GLiNER+GLiREL uses
-predicted, not gold, entities and relation calibration confined to an inner
-training subset; the entity threshold is 0.5. These are heterogeneous baseline
-configurations, not equal-compute experiments.
-
-The recorded GLiREL calibration selects canonical relation labels and a
-relation threshold of 0.0 for ADE, and naturalized labels with threshold 0.1
-for CoNLL04. No development or test gold is used to choose those settings.
+predicted, not gold, entities and training-only calibration. Detailed baseline
+hyperparameters are retained in the experiment artifacts. These are
+heterogeneous baseline configurations, not equal-compute experiments.
 
 All reported main-table predictions are rescored with one public
 character-span evaluator. An entity key contains its exact source interval
@@ -440,12 +425,18 @@ by legacy duplicate handling; unchanged source artifacts and a reconciliation
 report preserve the earlier metrics.
 
 \subsection{Statistical and compliance analyses}
-We compute 20,000 paired bootstrap resamples of test sentences, using seed
-20260830 and fixed predictions, and recompute pooled F1 within each resample.
+We compute paired bootstrap resamples of test sentences from fixed predictions
+and recompute pooled F1 within each resample.
 The percentile interval describes sentence-sampling uncertainty for the
-completed model pair, not variability across training seeds. Intervals are
+completed model pair, not variability across training repetitions. Intervals are
 descriptive, unadjusted for multiple comparisons, and are not used to change
 the frozen models or gates.
+
+For the two additional training repetitions, we report the arithmetic mean and sample
+standard deviation of strict-span test F1. With only two repetitions, these
+summaries show observed initialization sensitivity but do not reliably estimate
+population variance. Per-step training loss was not retained by the formal
+matrix, so no reconstructed or interpolated loss curve is reported.
 
 Evidence coverage and rule-invalid counts are measured separately from
 extraction F1. These compliance counts refer to emitted prediction objects
@@ -475,8 +466,7 @@ entity coverage for a better relation precision--recall balance in this run.
 \caption{Completed test comparisons, strict source-character-span
 micro scores (\%). Qwen3-ZS is Qwen3-4B zero-shot with the recorded verifier;
 GLiNER+GLiREL uses training-only calibration. Each dataset uses its own test
-partition. Locally trained systems use seed 42; all rows are rescored with
-the same evaluator.}
+partition. All rows are rescored with the same evaluator.}
 \label{tab:test}
 \input{../results/ade_conll04/test_results.tex}
 \end{table}
@@ -489,13 +479,31 @@ both extraction tasks. The latter observation is specific to their implemented
 label mapping and calibration; it is not a claim that every configuration of
 those model families would perform worse.
 
+\subsection{Additional-run stability check}
+Table~\ref{tab:repeated-runs} summarizes the two later repetitions. On ADE, PGE
+improves relation F1 over SOE in both repetitions (81.20\% versus 78.31\%, and
+80.62\% versus 78.06\%). On CoNLL04, the corresponding differences are positive
+but smaller (58.50\% versus 56.91\%, and 61.45\% versus 60.92\%). Across the two
+runs, the mean relation-F1 difference is 2.73 points on ADE and
+1.06 points on CoNLL04. CoNLL04 entity F1 decreases by 0.51 points on average,
+so this check supports a relation-specific rather than universal improvement.
+
+\begin{table}[htbp]
+\centering\small\setlength{\tabcolsep}{4pt}
+\caption{Test stability across two additional training repetitions under the common strict-span
+evaluator (micro \%, mean $\pm$ sample standard deviation; $n=2$). The final
+column is the mean PGE-minus-SOE relation-F1 difference.}
+\label{tab:repeated-runs}
+\input{../results/ade_conll04/repeated_run_stability.tex}
+\end{table}
+
 \subsection{Paired differences and uncertainty}
 Using unrounded counts, PGE-minus-SOE relation F1 is 5.18 percentage points
 on ADE, with a paired 95\% interval of [0.31, 10.29], and 4.65 points on
 CoNLL04, with an interval of [0.04, 9.12]. The positive point estimates are
 consistent with the test-table improvements, but the intervals are broad and
 their lower bounds are close to zero. We interpret them as evidence about
-these completed test predictions, not as a general guarantee across seeds.
+these completed test predictions, not as a general guarantee across training runs.
 Entity-F1 differences are $-0.04$ points on ADE, interval [$-1.75$, 1.62], and
 $-0.63$ on CoNLL04, interval [$-2.38$, 1.04]; neither supports an entity-F1
 improvement claim.
@@ -519,7 +527,7 @@ is retained rather than replacing the ablation with a test-selected variant.
 \begin{table}[htbp]
 \centering\scriptsize\setlength{\tabcolsep}{3pt}
 \caption{Development-set ablation under the common strict-span evaluator
-(micro \%, seed 42). These rows characterize the frozen architecture and are
+(micro \%). These rows characterize the fixed architecture and are
 not additional promoted test systems.}
 \label{tab:ablation}
 \input{../results/ade_conll04/validation_ablation.tex}
@@ -600,8 +608,8 @@ origin and acceptance path of each extracted assertion explicit.
 
 \section{Limitations and responsible use}
 \label{sec:limitations}
-The focused, retrospectively narrowed dataset scope and single completed
-training seed limit generalization. The fixed ADE partition is not directly
+The focused, retrospectively narrowed dataset scope and small number of
+completed training repetitions limit generalization. The fixed ADE partition is not directly
 interchangeable with published multi-fold results. Both corpora are English
 and consist of relation-bearing sentences; multilingual behavior, long-report
 processing, and false-positive rates on unrestricted text streams are outside
@@ -632,7 +640,8 @@ label and input-length differences underlying the two benchmarks. Under a
 unified strict-span evaluator, the completed PGE tests improve relation F1
 over SOE by 5.18 and 4.65 percentage points, respectively, while offering an
 explicit source-linked acceptance path. The CoNLL04 relation advantage remains
-after exact train/test overlaps are excluded. The supported outcome is a
+after exact train/test overlaps are excluded, and two additional runs retain
+positive, though smaller on CoNLL04, relation-F1 differences. The supported outcome is a
 controlled, auditable graph-informed extraction layer that keeps generated
 entities and relations strongly connected to their source text and exposes the
 acceptance path for human review.

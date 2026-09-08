@@ -1,29 +1,38 @@
-# Low-resource result audit
+# ADE/CoNLL04 results audit
 
-This snapshot includes validation metrics only when the run directory contains a valid `pipeline_complete.json` gate. The sealed formal-test namespace was not read.
-Strict span metrics are recomputed after merging and de-duplicating all windows of each document. Original experiment directories are read-only.
+This audit describes the result snapshot used by the active manuscript. The
+reporting scope is limited to the ADE and CoNLL04 benchmarks; SciERC, private
+corpora, low-resource D10/D25/D50/D100 runs, API pilots, and exploratory
+ablations are not primary paper evidence.
 
-## Included validation groups
+## Canonical reporting snapshot
 
-- D10: 1 completed seed(s): 20260830
-- D25: 1 completed seed(s): 20260830
-- D100: 3 completed seed(s): 20260830, 20260831, 20260901
+- Location: `paper/results/ade_conll04/`
+- Evaluator: strict source-character-span matching with set deduplication
+- Main comparison: SOE and PGE on the held-out test split
+- Development analysis: EAE, HRGE, EVGE, CFE, and PGE on validation
+- Dataset descriptions: `dataset_statistics.csv`, `label_distribution.csv`,
+  `lengths.json`, and the corresponding generated LaTeX tables
+- Provenance: `protocol_snapshot.json`, `source_hashes.json`, and
+  `evaluator_reconciliation.json`
 
-D50 has no completed validation pipeline and is excluded from validation tables and scaling plots. D10 and D25 are single-seed observations; D100 is summarized across three seeds.
+The generated tables are the only result files included directly in the
+manuscript. JSON and CSV artifacts provide auditable counts and intermediate
+checks and should not be interpreted as additional experiments.
 
-## Training evidence
+## Interpretation guardrails
 
-- Completed training runs: 36/36
-- Parsed loss logs: 36/36
-- Total recorded loss observations: 1053
-- Prompt truncations: 0
-- Answer truncations: 0
-- Skipped overlength examples: 0
+The snapshot is a retrospective focused analysis, not a preregistered domain
+survey. It does not establish semantic truth, clinical causality, or overall
+state-of-the-art performance. The paired bootstrap file contains fixed-
+prediction sentence resampling and must not be reported as training-seed
+variation.
 
-## Completion gates read
+## Retained non-primary artifacts
 
-- `/ds1/workspace/ai/railway-agent-safety-security/data/processed/experiments/formal/low_resource_v2/d010/seed20260830/derived_validation/pipeline_complete.json`
-- `/ds1/workspace/ai/railway-agent-safety-security/data/processed/experiments/formal/low_resource_v2/d025/seed20260830/derived_validation/pipeline_complete.json`
-- `/ds1/workspace/ai/railway-agent-safety-security/data/processed/experiments/formal/low_resource_v2/d100/seed20260830/derived_validation/pipeline_complete.json`
-- `/ds1/workspace/ai/railway-agent-safety-security/data/processed/experiments/formal/low_resource_v2/d100/seed20260831/derived_validation/pipeline_complete.json`
-- `/ds1/workspace/ai/railway-agent-safety-security/data/processed/experiments/formal/low_resource_v2/d100/seed20260901/derived_validation/pipeline_complete.json`
+Historical run summaries and exploratory directories remain under
+`paper/results/` for traceability. They are explicitly separated in
+[`README.md`](README.md) and must not be copied into the active tables without
+an accompanying protocol and provenance update. The previous low-resource
+audit is preserved at
+`paper/results/archive/legacy-low-resource/RESULTS_AUDIT_low_resource.md`.

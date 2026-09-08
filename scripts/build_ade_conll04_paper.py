@@ -13,18 +13,27 @@ import json
 from collections import Counter
 from pathlib import Path
 
-import matplotlib
-matplotlib.use("Agg")
-import matplotlib.pyplot as plt
 import numpy as np
 
 import evaluate_public_validation_spans as evaluator
 
 ROOT = Path(__file__).resolve().parents[1]
 OUT = ROOT / "paper/results/ade_conll04"
-FIG = ROOT / "paper/figures/ade_conll04"
 DATASETS = ("ade", "conll04")
 NAMES = {"ade": "ADE", "conll04": "CoNLL04"}
+LABEL_NAMES = {
+    "Adverse-Effect": "ADVERSE EFFECT",
+    "Drug": "DRUG",
+    "Loc": "LOCATION",
+    "Org": "ORGANIZATION",
+    "Other": "OTHER",
+    "Peop": "PERSON",
+    "Kill": "KILL",
+    "Live_In": "LIVE IN",
+    "Located_In": "LOCATED IN",
+    "OrgBased_In": "ORGANIZATION BASED IN",
+    "Work_For": "WORK FOR",
+}
 SPLITS = ("train", "validation", "test")
 SYSTEMS = ("soe", "eae", "hrge", "evge", "cfe", "pge")
 HASHES = {}
@@ -89,7 +98,6 @@ def table(name, header, body, columns):
 
 def main():
     OUT.mkdir(parents=True, exist_ok=True)
-    FIG.mkdir(parents=True, exist_ok=True)
     stats, labels, lengths, results, sensitivity, evidence = [], [], {}, {}, {}, []
     reconciliation, bootstrap = {}, {}
     for ds in DATASETS:
@@ -215,38 +223,11 @@ def main():
     for ds in DATASETS:
         for kind in ("entity","relation"):
             for label in sorted({r['label'] for r in labels if r['dataset']==ds and r['kind']==kind}):
-                label_rows.append([NAMES[ds],kind,label]+[next(r['count'] for r in labels if r['dataset']==ds and r['kind']==kind and r['label']==label and r['split']==split) for split in SPLITS])
+                label_rows.append([NAMES[ds], kind.title(), LABEL_NAMES[label]] +
+                    [next(r['count'] for r in labels if r['dataset']==ds and
+                          r['kind']==kind and r['label']==label and r['split']==split)
+                     for split in SPLITS])
     table("label_counts.tex",["Dataset","Kind","Label","Train","Validation","Test"],label_rows,"lllrrr")
-
-    plt.rcParams.update({'font.family':'serif','font.serif':['Times New Roman','Liberation Serif','DejaVu Serif'],
-        'font.size':10,'axes.labelsize':11,'axes.titlesize':12,'xtick.labelsize':9,'ytick.labelsize':9,
-        'legend.fontsize':9,'figure.facecolor':'white','axes.facecolor':'white','savefig.dpi':400,
-        'pdf.fonttype':42,'ps.fonttype':42,'axes.spines.top':False,'axes.spines.right':False})
-    colors=['#0072B2','#D55E00','#009E73']
-    fig,axs=plt.subplots(2,2,figsize=(6.7,5.4),layout='constrained')
-    for col,ds in enumerate(DATASETS):
-        for row,kind in enumerate(('entity','relation')):
-            ax=axs[row,col]
-            subset=[r for r in labels if r['dataset']==ds and r['kind']==kind and r['split']=='train']
-            names=[r['label'].replace('_',' ') for r in subset]
-            vals=[100*r['proportion'] for r in subset]
-            ax.barh(names,vals,height=.5,color=colors[col],edgecolor='black',linewidth=.5,hatch='//' if col else '')
-            ax.set_ylim(-.75,len(names)-.25)
-            ax.set_xlim(0,116);ax.set_xticks([0,25,50,75,100]);ax.set_xlabel('Training annotations (%)')
-            ax.set_title(f"({chr(97+row*2+col)}) {NAMES[ds]} {kind} labels",loc='left')
-            for i,v in enumerate(vals):ax.text(v+1.2,i,f'{v:.1f}',va='center',fontsize=9)
-    for ext in ('pdf','png'):fig.savefig(FIG/f'01-label-distribution.{ext}',bbox_inches='tight')
-    plt.close(fig)
-    fig,axs=plt.subplots(1,2,figsize=(6.7,2.85),layout='constrained')
-    for i,ds in enumerate(DATASETS):
-        ax=axs[i]
-        for split,color,style in zip(SPLITS,colors,('-', '--', ':')):
-            x=np.sort(lengths[ds][split]);y=np.arange(1,len(x)+1)/len(x)
-            ax.step(x,y,where='post',label=split.title(),color=color,linestyle=style,linewidth=1.7)
-        ax.set_title(f'({chr(97+i)}) {NAMES[ds]}',loc='left');ax.set_xlabel('Reconstructed token count')
-        ax.set_ylabel('Cumulative fraction');ax.legend(loc='lower right',frameon=False)
-    for ext in ('pdf','png'):fig.savefig(FIG/f'02-sentence-length-distribution.{ext}',bbox_inches='tight')
-    plt.close(fig)
     print(json.dumps({'statistics':stats,'test':{d:{s:{f:results[d]['test'][s][f]['f1'] for f in ('entity_strict','relation_strict')} for s in results[d]['test']} for d in DATASETS},'sensitivity':sensitivity},indent=2))
 
 

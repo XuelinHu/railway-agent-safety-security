@@ -19,14 +19,14 @@ with the final span-aware validation results.
 | `NEXT_SESSION_HANDOFF_2026-08-30.md` | Current source of truth and next-session entry point |
 | `annotation-guidelines.md` | Current annotation definitions and review rules |
 | `paper-metadata.md` | Journal and manuscript metadata |
-| `../paper/PROTOCOL_FREEZE.md` | Frozen RQs, systems, hyperparameters, metrics, failure policy, 36-run matrix, and formal-test gate |
+| `legacy-experiments/PROTOCOL_FREEZE.md` | Historical frozen RQs, systems, hyperparameters, metrics, failure policy, 36-run matrix, and formal-test gate |
 | `../configs/low_resource_protocol_v1.yaml` | Machine-readable frozen low-resource protocol |
-| `../paper/D100_EXECUTION_GATE.md` | Phase D hardware-gate audit; protocol v1 terminated on the first d100 baseline row |
-| `../paper/PROTOCOL_V2_AMENDMENT.md` | Frozen semantic-windowing and 4,096-token protocol v2 amendment |
+| `legacy-experiments/D100_EXECUTION_GATE.md` | Historical Phase D hardware-gate audit |
+| `legacy-experiments/PROTOCOL_V2_AMENDMENT.md` | Historical semantic-windowing protocol amendment |
 | `../configs/low_resource_protocol_v2.yaml` | Machine-readable frozen protocol v2; immutable after its first successful run |
-| `../paper/D100_V2_EXECUTION_GATE.md` | Protocol v2 d100 gate; first baseline row passed and remaining d100 rows are authorized |
-| `../paper/elsarticle/manuscript.tex` | Manuscript source; still incomplete and contains stale abstract metrics |
-| `../paper/elsarticle/references.bib` | Bibliography source; currently effectively empty |
+| `legacy-experiments/D100_V2_EXECUTION_GATE.md` | Historical protocol v2 hardware gate |
+| `../paper/elsarticle/manuscript.tex` | Current ADE/CoNLL04 manuscript source |
+| `../paper/elsarticle/references.bib` | Current manuscript bibliography |
 
 Active generated protocol assets:
 
@@ -61,7 +61,7 @@ Protocol v2 applies the same 4,096-token training maximum and semantic-window
 construction to every system and seed. Its first d100 baseline trained all
 1,266 examples successfully, with zero truncation/skipping and 15,155 MiB peak
 whole-device use. The d100 rows are running sequentially with an audit after
-each row; consult `../paper/D100_V2_EXECUTION_GATE.md` or its machine audit for
+each row; consult `legacy-experiments/D100_V2_EXECUTION_GATE.md` or its machine audit for
 the live completed count. The active controller is the user service
 `railway-low-resource-v2-d100.service`; its log is
 `../data/processed/experiments/formal/low_resource_v2/remaining_d100_controller_attempt02.log`.
@@ -80,8 +80,7 @@ against the canonical handoff before being cited.
 | Document | Role |
 |---|---|
 | `SESSION_HANDOFF_2026-08-30.md` | Previous handoff covering V1/V2, BIO, CRF, and span follow-ups |
-| `../paper/EXPERIMENT_PLAN.md` | Broad JSSR experiment plan and intended paper scope |
-| `../paper/RESULTS_DRAFT.md` | Chronological result record containing both legacy normalized and newer span-aware results |
+| `legacy-experiments/EXPERIMENT_PLAN.md` | Superseded broad experiment plan |
 | `preannotation-gate-report.md` | Teacher pre-annotation quality-gate provenance |
 | `research-requirements.md` | Early research and corpus concept; its agent/resilience claims are not current claims |
 

@@ -2,9 +2,9 @@
 \usepackage{amsmath,amssymb,array,booktabs,geometry,graphicx,tabularx,xurl}
 \usepackage[numbers,sort&compress]{natbib}
 \usepackage{hyperref}
-\setCJKmainfont[BoldFont=SimSun]{SimSun}
-\setCJKsansfont[BoldFont=Microsoft YaHei]{Microsoft YaHei}
-\setCJKmonofont[BoldFont=Microsoft YaHei]{Microsoft YaHei}
+\setCJKmainfont[BoldFont=Noto Serif CJK SC Bold]{Noto Serif CJK SC}
+\setCJKsansfont[BoldFont=Noto Sans CJK SC Bold]{Noto Sans CJK SC}
+\setCJKmonofont{Noto Sans Mono CJK SC}
 \geometry{margin=2.4cm}
 \hypersetup{colorlinks=true,linkcolor=blue,citecolor=blue,urlcolor=blue}
 \newcolumntype{Y}{>{\raggedright\arraybackslash}X}
@@ -25,7 +25,8 @@
 并先报告两个数据集的分布特征。\\
 \textbf{结果：} 已完成的测试比较显示，溯源门控系统在两个基准上的关系F1均高于
 配对的纯源生成器，并记录了明确的接受决策。在所报告的CoNLL04敏感性分析中，
-移除训练—测试文本完全重合句后，关系改进仍然存在。\\
+两次追加训练在两套数据上均保留正向关系F1差异，尽管CoNLL04实体分数没有
+改善；移除训练—测试文本完全重合句后，关系改进也仍然存在。\\
 \textbf{讨论：} 结果支持将受控图谱增强作为面向人工复核的可审计抽取层。门控建立
 结构准入和原文链接，使抽取实体与关系相比无此约束的输出更强地连接到原文，并为
 每条断言记录明确的接受路径，但不宣称普遍准确率领先。
@@ -117,8 +118,7 @@ BGE-M3为语义模式检索提供冻结文本表示\cite{chen2024bgem3}，它既
 本文采用以SpERT格式发布的句级ADE和CoNLL04文件，计数对应这一预处理版本，
 而非原始来源语料中的全部句子。CoNLL04保留其训练、开发与
 测试划分。ADE文件包含3,845个训练句和427个测试句，从原始训练池中确定性划出
-384句作为开发集，剩余3,461句用于训练。划分以固定种子字符串
-\texttt{public-full-42}和原始记录标识符构造字符串，并按SHA-256摘要排序，
+384句作为开发集，剩余3,461句用于训练。开发集通过固定的标识符哈希程序确定，
 而非依据验证表现选样。这是一个固定ADE划分，不是文献中部分研究所采用的多折均值。
 
 表\ref{tab:data}由实际导入资产重新统计。软件称为文档的评估单元对应一个基准句子，
@@ -133,12 +133,12 @@ BGE-M3为语义模式检索提供冻结文本表示\cite{chen2024bgem3}，它既
 \end{table}
 
 \subsection{实体与关系标签分布}
-ADE包含\texttt{Drug}、\texttt{Adverse-Effect}两种实体，以及
-\texttt{Adverse-Effect}一种关系。导入文件的端点方向是“不良反应指向药物”，
+ADE包含\textsc{Drug}、\textsc{Adverse Effect}两种实体，以及
+\textsc{Adverse Effect}一种关系。导入文件的端点方向是“不良反应指向药物”，
 本文保留该约定，不将其改成直觉上的“药物指向不良反应”。CoNLL04的实体类型为
-\texttt{Loc}、\texttt{Org}、\texttt{Peop}与\texttt{Other}，关系类型为
-\texttt{Work\_For}、\texttt{Kill}、\texttt{OrgBased\_In}、\texttt{Live\_In}
-和\texttt{Located\_In}。
+\textsc{Location}、\textsc{Organization}、\textsc{Person}与\textsc{Other}，
+关系类型为\textsc{Work For}、\textsc{Kill}、\textsc{Organization Based In}、
+\textsc{Live In}和\textsc{Located In}。
 
 训练标签分布由配套表格汇总，表\ref{tab:labels}列出每个划分的精确标签
 计数。ADE仅有一种关系类型，减少了关系类别之间的混淆，但端点识别、方向和错误
@@ -187,13 +187,16 @@ e=(b,u,y),\qquad x[b:u]=m,
 表示约定，使每条评估关系都绑定到具体来源句，并使证据路径可以被检查。
 
 \subsection{架构与比较系统}
-图\ref{fig:architecture}展示流水线。SOE（纯源抽取）、EAE（精确锚点抽取）和
-HRGE（高召回图谱抽取）在相同Qwen3-4B快照上分别训练QLoRA适配器。SOE使用
+图\ref{fig:architecture}展示流水线。SOE（Source-Only Extraction，纯源抽取）、
+EAE（Exact-Anchor Extraction，精确锚点抽取）和HRGE（High-Recall Graph
+Extraction，高召回图谱抽取）在相同Qwen3-4B快照上分别训练QLoRA适配器。SOE使用
 原文与训练推导本体，不接收图谱提示；EAE接收保守概念提示；HRGE接收有界锚点、
 边先验和语义关系模式。
 
-EVGE（证据验证图谱抽取）对HRGE应用关系验证器。CFE（保守融合抽取）将接受的
-HRGE实体与端点过滤后的原始HRGE关系组合。PGE（溯源门控抽取）则将相同实体集合
+EVGE（Evidence-Verified Graph Extraction，证据验证图谱抽取）对HRGE应用关系
+验证器。CFE（Conservative-Fusion Extraction，保守融合抽取）将接受的HRGE实体
+与端点过滤后的原始HRGE关系组合。PGE（Provenance-Gated Extraction，溯源门控
+抽取）则将相同实体集合
 与端点过滤后的验证关系组合。这三者是确定性后处理变体，而非额外训练网络。
 部署PGE需要EAE与HRGE候选，SOE只作为比较分支，不参与融合。
 \begin{figure}[htbp]
@@ -210,8 +213,8 @@ HRGE实体与端点过滤后的原始HRGE关系组合。PGE（溯源门控抽取
 支持统计不会按完整留一法重新构图。因此，该策略不应被解释为完全删除当前样本
 对所有统计量的贡献。
 
-EAE最多使用20个类型平衡的精确概念提示。HRGE具有三个上下文通道：第一，
-原文匹配锚点须满足0.8的经验类型纯度及至少4字符的英文长度条件；第二，类型边
+EAE使用类型平衡的精确匹配概念提示。HRGE具有三个上下文通道：第一，
+原文匹配锚点须通过类型纯度与提及形式过滤；第二，类型边
 先验须在当前样本之外得到支持，且两个端点字符串都在当前原文中出现；第三，
 冻结BGE-M3检索语义相关的关系模式记录。设$\mathbf H$存储合格记录的归一化向量，
 $\mathbf q$为归一化原文向量，则
@@ -220,9 +223,9 @@ $\mathbf q$为归一化原文向量，则
 \mathcal I=\operatorname{TopK}_{k}\{i:s_i\geq\tau\}.
 \label{eq:retrieval}
 \end{equation}
-公式\eqref{eq:retrieval}排序的是候选上下文而非被接受的事实。冻结HRGE上限为
-12个锚点（每类最多2个）、6个边先验及4个余弦相似度不低于0.72的语义模式。
-提示明确将这些对象称为候选提示；完全重合隔离规则优先于检索，对受影响的评估句
+公式\eqref{eq:retrieval}排序的是候选上下文而非被接受的事实。检索数量上限与阈值
+固定记录在协议产物中，不依据测试集调节。提示明确将这些对象称为候选提示；完全
+重合隔离规则优先于检索，对受影响的评估句
 清空全部图谱上下文。
 
 \subsection{紧凑生成与确定性重建}
@@ -230,14 +233,11 @@ $\mathbf q$为归一化原文向量，则
 状态，不要求模型计算原文偏移。确定性扩展将复制提及分配到句中出现位置并重建
 字符跨度，同时记录无法匹配的字符串与无效引用。这将候选生成与原文坐标处理分离。
 
-三个生成器均训练1轮，批大小1，梯度累积4，学习率$2\times10^{-4}$。
-QLoRA使用秩8、alpha 16、dropout 0.05、NF4双重量化与bfloat16计算，适配注意力
-q/k/v/o及前馈gate/up/down投影，冻结骨干。AdamW其余参数采用PyTorch默认值，
-无学习率调度器或预热。最大训练序列为4,096 token，损失不包含提示token。
-所有分支使用相同数据集划分，主比较的训练种子均为42。
+三个生成器均采用相同冻结Qwen3-4B骨干进行单轮QLoRA适配，低秩更新作用于注意力
+与前馈投影，训练损失排除提示词元。所有分支与重复运行使用相同数据划分和优化
+配置；完整设置保存在实验产物中，不在正文逐项罗列。
 
-推理采用记录中的4,096-token输入上限、1,024-token生成预算和90秒任务时限，
-在本地GPU上运行两个推理工作进程。骨干版本与输入哈希保存在产物清单中。失败
+推理使用完整给定句与固定生成策略。骨干版本与输入哈希保存在产物清单中。失败
 任务视为空预测，而非从分母删除。实验使用完整给定句子，不采用标注指导的救援
 窗口或依赖标签的句子截断。
 
@@ -278,22 +278,16 @@ G_{\rm PGE}=(E_A,F(R_V,E_A)).
 在开发集上发挥作用；以及移除完全重合句后优势是否保留。外部基线用于判断生成式
 设计与其他抽取模型家族相比的表现，而不是将超过SOE等同于达到最先进水平。
 
-本文的双基准报告范围是在查看验证及已有测试结果之后事后收敛的，属于聚焦分析，
-并非对全部尝试领域的预注册代表性抽样。在已有协议中，模型与门控设置在测试开放
-之前冻结；SOE和PGE在验证
-关系F1退化不超过1个百分点、完成性与证据检查通过后晋级。这是实用的点估计门槛，
-而不是统计非劣效检验。本文使用已完成的seed 42测试，不据此推断多种子稳定性。
+本文的双基准范围属于聚焦的事后分析，并非对抽取领域的预注册代表性抽样。模型与
+门控设置在所报告的测试评估前固定；另完成两次重复运行，用于在相同两套数据上对
+SOE与PGE进行有限稳定性检查。
 
 \subsection{基线与评估一致性}
 内部开发集比较包含六个命名系统。测试表包含两个晋级系统及三个已完成外部对照。
 Qwen3-4B零样本使用同骨干但不加载本地适配器，并采用已记录的原文扩展和关系验证器。
-SpERT从\texttt{bert-base-cased}出发，在相同训练划分上训练20轮，批大小2，关系
-阈值0.4；使用最终检查点，不挑选测试最优轮次。GLiNER+GLiREL使用预测实体而非
-金标实体，关系校准局限于训练集内部子集，实体阈值为0.5。这些配置不同，不构成
-等计算量比较。
-
-记录中的GLiREL校准为ADE选择原始规范标签与0.0关系阈值，为CoNLL04选择自然
-语言化标签与0.1关系阈值。选择这些设置没有使用开发或测试金标。
+SpERT从基础编码器出发，在相同训练划分上训练，并使用最终检查点而不挑选测试最优
+轮次。GLiNER+GLiREL使用预测实体而非金标实体，校准局限于训练集内部子集。基线
+超参数保存在实验产物中。这些配置不同，不构成等计算量比较。
 
 主表全部预测使用同一个公开数据字符跨度评估器重新计分。实体键包含精确原文
 区间和类型，关系键包含两个带类型的有向端点键及关系标签。预测证据偏移必须
@@ -310,9 +304,13 @@ F_1=\frac{2TP}{2TP+FP+FN}.
 计数对照报告。
 
 \subsection{统计与规则符合性分析}
-本文固定预测，以种子20260830对测试句进行20,000次配对bootstrap，每次重新
+本文对固定预测执行测试句级配对bootstrap，每次重新
 计算合并F1。百分位区间描述该已完成模型对的句子抽样不确定性，不描述训练种子
 差异。区间为描述性结果，未进行多重比较校正，也不用于改变冻结模型或门控。
+
+对两次追加训练，本文报告严格跨度测试F1的算术均值与样本标准差。由于仅有
+两次重复，这些统计只能描述观测到的初始化敏感性，不能可靠估计总体方差。正式
+矩阵没有保留逐step训练损失，因此本文不绘制重建或插值的损失下降曲线。
 
 证据覆盖率与规则无效计数独立于抽取F1报告，采用评估器去重之前的预测对象作为
 分母。完全重合敏感性分析从两个系统中移除同一批测试句标识，不重新训练或生成。
@@ -333,7 +331,7 @@ CoNLL04上，关系精确率由54.61\%提高到62.40\%，召回率由56.16\%提�
 \centering\scriptsize\setlength{\tabcolsep}{2.6pt}
 \caption{已完成测试比较，严格原文字符跨度微平均分数（\%）。Qwen3-ZS为
 Qwen3-4B零样本加已记录验证器；GLiNER+GLiREL仅在训练数据内校准。各数据集使用
-自身测试划分，本地训练系统采用seed 42，所有行采用同一评估器重算。}
+自身测试划分，所有行采用同一评估器重算。}
 \label{tab:test}
 \input{../results/ade_conll04/test_results.tex}
 \end{table}
@@ -343,11 +341,26 @@ SpERT在已完成系统中取得最高实体与关系F1：ADE为91.37\%／84.08\
 同时，PGE在两套数据的两类任务上均超过记录中的零样本与GLiNER+GLiREL流水线；
 后者结论仅适用于已实现标签映射和校准设置，并不意味着这些家族的所有配置均较差。
 
+\subsection{追加运行稳定性检查}
+表\ref{tab:repeated-runs}汇总随后完成的两次重复。ADE上，PGE与SOE关系F1在两次运行中
+分别为81.20\%与78.31\%，以及80.62\%与78.06\%。CoNLL04上的正向差异较小：
+两次分别为58.50\%对56.91\%，以及61.45\%对60.92\%。两次运行
+平均后，ADE关系F1提高2.73个百分点，CoNLL04提高1.06个百分点；CoNLL04实体
+F1平均下降0.51个百分点。因此，该检查支持关系层面的改善，不支持普遍性能提升。
+
+\begin{table}[htbp]
+\centering\small\setlength{\tabcolsep}{4pt}
+\caption{两次追加训练运行的测试稳定性，统一严格跨度评估器下的微平均分数
+（\%，均值$\pm$样本标准差，$n=2$）。末列为PGE减SOE的平均关系F1差异。}
+\label{tab:repeated-runs}
+\input{../results/ade_conll04/repeated_run_stability.tex}
+\end{table}
+
 \subsection{配对差异与不确定性}
 从未四舍五入计数计算，ADE的PGE减SOE关系F1差异为5.18个百分点，配对95\%
 区间为[0.31,10.29]；CoNLL04为4.65个百分点，区间[0.04,9.12]。正点估计与主表
 改善一致，但区间较宽、下界接近零，应理解为对当前已完成测试预测的证据，而不是
-跨种子的普遍保证。实体F1差异为ADE的$-0.04$个百分点，区间[$-1.75$,1.62]；
+跨训练运行的普遍保证。实体F1差异为ADE的$-0.04$个百分点，区间[$-1.75$,1.62]；
 CoNLL04的$-0.63$个百分点，区间[$-2.38$,1.04]，均不支持实体F1提高的结论。
 
 \subsection{开发集组件分析}
@@ -362,8 +375,8 @@ CoNLL04上，HRGE关系F1为58.26\%，低于SOE的60.24\%；验证提高到59.60
 重新选择消融系统。
 \begin{table}[htbp]
 \centering\scriptsize\setlength{\tabcolsep}{3pt}
-\caption{统一严格跨度评估器下的开发集消融（微平均\%，seed 42）。这些行用于
-分析冻结架构，不代表额外晋级的测试系统。}
+\caption{统一严格跨度评估器下的开发集消融（微平均\%）。这些行用于分析固定
+架构，不代表额外测试系统。}
 \label{tab:ablation}
 \input{../results/ade_conll04/validation_ablation.tex}
 \end{table}
@@ -419,7 +432,7 @@ ADE将实验连接到药物安全信息抽取，CoNLL04则检验通用关系结�
 
 \section{局限性与负责任使用}
 \label{sec:limitations}
-聚焦且事后收敛的报告范围与单个完成训练种子限制了泛化。固定ADE划分不能直接
+聚焦且事后收敛的报告范围与较少的完成训练重复限制了泛化。固定ADE划分不能直接
 等同于已发表多折结果。两套数据均为英文含关系句，多语言表现、长报告处理和
 无限制文本流上的误报率不在本实验范围内。若缺少上游文章标识，句级bootstrap
 不能恢复来自同一原始文章的句间依赖。
@@ -440,7 +453,8 @@ ADE将实验连接到药物安全信息抽取，CoNLL04则检验通用关系结�
 揭示了两个基准的标签与输入长度差异。统一严格跨度评估下，PGE已完成测试的关系
 F1相对SOE分别提高5.18与4.65个百分点，同时提供明确的原文链接接受路径。
 CoNLL04关系优势在移除训练—测试完全重合句后仍存在。开发集消融说明门控与图谱
-条件需要结合使用。所支持的成果是面向人工复核的受控、可审计图谱增强抽取，使
+条件需要结合使用；两次追加运行也保留了正向关系F1差异，但CoNLL04增幅较小。
+所支持的成果是面向人工复核的受控、可审计图谱增强抽取，使
 生成实体与关系保持与原文的强关联，并公开其接受路径。
 相较匹配的纯源生成器，该框架提升了抽取结果的原文强关联性和可审计性，但不宣称
 普遍准确率领先。

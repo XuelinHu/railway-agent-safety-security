@@ -13,9 +13,7 @@ ROOT = Path(__file__).resolve().parents[1]
 TEX = ROOT / "paper/elsarticle"
 OUT = ROOT / "output/pdf/ade-conll04"
 EXPECTED_FIGURES = [
-    "../figures/ade_conll04/01-label-distribution.pdf",
-    "../figures/ade_conll04/02-sentence-length-distribution.pdf",
-    "../figures/ade_conll04/03-pge-architecture.pdf",
+    "../figures/methodology_detailed_draft.pdf",
 ]
 
 
@@ -78,7 +76,7 @@ def main():
             f"{figure_paths}"
         )
     figure_captions = captions(text)
-    assert len(figure_paths) == len(figure_captions) == 3
+    assert len(figure_paths) == len(figure_captions) == 1
     caption_source = "\n\n".join(
         f"\\noindent\\textbf{{Figure {i}.}} {caption}\\par"
         for i, caption in enumerate(figure_captions, 1))
@@ -109,14 +107,25 @@ def main():
             archive.write(path, str(path.relative_to(ROOT)))
         for name in ('dataset_statistics.csv','label_distribution.csv','results_snapshot.json',
                      'evaluator_reconciliation.json','paired_test_bootstrap.json','overlap_sensitivity.json',
-                     'source_hashes.json','test_evidence.csv','protocol_snapshot.json'):
+                     'source_hashes.json','test_evidence.csv','protocol_snapshot.json',
+                     'repeated_run_stability.json','training_loss_availability.md'):
             path = ROOT / 'paper/results/ade_conll04' / name
             archive.write(path,str(path.relative_to(ROOT)))
         archive.write(OUT / "figure-captions.tex", "figure-captions.tex")
         archive.writestr("BUILD.txt", "cd paper/elsarticle\nlatexmk -pdf manuscript.tex\n"
             "Anonymous manuscript source only. Upload the title page separately.\n"
-            "ADE and CoNLL04 only; completed seed-42 test results and validation ablations.\n"
+            "ADE and CoNLL04 only; main results plus two repeated-run stability checks.\n"
             "No raw dataset text or model weights are included.\n")
+    figure_out = OUT / "figures"
+    figure_out.mkdir(parents=True, exist_ok=True)
+    for suffix in (".drawio", ".pdf", ".png", ".svg"):
+        source = ROOT / "paper/figures" / f"methodology_detailed_draft{suffix}"
+        if source.exists():
+            shutil.copy2(source, figure_out / source.name)
+    word_out = OUT / "submission-word"
+    word_out.mkdir(parents=True, exist_ok=True)
+    for source in sorted((TEX / "words").glob("*.docx")):
+        shutil.copy2(source, word_out / source.name)
     report["figure_count"] = len(figure_paths)
     report["table_count"] = len(re.findall(r"\\begin\{table\}", text))
     report["visual_review_required"] = True

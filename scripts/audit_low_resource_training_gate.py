@@ -230,7 +230,7 @@ def parse_args() -> argparse.Namespace:
         ),
     )
     parser.add_argument(
-        "--report", type=Path, default=Path("paper/D100_EXECUTION_GATE.md")
+        "--report", type=Path, default=Path("docs/legacy-experiments/D100_EXECUTION_GATE.md")
     )
     return parser.parse_args()
 

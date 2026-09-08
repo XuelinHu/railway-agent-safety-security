@@ -8,23 +8,29 @@ The target journal remains *Journal of Safety Science and Resilience*. The
 motivation concerns auditable extraction and ADE's drug-safety relevance;
 CoNLL04 is a general-domain structural comparison, not a safety-outcome dataset.
 
-## Active files
+## Directory map
 
-- `elsarticle/manuscript.tex`: English anonymous manuscript.
-- `elsarticle/manuscript-zh.tex`: Chinese full-text checking version.
-- `elsarticle/title-page.tex`: separate author page with the matching title.
-- `elsarticle/references.bib`: cited literature, including benchmark and baseline sources.
+- `elsarticle/`: English anonymous source, Chinese checking source, author page,
+  bibliography, journal class files, and submission Word documents.
+- `figures/`: one authoritative editable method figure and its PDF/PNG/SVG
+  exports. `methodology_detailed_draft.drawio` is the sole figure source.
 - `results/ade_conll04/`: source-hashed statistics, common-evaluator scores,
-  generated tables, bootstrap intervals, and exact-overlap sensitivity.
-- `figures/methodology_detailed_draft.drawio`: the single active editable methodology figure.
-- `../output/pdf/ade-conll04/`: current PDFs, figure files, captions, and review source ZIP.
-- [SUBMISSION_READINESS.md](SUBMISSION_READINESS.md): scope and final checks.
+  generated tables, repeated-run summaries, bootstrap intervals, and
+  exact-overlap sensitivity results used by the manuscript.
+- `results/archive/`: result audits retained for traceability but not cited by
+  the active manuscript.
+- `SUBMISSION_READINESS.md`: scope, known limitations, and author checks.
+- `../output/pdf/ade-conll04/`: generated delivery PDFs and submission package;
+  this directory is ignored by default except for already tracked final PDFs.
+
+Historical low-resource protocols were moved to
+[`../docs/legacy-experiments/`](../docs/legacy-experiments/README.md). Raw data,
+checkpoints, runtime logs, and full prediction dumps do not belong in `paper/`.
 
 ## Rebuild
 
 ```bash
 python3 scripts/build_ade_conll04_paper.py
-python3 scripts/build_ade_conll04_diagram.py
 # Draw.io needs a working DISPLAY/XAUTHORITY or Xvfb session.
 python3 scripts/export_submission_artwork.py
 cd paper/elsarticle
@@ -43,11 +49,9 @@ fixed-prediction analyses, not estimates of training-seed variation.
 
 ## Version history and submission
 
-The previous mixed-scope manuscripts and metadata are preserved under
-`archive/pre-ade-conll04-20260907/`; their PDFs and source package are in
-`../output/pdf/archive/pre-ade-conll04-20260907/`. Earlier root-level PDF names
-are historical, not the active two-benchmark delivery. Existing experiment
-records and original Draw.io files were not deleted.
+The previous mixed-scope manuscript is preserved locally under the ignored
+`archive/` directory. Earlier root-level PDF names are historical, not the
+active two-benchmark delivery. Existing experiment results were not deleted.
 
 Submit the anonymous manuscript and author page separately, with editable
 LaTeX, numbered references, and individual high-quality figures. Author

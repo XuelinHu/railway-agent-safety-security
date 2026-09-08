@@ -31,7 +31,7 @@ COMPARISON_ITERATIONS = 20_000
 COMPARISON_SEED = 20_260_830
 SCHEMA_VERSION = "public-formal-test-promotion-v2"
 AUDIT_SCHEMA_VERSION = "public-validation-audit-v1"
-POLICY_DOCUMENT = Path("paper/PUBLIC_FULL_RUN_PLAN.md")
+POLICY_DOCUMENT = Path("docs/legacy-experiments/PUBLIC_FULL_RUN_PLAN.md")
 
 SYSTEM_FAMILIES = {
     "baseline_raw": "public_stage1",
