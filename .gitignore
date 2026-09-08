@@ -3,19 +3,38 @@ __pycache__/
 *.py[cod]
 .venv/
 
-# Data and model outputs
+# Local datasets, experiment outputs, and model artifacts
 data/raw/
 data/processed/
 models/
 outputs/
+checkpoints/
+runs/
+logs/
+wandb/
+mlruns/
+lightning_logs/
+tensorboard/
+.huggingface/
+hf_cache/
+huggingface_cache/
 tools/antiword/
 tools/catdoc/
 tools/*.deb
 tools/external-baselines/
 data/external/
-output/
 tmp/
 .playwright-mcp/
+
+# Generated output is local by default. Keep only the reviewed paper delivery.
+output/*
+!output/pdf/
+output/pdf/*
+!output/pdf/ade-conll04/
+!output/pdf/ade-conll04/**
+
+# Never version large datasets, model weights, or logs, including within a
+# whitelisted delivery directory.
 *.parquet
 *.pkl
 *.pt
@@ -25,15 +44,19 @@ tmp/
 *.bin
 *.onnx
 *.joblib
+*.gguf
+*.ggml
+*.tflite
+*.mlmodel
+*.engine
+*.plan
+*.log
 
 # Large run artifacts and local caches
-checkpoints/
-wandb/
-mlruns/
-lightning_logs/
 paper/ref/
-tensorboard/
 events.out.tfevents.*
+**/checkpoint-*/
+**/final_model/
 *.npy
 *.npz
 *.arrow

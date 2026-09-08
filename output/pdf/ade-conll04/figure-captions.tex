@@ -1,0 +1,23 @@
+\noindent\textbf{Figure 1.} Dataset distribution analysis. (a) Training-label composition within
+each dataset's entity (E) or relation (R) inventory. Percentages sum to 100\%
+separately within each dataset--kind combination. (b) Empirical cumulative
+distributions of reconstructed sentence length for the train, validation, and
+test partitions. Length is measured in whitespace-delimited tokens.\par
+
+\noindent\textbf{Figure 2.} Detailed methodology used in this study. The figure shows the ADE and
+CoNLL04 inputs, dataset-specific training knowledge graphs, the Transformer
+attention block, the SOE/EAE/HRGE QLoRA adapter branches, and deterministic
+evidence gates based on agreement, anchors, endpoints, relation validity, and
+source evidence.\par
+
+\noindent\textbf{Figure 3.} Test-set analysis of the matched SOE and PGE systems. (a) Strict-span
+entity and relation F1 on ADE and CoNLL04. (b) PGE-minus-SOE F1 differences;
+horizontal intervals are paired 95\% sentence-bootstrap intervals from fixed
+predictions. Exact values and all external baselines remain in
+Table~\ref{tab:test}.\par
+
+\noindent\textbf{Figure 4.} Audited seed-42 training loss for the EAE and HRGE adapters. Raw
+observations (faint) were written to runner stdout every five optimizer steps;
+emphasized curves are ten-observation trailing means. The logarithmic scale
+retains the large variation in the raw observations. No intermediate values
+are reconstructed or interpolated.\par
