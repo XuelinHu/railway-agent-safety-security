@@ -13,7 +13,7 @@
 ## Verified content and layout
 
 - English and Chinese manuscripts contain the same six-section argument,
-  4 figures, 5 tables, 14 numbered equation environments, and 24 cited works.
+  4 figures, 5 tables, 14 numbered equation environments, and 23 cited works.
 - The English abstract is one continuous paragraph and has four keywords.
 - Figure 2 uses a one-column CDF legend at the far right. Figure 3 places the
   SOE/PGE legend in panel (a)'s upper-right clear area. Neither legend overlaps
@@ -43,7 +43,8 @@
   integrated into setup, with compact supporting results in the main analysis.
 - Explicit training seed identifiers and epoch counts are removed from the
   narrative; the frozen experiment records remain unchanged.
-- All numeric test-table values are unchanged. Twelve within-dataset metric
+- The test table contains four systems per dataset; retained numeric values
+  are unchanged. Twelve within-dataset metric
   maxima are bold and marked with an upward arrow. Citation numbering still
   follows first appearance, and Equation 14 retains its three-line layout.
 - The five Word documents are rebuilt in `submission-word/`. Highlights are
@@ -61,6 +62,10 @@
   for Auditable Drug-Adverse Effect Relation Extraction*, is applied across
   delivery formats. Abstracts and contributions explicitly locate augmentation
   in the generator's input context and distinguish it from output acceptance.
+- Section 3.2 ends with the system definitions; the two closing sentences on
+  post-processing classification and deployment branches have been removed.
+- The submission archive contains a scoped projection of the recorded test
+  evidence. Original experiment snapshots remain unchanged in the repository.
 
 ## Evidence boundary
 
