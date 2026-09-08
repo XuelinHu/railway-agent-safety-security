@@ -14,7 +14,7 @@ double-column manuscript.
 - `FINAL_REVIEW.md`: final format and reproducibility review
 
 The manuscript contains four figures, five tables, fourteen numbered equation
-environments, and fourteen cited references. The tracked result evidence is in
+environments, and twenty-four cited references. The tracked result evidence is in
 `paper/results/ade_conll04/`. Model weights, raw datasets, caches, and full
 training-output directories are intentionally excluded from the repository and
 the review-source archive.

@@ -48,7 +48,6 @@ entity and relation extraction \sep knowledge graph \sep provenance
 % internal box; keep that class-internal box from producing a false layout
 % warning after the visible content has already been wrapped correctly.
 \begingroup\hfuzz=124pt\maketitle\endgroup
-\linenumbers
 
 \section{Introduction}
 \label{sec:introduction}
@@ -129,6 +128,21 @@ task without requiring a generative JSON interface. Our experiments retrain
 SpERT from a clean base encoder on the same training partitions rather than
 using a released task checkpoint that may already include development data.
 
+Recent joint extractors explore complementary output representations. OneRel
+casts extraction as fine-grained triple classification, UniRel unifies entity
+and relation interactions, and set-prediction networks treat the output as an
+unordered collection of relational tuples
+\cite{shang2022onerel,tang2022unirel,sui2024setprediction}. Boundary-oriented
+methods either assemble mention boundaries or learn them through regression,
+whereas position-aware models emphasize endpoint structure and relation
+representations
+\cite{tang2022boundaryassembling,tang2023boundaryregression,chen2022positionaware,zhang2022positionaware}.
+Global entity matching and span-based single-stage decoding provide further
+ways to reduce pipeline error propagation
+\cite{gao2023ergm,han2023spanbased}. These studies primarily improve the
+extraction architecture; our focus is the provenance and acceptance policy
+applied to generated candidates.
+
 GLiNER and GLiREL provide label-conditioned alternatives for entity recognition
 and relation classification~\cite{zaratiana2024gliner,boylan2025glirel}.
 These models differ from locally fine-tuned generators in supervision,
@@ -142,8 +156,10 @@ Knowledge graphs represent typed entities and relations explicitly, while
 retrieval augmentation uses selected records as model
 context~\cite{hogan2021kg,lewis2020rag}. GenIE constrains generative information
 extraction with a structured output space and entity/relation
-catalogues~\cite{josifoski2022genie}. Catalogue validity and source support are
-different requirements: an admissible entity or relation may still not be
+catalogues~\cite{josifoski2022genie}. Unified Structure Generation similarly
+maps heterogeneous information-extraction schemas to a common structured
+generation formulation~\cite{lu2022uie}. Catalogue validity and source support
+are different requirements: an admissible entity or relation may still not be
 asserted in the current input. Our graph context is consequently treated as a
 candidate prior whose eligibility depends on training provenance and local
 source matching.
@@ -489,7 +505,8 @@ Duplicate keys receive one vote, invalid objects remain unmatched predictions,
 and omitted jobs remain empty. For pooled counts,
 \begin{equation}
 \begin{aligned}
-P&=\frac{TP}{TP+FP},\qquad R=\frac{TP}{TP+FN},\\
+P&=\frac{TP}{TP+FP},\\
+R&=\frac{TP}{TP+FN},\\
 F_1&=\frac{2TP}{2TP+FP+FN}.
 \end{aligned}
 \label{eq:metrics}
@@ -771,23 +788,12 @@ Larger repeated-run studies, end-to-end latency and resource measurements, and
 analyst studies are also needed to determine whether inspectable acceptance
 paths reduce review effort or improve downstream decisions.
 
-\section*{Acknowledgements and funding}
-Author-identifying funding and acknowledgement information is supplied on the
-separate title page for double-blind review.
 \section*{Declaration of competing interest}
 The authors declare that they have no known competing financial interests or
 personal relationships that could have appeared to influence this work.
 \section*{Data and code availability}
-The experiments use the public ADE and CoNLL04 distributions in SpERT format.
-An anonymized reproducibility package will contain the split construction,
-dataset statistics, source hashes, evaluation code, and derived result tables.
-Dataset text and model weights remain subject to their original licenses.
-The identifying repository URL is withheld during double-blind review.
-\section*{Declaration of generative AI and AI-assisted technologies in the writing process}
-The authors used OpenAI Codex to assist with code inspection, language editing,
-figure preparation, and manuscript organization. The authors are responsible
-for reviewing the resulting material and for the final content. The language
-models evaluated as research systems are described separately in the Methods.
+The data and code supporting the findings of this study are available from the
+corresponding author upon reasonable request.
 
 \bibliographystyle{cas-model2-names}
 \bibliography{references}

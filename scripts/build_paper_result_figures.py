@@ -70,13 +70,15 @@ def build_result_analysis() -> None:
         for bar, value in zip(bars, values):
             ax.text(bar.get_x() + bar.get_width() / 2, value + 0.8,
                     f"{value:.1f}", ha="center", va="bottom", fontsize=7.3,
-                    rotation=90)
+                    rotation=0)
     ax.set_ylabel("Strict-span F1 (%)")
     ax.set_xticks(x, ("Entity", "Relation", "Entity", "Relation"))
+    # Reserve a clear band above the value labels for the method legend.
     ax.set_ylim(0, 105)
     ax.grid(axis="y", color="#D0D0D0", linewidth=0.55)
     ax.set_axisbelow(True)
-    ax.legend(frameon=False, ncol=2, loc="lower left")
+    ax.legend(frameon=False, ncol=2, loc="upper right",
+              columnspacing=1.0, handlelength=2.0)
     ax.annotate("ADE", (0.25, -0.22), xycoords="axes fraction",
                 ha="center", fontsize=9)
     ax.annotate("CoNLL04", (0.75, -0.22), xycoords="axes fraction",
@@ -176,8 +178,11 @@ def build_dataset_distribution() -> None:
     ax.set_ylim(0, 1.02)
     ax.grid(color="#D0D0D0", linewidth=0.55)
     ax.set_axisbelow(True)
-    ax.legend(frameon=False, ncol=2, loc="lower right", fontsize=7.6,
-              columnspacing=0.8, handlelength=2.2)
+    # A single-column legend at the far right uses the empty lower-right
+    # region and avoids covering the rising parts of the CDF curves.
+    ax.legend(frameon=False, ncol=1, loc="lower right", fontsize=7.6,
+              bbox_to_anchor=(0.995, 0.015), borderaxespad=0.0,
+              labelspacing=0.35, handlelength=2.2)
     ax.set_title("(b) Sentence-length CDFs", loc="left", fontweight="bold",
                  pad=12)
 
