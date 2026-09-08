@@ -1,7 +1,7 @@
 # ADE and CoNLL04 manuscript
 
-The current manuscript is titled *Provenance-Preserving Evidence-Gated
-Knowledge-Graph Augmentation for Auditable Entity-Relation Extraction* and is
+The current manuscript is titled *Provenance-Controlled Graph Augmentation
+for Auditable Entity-Relation Extraction* and is
 prepared for double-blind review at the *Journal of Safety Science and
 Resilience*.
 

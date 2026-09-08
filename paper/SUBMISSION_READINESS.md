@@ -33,3 +33,31 @@ Jingchao Wang is the corresponding author. The authors must still confirm the
 telephone number, complete postal data, author order, CRediT roles, competing
 interests, journal scope, special-issue entry, licenses, and APC before formal
 submission.
+
+The file `submission/submission-word/author statement.docx` is explicitly a
+draft: proposed roles for all seven authors require confirmation against their
+actual work. The proposal emphasizes Xuelin Hu's research and implementation,
+Jingchao Wang's supervision and project leadership, Xiaoqin Fu's data and
+experimental work, and Youjing Fu's methodology and analysis. It is not a
+verified contribution record and must not be uploaded as a completed statement
+until every author has confirmed or corrected it. No workload percentages,
+equal-contribution claims, or funding-acquisition roles have been asserted.
+
+Before using the cover letter, confirm manuscript originality, prior
+publication/preprint status, absence of simultaneous journal submission, and
+approval by every author. Add the journal-required originality and author
+approval declarations only after that confirmation. The revised cover letter
+does not attest to these unverified facts. Every author must also confirm the
+competing-interests statement already used in the manuscript.
+
+## Author-approved title
+
+The following shorter title is applied consistently to the manuscript, title
+page, and Word documents following the author's approval:
+
+*Provenance-Controlled Graph Augmentation for Auditable Entity-Relation Extraction*
+
+Chinese: 面向可审计实体—关系抽取的来源受控图谱增强。
+
+This preserves provenance control, auditability, and the extraction task while
+leaving the evidence-gating mechanism to the abstract and method sections.

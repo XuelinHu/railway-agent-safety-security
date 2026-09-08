@@ -3,23 +3,25 @@
 
 from datetime import date
 from pathlib import Path
+import re
 
 from docx import Document
 from docx.enum.text import WD_ALIGN_PARAGRAPH
-from docx.shared import Inches, Pt
+from docx.shared import Inches, Pt, RGBColor
 
 
 ROOT = Path(__file__).resolve().parents[1]
 OUT = ROOT / "paper" / "submission" / "submission-word"
-TITLE = (
-    "Provenance-Preserving Evidence-Gated Knowledge-Graph Augmentation "
-    "for Auditable Entity-Relation Extraction"
-)
+MANUSCRIPT = ROOT / "paper" / "cas-dc" / "manuscript.tex"
+SOURCE = MANUSCRIPT.read_text()
+TITLE = re.search(r"\\title\[mode = title\]\{([^}]+)\}", SOURCE).group(1).replace("--", "-")
 JOURNAL = "Journal of Safety Science and Resilience"
 
 
 def setup(document: Document, heading: str) -> None:
     section = document.sections[0]
+    section.page_width = Inches(8.27)
+    section.page_height = Inches(11.69)
     section.top_margin = Inches(0.8)
     section.bottom_margin = Inches(0.8)
     section.left_margin = Inches(0.9)
@@ -27,6 +29,20 @@ def setup(document: Document, heading: str) -> None:
     style = document.styles["Normal"]
     style.font.name = "Times New Roman"
     style.font.size = Pt(11)
+    style.paragraph_format.space_after = Pt(6)
+    style.paragraph_format.line_spacing = 1.05
+    style.paragraph_format.widow_control = True
+    for name in ("Heading 1", "Heading 2"):
+        heading_style = document.styles[name]
+        heading_style.font.name = "Times New Roman"
+        heading_style.font.size = Pt(12)
+        heading_style.font.color.rgb = RGBColor(0, 0, 0)
+        heading_style.paragraph_format.space_before = Pt(8)
+        heading_style.paragraph_format.space_after = Pt(4)
+        heading_style.paragraph_format.keep_with_next = True
+    document.core_properties.title = heading
+    document.core_properties.subject = TITLE
+    document.core_properties.author = ""
     paragraph = document.add_paragraph()
     paragraph.alignment = WD_ALIGN_PARAGRAPH.CENTER
     run = paragraph.add_run(heading)
@@ -43,12 +59,9 @@ def save(document: Document, name: str) -> None:
 def highlights() -> None:
     document = Document()
     setup(document, "Highlights")
-    for text in (
-        "Separates graph-informed generation from deterministic evidence acceptance.",
-        "Links accepted entities and relations to exact source spans and provenance.",
-        "Improves relation F1 over matched source-only extraction on ADE and CoNLL04.",
-        "Records auditable acceptance paths without asserting universal semantic truth.",
-    ):
+    block = re.search(r"\\begin\{highlights\}(.*?)\\end\{highlights\}", SOURCE, re.S).group(1)
+    for text in re.findall(r"\\item\s+([^\n]+)", block):
+        assert len(text) <= 85, f"Highlight exceeds 85 characters: {text}"
         document.add_paragraph(text, style="List Bullet")
     save(document, "Highlights.docx")
 
@@ -106,18 +119,29 @@ def title_page() -> None:
 
 def author_statement() -> None:
     document = Document()
-    setup(document, "CRediT Author Statement")
+    setup(document, "CRediT Author Statement - Draft for Author Confirmation")
     document.add_paragraph(TITLE)
     document.add_paragraph(
-        "The author names below have been synchronized with the title page. Individual "
-        "CRediT roles require confirmation by all authors before submission; no roles "
-        "have been inferred from author order."
+        "Proposed allocation for author review, not a verified record of contributions. "
+        "Each author must confirm or correct the roles below to reflect work actually "
+        "performed before journal submission."
     )
-    for name in (
-        "Xuelin Hu", "Xiaoqin Fu", "Youjing Fu", "Jingchao Wang",
-        "Ruishen Liu", "Charles Jumaa Katila", "Pengming Hu",
+    for name, roles in (
+        ("Xuelin Hu", "Conceptualization; Methodology; Software; Formal analysis; "
+         "Investigation; Writing - original draft."),
+        ("Xiaoqin Fu", "Data curation; Investigation; Validation; Visualization; "
+         "Writing - original draft; Writing - review & editing."),
+        ("Youjing Fu", "Methodology; Formal analysis; Investigation; Validation; "
+         "Writing - original draft; Writing - review & editing."),
+        ("Jingchao Wang", "Conceptualization; Methodology; Supervision; "
+         "Project administration; Writing - review & editing."),
+        ("Ruishen Liu", "Data curation; Validation; Writing - review & editing."),
+        ("Charles Jumaa Katila", "Validation; Writing - review & editing."),
+        ("Pengming Hu", "Software; Validation; Writing - review & editing."),
     ):
-        document.add_paragraph(f"{name}: CRediT role(s) to be confirmed by the authors.")
+        paragraph = document.add_paragraph()
+        paragraph.add_run(f"{name}: ").bold = True
+        paragraph.add_run(roles)
     save(document, "author statement.docx")
 
 
@@ -127,22 +151,31 @@ def cover_letter() -> None:
     document.add_paragraph(date.today().strftime("%B %d, %Y"))
     document.add_paragraph("Dear Editors,")
     document.add_paragraph(
-        f'We submit the manuscript entitled "{TITLE}" for consideration in {JOURNAL}.'
+        f'Please consider our manuscript entitled "{TITLE}" for publication in the {JOURNAL}.'
     )
     document.add_paragraph(
-        "The manuscript addresses a central limitation of graph-augmented entity-relation "
-        "extraction: retrieved associations and fluent generated triples are not necessarily "
-        "facts stated in the current source sentence. We separate graph-informed candidate "
-        "generation from deterministic acceptance, reconstruct exact source spans, enforce "
-        "type-compatible relations, and retain an auditable provenance record. Evaluation "
-        "on ADE and CoNLL04 shows higher relation F1 than the matched source-only generator "
-        "on both benchmarks, while the manuscript explicitly limits the gates to structural "
-        "admissibility and source linkage rather than semantic or clinical truth."
+        "The study addresses two connected questions in graph-augmented extraction: "
+        "which retrieved associations are eligible to guide generation, and which "
+        "generated candidates should enter the final output. A provenance-constrained "
+        "context policy uses training annotations only, excludes current-example-only "
+        "support, and quarantines exact cross-split text overlaps. A separate evidence-gated "
+        "acceptance mechanism combines source-span reconstruction, entity selection, "
+        "relation verification, and endpoint consistency with inspectable decisions."
     )
     document.add_paragraph(
-        "This work is original, has not been published previously, and is not under "
-        "consideration by another journal. All authors must approve the final submitted "
-        "version and the accompanying declarations."
+        "Under a common strict-span evaluation, the proposed system improves relation F1 "
+        "over matched source-only generation by 5.18 percentage points on ADE and "
+        "4.65 points on CoNLL04. The relation gains recur in two additional training "
+        "runs and persist after exact CoNLL04 train-test overlaps are excluded. "
+        "Development-set ablations distinguish candidate-recovery benefits from the "
+        "precision and coverage effects of deterministic acceptance."
+    )
+    document.add_paragraph(
+        "The connection to safety science is the construction of inspectable knowledge "
+        "from source text: ADE provides a drug-safety-related extraction task, while "
+        "CoNLL04 tests general relational structure. The framework exposes source links "
+        "and acceptance decisions for analyst review. The study evaluates extraction and "
+        "rule compliance, not clinical truth or measured downstream safety outcomes."
     )
     document.add_paragraph("Thank you for considering our manuscript.")
     document.add_paragraph("Sincerely,")
@@ -162,9 +195,6 @@ def competing_interests() -> None:
         "The authors declare that they have no known competing financial interests or "
         "personal relationships that could have appeared to influence the work reported "
         "in this paper."
-    )
-    document.add_paragraph(
-        "This declaration must be confirmed by every author before submission."
     )
     save(document, "declaration-of-competing-interests.docx")
 

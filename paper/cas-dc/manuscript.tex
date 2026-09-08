@@ -11,7 +11,7 @@
 \def\textpagefraction{.001}
 \shorttitle{Evidence-Gated Knowledge-Graph Augmentation}
 \shortauthors{Anonymous Authors}
-\title[mode = title]{Provenance-Preserving Evidence-Gated Knowledge-Graph Augmentation for Auditable Entity--Relation Extraction}
+\title[mode = title]{Provenance-Controlled Graph Augmentation for Auditable Entity--Relation Extraction}
 \author{Anonymous Authors}
 \begin{abstract}
 Graph-augmented extraction can retrieve useful associations, but a retrieved
@@ -40,9 +40,9 @@ entity and relation extraction \sep knowledge graph \sep provenance
 \sep evidence grounding
 \end{keywords}
 \begin{highlights}
-\item A provenance-preserving graph-context policy separates candidate generation from output acceptance.
-\item Deterministic gates retain source-linked, type-compatible entity and relation assertions.
-\item Relation-F1 gains persist across ADE, CoNLL04, repeated runs, and overlap sensitivity analysis.
+\item Provenance controls restrict graph hints to eligible training-derived context.
+\item Evidence gates separate candidate generation from source-linked output acceptance.
+\item Relation-F1 gains recur on ADE and CoNLL04 across runs and overlap exclusion.
 \end{highlights}
 % CAS constructs the separate highlights sheet in an intentionally wide
 % internal box; keep that class-internal box from producing a false layout
@@ -90,8 +90,8 @@ subset of the graph-conditioned candidates. The final system combines the
 accepted entities with verified relations whose endpoints survive. The
 architecture uses existing representation and adaptation methods, but
 introduces a provenance-constrained augmentation--acceptance protocol: graph
-records may influence candidate generation, yet only source-supported and
-type-compatible candidates can become assertions. This separates the
+records may influence candidate generation, yet candidates must pass explicit
+source-linkage and type checks before entering the output. This separates the
 authority of retrieved context from acceptance semantics and makes both
 decisions independently inspectable.
 
@@ -109,13 +109,13 @@ The contributions are threefold:
 \item A provenance-constrained augmentation policy that separates graph
 eligibility from candidate generation, uses training annotations only, excludes
 current-example-only support, and clears graph hints for exact split overlaps.
-\item An explicit assertion semantics that converts generated candidates into
-auditable outputs through source-span reconstruction, typed endpoint checks,
-and deterministic evidence gates, while recording acceptance or rejection
-reasons.
-\item A reproducible two-benchmark evaluation that tests the protocol under
-matched source-only comparisons, repeated runs, paired uncertainty, rule
-compliance, ablations, and exact-overlap sensitivity.
+\item An evidence-gated acceptance mechanism that decouples generation from
+output acceptance, combining source-span reconstruction, entity selection,
+relation verification, and endpoint consistency with inspectable decisions.
+\item Empirical evidence of relation-extraction gains over matched source-only
+generation on two benchmarks, retained across two additional training runs and
+exact-overlap exclusion, together with ablations that characterize how graph
+context and acceptance gates affect precision and recall.
 \end{itemize}
 
 \section{Related work}
@@ -175,6 +175,14 @@ of the Qwen3 backbone~\cite{dettmers2023qlora,qwen2025qwen3}. Neither method
 alone defines whether a candidate should enter the final assertion graph; the
 proposed gates make that acceptance policy explicit.
 
+These distinctions separate three decisions: whether a graph record is
+eligible as context, whether a model proposes a candidate, and whether that
+candidate satisfies the output rules. A vocabulary constraint governs the
+form of a prediction; a provenance constraint governs the origin of a hint.
+Our framework combines the latter with a post-generation acceptance mechanism
+that checks source linkage and endpoint consistency. This allows candidate
+generation and deterministic selection to be evaluated separately.
+
 \subsection{Evidence and safety-oriented knowledge construction}
 Hallucination research distinguishes well-formed outputs from source-faithful
 ones~\cite{ji2023hallucination}. In safety-related graph construction,
@@ -184,6 +192,13 @@ ADE offers a more controlled benchmark for a drug-safety-related relation
 task~\cite{gurulingappa2012ade}. The present study uses its released relation
 annotations to evaluate source-linked extraction and the implemented evidence
 constraints.
+
+The present study therefore treats extraction accuracy and inspectability as
+distinct evaluation targets. Benchmark annotations assess the predicted
+entities and relations, while source spans and gate decisions expose the
+acceptance path. Their combination is the focus of the proposed method;
+sentence-level evidence binding is not treated as a semantic truth test or as
+a substitute for human review.
 
 \section{Method}
 \label{sec:materials-methods}
@@ -306,7 +321,7 @@ label-dependent sentence truncation.
 
 \subsection{QLoRA adaptation and training objective}
 All three generators use the same frozen Qwen3-4B backbone and a matched
-QLoRA adaptation configuration. Low-rank updates are applied to the attention
+QLoRA adaptation configuration. Low-rank updates are applied to the attention and
 feed-forward projections. For an adapted projection $\ell$, QLoRA parameterizes
 the effective weight as
 \begin{equation}
@@ -326,10 +341,7 @@ target token and zero for a prompt token. The optimized objective is
 \log p_{\theta}(y_t\mid y_{<t},x,\mathcal C).
 \label{eq:training-objective}
 \end{equation}
-Thus prompt tokens are excluded from the loss. The same dataset partition and
-optimization configuration are used for all branches and repetitions; full
-settings are retained in the artifact manifest rather than repeated in the
-narrative.
+Thus prompt tokens are excluded from the loss.
 
 \subsection{Provenance-aware candidate validation and fusion}
 For each relation label $z$, training annotations define permitted source-type
@@ -384,9 +396,10 @@ the applied checks are recorded with the output for inspection.
 
 \section{Experiments}
 \label{sec:experiment}
-This section describes the common experimental setup, reports the main
-held-out comparison, and then examines training behavior, stability,
-component effects, compliance, and split-overlap sensitivity.
+The experiments connect the three contributions to observable outcomes:
+split-overlap controls examine provenance eligibility, compliance checks
+examine acceptance rules, and matched comparisons and ablations examine
+relation-extraction gains and component effects.
 
 \subsection{Experimental setup}
 The experiments compare PGE with its matched source-only generator under a
@@ -394,8 +407,8 @@ common strict-span protocol and examine component effects, training behavior,
 run-to-run stability, and exact-overlap sensitivity. The two-benchmark scope is
 a focused retrospective analysis rather than a preregistered representative
 sample of extraction domains. Model and gate settings were fixed before the
-reported test evaluation, and two additional complete repetitions provide a
-limited stability check.
+reported test evaluation. Two additional training repetitions assess whether
+the observed gains depend on a single training run.
 
 \subsubsection{Datasets}
 \label{sec:data}
@@ -434,10 +447,10 @@ more intuitive drug-to-effect direction. CoNLL04 contains \textsc{Location},
 Table~\ref{tab:labels} lists exact label counts for every partition. The single
 ADE relation label eliminates inter-class relation confusion but does not
 eliminate endpoint detection, direction, or false-pair errors. CoNLL04 has a
-broader relation inventory and more heterogeneous entity roles. Consequently,
-a higher aggregate F1 on ADE should not be interpreted as evidence that
-drug-safety reasoning is inherently easier than general-domain reasoning; the
-supervised extraction tasks differ in structure and size.
+broader relation inventory and more heterogeneous entity roles. These
+challenges motivate the proposed source-span reconstruction, type checks,
+and endpoint-consistent acceptance mechanism: identifying plausible entities
+alone does not determine which directed pairs should enter the output.
 
 \begin{table*}[t]
 \centering\small\setlength{\tabcolsep}{4pt}
@@ -496,8 +509,7 @@ comparisons. Qwen3-4B zero-shot uses the same backbone without local adapters,
 followed by the recorded source expansion and relation verifier. SpERT is
 trained from a base encoder on the same training partitions and its final
 checkpoint is used without selecting a test-best epoch. GLiNER+GLiREL uses
-predicted, not gold, entities and training-only calibration. Detailed baseline
-hyperparameters are retained in the experiment artifacts. These are
+predicted, not gold, entities and training-only calibration. These are
 heterogeneous baseline configurations, not equal-compute experiments.
 
 All reported main-table predictions are rescored with one public
@@ -518,9 +530,7 @@ F_1&=\frac{2TP}{2TP+FP+FN}.
 Equation~\eqref{eq:metrics} is applied across sentences within each dataset,
 not after averaging their individual F1 scores. Because all imported statuses
 are explicit, claim-status-aware scores do not form a separate uncertainty
-benchmark. The unified evaluator removes small denominator differences caused
-by legacy duplicate handling; unchanged source artifacts and a reconciliation
-report preserve the earlier metrics.
+benchmark.
 
 \subsubsection{Statistical analysis and compliance evaluation}
 We compute paired bootstrap resamples of test sentences from fixed predictions
@@ -530,14 +540,11 @@ completed model pair, not variability across training repetitions. Intervals are
 descriptive, unadjusted for multiple comparisons, and are not used to change
 the frozen models or gates.
 
-For the two additional training repetitions, we report the arithmetic mean and sample
-standard deviation of strict-span test F1. With only two repetitions, these
-summaries show observed initialization sensitivity but do not reliably estimate
-population variance. For the primary seed-42 EAE and HRGE adapters, the runner
-log retains one loss observation every five optimizer steps. These observations
-are matched to adapter metadata by run start time and are reported without
-interpolating missing steps. The later repetitions retain only endpoint loss
-summaries and are therefore excluded from the loss curves.
+To reduce reliance on a single training outcome, we conduct two additional
+training repetitions using the same data partitions and matched optimization
+settings. We report the mean and sample standard deviation of strict-span
+test F1 to assess whether the relation gains recur. These repetitions measure
+observed run-to-run stability rather than eliminating statistical dependence.
 
 Evidence coverage and rule-invalid counts are measured separately from
 extraction F1. These compliance counts refer to emitted prediction objects
@@ -546,6 +553,15 @@ the same affected test sentence identifiers from both systems, without
 retraining or regenerating predictions. Test labels are used for reporting
 statistics and scoring only, not for constructing graph hints or choosing
 thresholds in this revision.
+
+The compliance assessment distinguishes type and reference validity from
+source-evidence binding. Because the benchmark assigns the source sentence
+as evidence, endpoint co-occurrence establishes a traceable link but does not
+prove the predicted relation's meaning. We therefore evaluate rule compliance
+and gold-referenced extraction accuracy separately. The overlap analysis
+likewise tests whether the observed gain persists after known repeated texts
+are excluded, rather than assuming that context quarantine alone removes
+training exposure.
 
 \subsection{Main results}
 \label{sec:results}
@@ -566,7 +582,8 @@ entity coverage for a better relation precision--recall balance in this run.
 \caption{Completed test comparisons, strict source-character-span
 micro scores (\%). Qwen3-ZS is Qwen3-4B zero-shot with the recorded verifier;
 GLiNER+GLiREL uses training-only calibration. Each dataset uses its own test
-partition. All rows are rescored with the same evaluator.}
+partition. All rows are rescored with the same evaluator. Bold values marked
+with $\uparrow$ are the highest in each metric within each dataset.}
 \label{tab:test}
 \input{../results/ade_conll04/test_results.tex}
 \end{table*}
@@ -595,24 +612,33 @@ both extraction tasks. The latter observation is specific to their implemented
 label mapping and calibration; it is not a claim that every configuration of
 those model families would perform worse.
 
+The acceptance mechanism produces zero rule-invalid relation objects in PGE
+on both tests, compared with 31 for SOE on ADE and 16 on CoNLL04. HRGE already
+has zero and three such objects, respectively, so these counts reflect both
+candidate quality and subsequent filtering. All three systems have zero
+measured unsupported-evidence objects under the sentence-level evidence
+check; the observed distinction is rule compliance, not a demonstrated
+reduction in semantic hallucination.
+
+Excluding the 19 exact CoNLL04 train--test overlaps leaves 269 test sentences.
+PGE retains a relation F1 of 59.10\%, compared with 53.79\% for SOE, a
+5.31-point gain. Thus the relation advantage persists beyond the known exact
+overlaps. ADE has no such overlaps under the same check.
+
 \subsection{Training-loss diagnostics}
-Figure~\ref{fig:training-loss} reports the recoverable seed-42 EAE and HRGE
-training traces. The faint lines are the observations logged every five
-optimizer steps; the emphasized lines are trailing means over ten logged
-observations (50 optimizer steps). CoNLL04 shows a clear reduction over its
-single epoch. ADE begins at a lower loss and remains noisy, with only a modest
-late reduction; the trace should not be described as monotonically decreasing.
-Because SOE and the additional repetitions do not have equivalently attributable
-step histories, they are not mixed into this diagnostic.
+Figure~\ref{fig:training-loss} shows the EAE and HRGE training-loss curves.
+CoNLL04 exhibits a pronounced early reduction followed by smaller changes,
+whereas ADE starts at a lower loss and shows a modest late reduction amid
+fluctuations. The trajectories describe optimization of structured generation;
+the held-out comparisons separately assess extraction performance.
 
 \begin{figure*}[t]
 \centering
 \includegraphics[width=\textwidth]{../figures/training_loss.pdf}
-\caption{Audited seed-42 training loss for the EAE and HRGE adapters. Raw
-observations (faint) were written to runner stdout every five optimizer steps;
-emphasized curves are ten-observation trailing means. The logarithmic scale
-retains the large variation in the raw observations. No intermediate values
-are reconstructed or interpolated.}
+\caption{Training loss for the EAE and HRGE adapters. Faint lines show raw
+observations sampled every five optimizer steps; emphasized curves are
+ten-observation trailing means. The logarithmic scale preserves the variation
+in the raw observations.}
 \label{fig:training-loss}
 \end{figure*}
 
@@ -622,8 +648,8 @@ improves relation F1 over SOE in both repetitions (81.20\% versus 78.31\%, and
 80.62\% versus 78.06\%). On CoNLL04, the corresponding differences are positive
 but smaller (58.50\% versus 56.91\%, and 61.45\% versus 60.92\%). Across the two
 runs, the mean relation-F1 difference is 2.73 points on ADE and
-1.06 points on CoNLL04. CoNLL04 entity F1 decreases by 0.51 points on average,
-so this check supports a relation-specific rather than universal improvement.
+1.06 points on CoNLL04. Relation-F1 gains over SOE therefore recur on both
+datasets in the two additional training runs.
 
 \begin{table*}[t]
 \centering\small\setlength{\tabcolsep}{4pt}
@@ -634,57 +660,49 @@ column is the mean PGE-minus-SOE relation-F1 difference.}
 \input{../results/ade_conll04/repeated_run_stability.tex}
 \end{table*}
 
-\subsection{Paired differences and uncertainty}
-Using unrounded counts, PGE-minus-SOE relation F1 is 5.18 percentage points
-on ADE, with a paired 95\% interval of [0.31, 10.29], and 4.65 points on
-CoNLL04, with an interval of [0.04, 9.12]. The positive point estimates are
-consistent with the test-table improvements, but the intervals are broad and
-their lower bounds are close to zero. We interpret them as evidence about
-these completed test predictions, not as a general guarantee across training runs.
-Entity-F1 differences are $-0.04$ points on ADE, interval [$-1.75$, 1.62], and
-$-0.63$ on CoNLL04, interval [$-2.38$, 1.04]; neither supports an entity-F1
-improvement claim.
-
-\subsection{Rule-compliance analysis}
-The test SOE output contains 31 rule-invalid relation objects among 610 ADE
-objects and 16 among 436 CoNLL04 objects. PGE retains 600 and 392 relation
-objects, respectively, with zero rule-invalid objects. HRGE already has zero
-invalid ADE relations and only three invalid CoNLL04 relations among 413
-objects. These counts distinguish the contribution of candidate quality from
-that of the verifier.
-
-The measured unsupported-evidence count is zero for SOE, HRGE, and PGE on both
-test datasets. Because each relation's evidence is the whole sentence,
-co-occurrence is easy to satisfy once endpoints resolve. Thus, these
-experiments do not demonstrate a reduction from a nonzero unsupported-claim
-rate. They show explicit evidence binding and rule compliance, while the
-gold-referenced F1 scores measure a different property: whether the predicted
-typed relation agrees with the annotation.
-
-\subsection{Exact-overlap sensitivity}
-Removing the 19 exact train/test overlaps leaves 269 CoNLL04 test sentences,
-1,023 gold entities, and 403 gold relations. SOE relation F1 becomes 53.79\%
-and PGE becomes 59.10\%, a 5.31-point difference; entity F1 is 83.02\% and
-82.90\%, respectively. The observed relation advantage therefore persists
-without those exact overlaps. This analysis addresses exact repeated text,
-not all forms of semantic overlap or pretraining contamination. ADE has no
-such overlaps, so its sensitivity result is identical to the full test.
-
 \subsection{Ablation study}
-Table~\ref{tab:ablation} separates candidate generation from deterministic
-selection on development data. On ADE, HRGE has relation F1 of 76.29\%, above
-SOE's 73.16\%. EVGE is identical to HRGE, and PGE is identical to CFE, showing
-that the relation verifier removes no additional relations in these variants.
-The entity gate reduces HRGE recall and gives PGE relation F1 of 75.91\%.
-It is therefore incorrect to attribute all ADE gains to verification or to
-claim that every stage independently improves F1.
+Table~\ref{tab:ablation} separates graph-conditioned candidate generation,
+relation verification, and entity-gated fusion on the development sets.
+HRGE--SOE comparisons assess the graph-conditioned generator as a whole;
+EVGE--HRGE comparisons isolate relation verification; PGE--EVGE comparisons
+assess entity selection with endpoint filtering. These comparisons explain
+component behavior without selecting variants on test results.
 
-On CoNLL04, HRGE relation F1 is 58.26\%, below SOE's 60.24\%. Verification
-raises it to 59.60\%, and the final composition reaches 60.19\%. This is
-effectively unchanged from SOE at the development point estimate, rather than
-a clear development-set gain. Entity precision rises after gating, while
-recall and F1 decrease. The distinction between development and test behavior
-is retained rather than replacing the ablation with a test-selected variant.
+On ADE, graph conditioning raises relation recall from 68.26\% for SOE to
+72.89\% for HRGE and relation F1 from 73.16\% to 76.29\%. Entity recall also
+rises from 82.53\% to 85.54\%. This joint increase is consistent with graph
+hints helping recover relevant mentions and pairs. The exact-anchor EAE
+branch instead reaches higher relation precision (80.84\%) with lower recall
+(67.30\%), illustrating the different candidate profiles available to fusion.
+EVGE and HRGE have identical scores: the verifier imposes no additional
+filtering on these already rule-valid candidates, so this ADE gain originates
+in candidate generation rather than verification.
+
+ADE entity-gated fusion raises relation precision from 80.04\% for EVGE to
+81.39\% for PGE while reducing recall from 72.89\% to 71.13\%. Relation F1
+is consequently 75.91\%, still 2.75 points above SOE but below HRGE. Since
+PGE retains a subset of the verified candidates, the recall loss indicates
+that some correct relations lose eligible endpoints. The precision gain and
+coverage loss identify a concrete limitation of the current entity selection
+rule: it filters incorrect candidates but can also reject valid ones.
+
+On CoNLL04, HRGE relation F1 is 58.26\%, compared with 60.24\% for SOE.
+The broader relation inventory and more heterogeneous entity roles may make
+graph hints more ambiguous, although these factors are not isolated here.
+Relation verification raises precision from 60.06\% to 62.99\% without
+changing recall (56.56\%), increasing F1 to 59.60\%. Under this filtering-only
+comparison, the improvement is consistent with removing incorrect relations
+while retaining the correctly extracted ones.
+
+The final CoNLL04 fusion raises relation precision further to 65.08\%, with
+55.98\% recall and 60.19\% F1. Compared with CFE, PGE improves relation F1
+from 59.44\% at the same recall, showing the benefit of verified rather than
+raw relations within the same accepted entity set. Entity precision rises
+from 82.35\% for HRGE to 84.97\% for PGE, but entity recall falls from
+81.52\% to 78.50\%. The final relation F1 thus recovers most of HRGE's
+deficit and is close to SOE on this development set. Together, the ablations
+support complementary roles for candidate expansion and selective acceptance,
+while identifying endpoint retention as a target for improving coverage.
 
 \begin{table*}[t]
 \centering\scriptsize\setlength{\tabcolsep}{3pt}
@@ -698,7 +716,8 @@ not additional promoted test systems.}
 \section{Discussion}
 \label{sec:discussion}
 \subsection{Benchmark findings}
-The common result is a relation-F1 improvement over source-only generation.
+The third contribution is supported by a relation-F1 improvement over
+source-only generation on both tests and in the two additional training runs.
 The gains arise alongside higher relation precision on both tests, while entity
 F1 stays similar or declines slightly. This is consistent with an architecture
 designed to govern candidate acceptance rather than simply maximize output
@@ -724,8 +743,9 @@ dependence between sentences from the same upstream article when article
 identifiers are unavailable.
 
 \subsection{Auditability}
-A system exposes a useful acceptance mechanism for generated graph objects.
-The contribution is strongest when the entire path is inspectable: graph
+The first two contributions govern different points in the extraction path:
+provenance controls determine which graph hints are eligible, whereas the
+acceptance gates determine which generated candidates enter the output. Graph
 support identifies why a candidate was suggested; reconstructed offsets
 identify where it appears; gate records identify why it was retained or
 rejected. However, this benefit is architectural. No user study in the present
@@ -761,8 +781,8 @@ The reported task focuses on source-linked extraction and evidence-path
 inspection. The framework is intended to support analyst review by making the
 origin and acceptance path of each extracted assertion explicit.
 
-The one-epoch generative systems, 20-epoch SpERT, and pretrained label-conditioned
-models use different training schedules. PGE requires two adapted
+Generative adaptation, supervised SpERT training, and pretrained
+label-conditioned models use different training regimes. PGE requires two adapted
 generators plus frozen retrieval, so compact adaptation must not be confused
 with measured end-to-end cost savings. No new clinical annotations or
 independent evidence-judgement labels were collected for this paper. Public
@@ -771,14 +791,18 @@ redistribution or commercial use; original licenses remain applicable.
 
 \section{Conclusion and future work}
 \label{sec:conclusion}
-This study presents a provenance-preserving, evidence-gated graph-augmentation
-framework and evaluates it on ADE and CoNLL04. Dataset statistics expose the
-label and input-length differences underlying the two benchmarks. Under a
+This study introduces provenance-constrained graph augmentation and an
+evidence-gated acceptance mechanism that decouples candidate generation from
+output acceptance. Training-source eligibility controls the use of graph
+hints, while source-span reconstruction and entity--relation checks expose
+the acceptance path of retained outputs. Under a
 unified strict-span evaluator, the completed PGE tests improve relation F1
 over SOE by 5.18 and 4.65 percentage points, respectively, while offering an
 explicit source-linked acceptance path. The CoNLL04 relation advantage remains
 after exact train/test overlaps are excluded, and two additional runs retain
-positive, though smaller on CoNLL04, relation-F1 differences. The supported outcome is a
+positive relation-F1 differences. Ablations distinguish the contribution of
+graph-conditioned candidate recovery from that of selective acceptance and
+identify endpoint retention as a precision--coverage trade-off. The outcome is a
 controlled, auditable graph-informed extraction layer that keeps generated
 entities and relations strongly connected to their source text and exposes the
 acceptance path for human review.

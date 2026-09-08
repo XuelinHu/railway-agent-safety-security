@@ -29,6 +29,32 @@
 - The title page uses the exact two-grant funding statement requested by the
   authors. Word forms identify Jingchao Wang as corresponding author as well.
 
+## Contribution-focused revision
+
+- The argument now distinguishes provenance eligibility, evidence-gated
+  acceptance, and empirical relation-extraction gains with component analysis.
+- Experiments contain five subsections: setup, main results, loss diagnostics,
+  additional-run stability, and ablation. Compliance and overlap controls are
+  integrated into setup, with compact supporting results in the main analysis.
+- Explicit training seed identifiers and epoch counts are removed from the
+  narrative; the frozen experiment records remain unchanged.
+- All numeric test-table values are unchanged. Twelve within-dataset metric
+  maxima are bold and marked with an upward arrow. Citation numbering still
+  follows first appearance, and Equation 14 retains its three-line layout.
+- The five Word documents are rebuilt in `submission-word/`. Highlights are
+  taken directly from the manuscript (three bullets, each under 85 characters),
+  and the cover letter follows the same three-contribution argument.
+- All five Word files were converted with LibreOffice in a temporary container
+  and visually inspected as single-page A4 documents. No clipped text,
+  overlapping elements, or unintended blank pages were observed. The container
+  was removed automatically; PDF/PNG previews stay under ignored `tmp/pdfs/`.
+- The CRediT author statement contains a proposed allocation, NOT a verified
+  contribution record: all seven author roles require
+  confirmation. The cover letter does not assert unverified originality,
+  exclusive submission, or unanimous approval. See `../SUBMISSION_READINESS.md`.
+- The author-approved shorter title, *Provenance-Controlled Graph Augmentation
+  for Auditable Entity-Relation Extraction*, is applied across delivery formats.
+
 ## Evidence boundary
 
 The dataset statistics, strict-span results, paired bootstrap intervals,

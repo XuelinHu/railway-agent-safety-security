@@ -8,15 +8,15 @@
   "documents": {
     "manuscript": {
       "pages": 12,
-      "sha256": "1f7d107302987fd76d2a54aa3804b8cb9c0bfa680cd938ac68a24c47e11a3b2a"
+      "sha256": "ef0ff6cc41717550709c3ee8e33776133a10a2395220040a65d6f9f54b6159b0"
     },
     "title-page": {
       "pages": 1,
-      "sha256": "8fba3ca22f62897d05b78976d264217287ec0a6e2395d30176d944d7e79d1b05"
+      "sha256": "5e43f651dba6047dc58ea997433852ec0cbe415de289b4e8efe48b3a11632eaa"
     },
     "manuscript-zh": {
       "pages": 11,
-      "sha256": "b87246886d10172953338d1a81db0466fe6acf69d321e32e0c83bdcebd070a96"
+      "sha256": "0d03ff942c013a45071e2834d7a589ec33874a4b8dc188551724cf3ac515d760"
     }
   },
   "figure_count": 4,
