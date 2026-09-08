@@ -5,8 +5,8 @@ paper reports **ADE** and **CoNLL04** only.
 
 ## Canonical files used by the manuscript
 
-All files consumed directly by `paper/elsarticle/manuscript.tex` and
-`manuscript-zh.tex` are under [`ade_conll04/`](ade_conll04/):
+All files consumed directly by `paper/cas-dc/manuscript.tex` are under
+[`ade_conll04/`](ade_conll04/):
 
 - `dataset_statistics.tex` and `label_counts.tex`: descriptive dataset tables;
 - `test_results.tex`: the primary held-out comparison table;

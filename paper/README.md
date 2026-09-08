@@ -10,8 +10,8 @@ CoNLL04 is a general-domain structural comparison, not a safety-outcome dataset.
 
 ## Directory map
 
-- `elsarticle/`: English anonymous source, Chinese checking source, author page,
-  bibliography, journal class files, and submission Word documents.
+- `cas-dc/`: CAS double-column anonymous source, author page, bibliography, and
+  journal class files.
 - `figures/`: one authoritative editable method figure and its PDF/PNG/SVG
   exports. `methodology_detailed_draft.drawio` is the sole figure source.
 - `results/ade_conll04/`: source-hashed statistics, common-evaluator scores,
@@ -33,9 +33,8 @@ checkpoints, runtime logs, and full prediction dumps do not belong in `paper/`.
 python3 scripts/build_ade_conll04_paper.py
 # Draw.io needs a working DISPLAY/XAUTHORITY or Xvfb session.
 python3 scripts/export_submission_artwork.py
-cd paper/elsarticle
+cd paper/cas-dc
 latexmk -pdf -interaction=nonstopmode -halt-on-error manuscript.tex
-latexmk -xelatex -interaction=nonstopmode -halt-on-error manuscript-zh.tex
 latexmk -pdf -interaction=nonstopmode -halt-on-error title-page.tex
 cd ../..
 python3 scripts/package_paper_submission.py

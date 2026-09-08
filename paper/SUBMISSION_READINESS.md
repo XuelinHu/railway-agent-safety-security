@@ -12,7 +12,7 @@
 ## 当前交付路径
 
 - 英文匿名稿：`../output/pdf/ade-conll04/manuscript.pdf`
-- 中文核对稿：`../output/pdf/ade-conll04/manuscript-zh.pdf`
+- CAS 双列匿名正文：`../paper/cas-dc/manuscript.pdf`
 - 独立作者页：`../output/pdf/ade-conll04/title-page.pdf`
 - 可编辑审稿源码：`../output/pdf/ade-conll04/review-source.zip`
 - 三张独立编号矢量插图及架构 TIFF：`../output/pdf/ade-conll04/figures/`

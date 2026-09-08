@@ -24,7 +24,7 @@ def run(*args):
 def main():
     OUT.mkdir(parents=True, exist_ok=True)
     TMP.mkdir(parents=True, exist_ok=True)
-    text = (ROOT / "paper/elsarticle/manuscript.tex").read_text()
+    text = (ROOT / "paper/cas-dc/manuscript.tex").read_text()
     paths = re.findall(r"\\includegraphics\[[^]]*\]\{\.\./figures/([^}]+)\}", text)
     for name in paths:
         stem = str(Path(name).with_suffix(''))

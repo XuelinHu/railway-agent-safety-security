@@ -1,14 +1,16 @@
-\documentclass[preprint,12pt]{elsarticle}
+\documentclass[a4paper,fleqn]{cas-dc}
 \usepackage{amsmath,amssymb,array,booktabs,graphicx,lineno,tabularx,xurl}
 \usepackage{hyperref}
 \hypersetup{colorlinks=true,linkcolor=blue,citecolor=blue,urlcolor=blue}
-\biboptions{sort&compress}
 \newcolumntype{Y}{>{\raggedright\arraybackslash}X}
 \setlength{\emergencystretch}{3em}
-\journal{Journal of Safety Science and Resilience}
 \begin{document}
-\begin{frontmatter}
-\title{Provenance-Preserving Evidence-Gated Knowledge-Graph Augmentation for Auditable Entity--Relation Extraction}
+\let\WriteBookmarks\relax
+\def\floatpagepagefraction{1}
+\def\textpagefraction{.001}
+\shorttitle{Evidence-Gated Knowledge-Graph Augmentation}
+\shortauthors{Anonymous Authors}
+\title[mode = title]{Provenance-Preserving Evidence-Gated Knowledge-Graph Augmentation for Auditable Entity--Relation Extraction}
 \author{Anonymous Authors}
 \begin{abstract}
 \textbf{Introduction:} Graph-augmented extraction can retrieve useful
@@ -38,11 +40,16 @@ strongly connected to the original text than outputs produced without these
 constraints, while recording an explicit acceptance path for each assertion,
 without claiming universal accuracy dominance.
 \end{abstract}
-\begin{keyword}
+\begin{keywords}
 entity and relation extraction \sep knowledge graph \sep provenance
 \sep evidence grounding \sep adverse drug effects \sep selective prediction
-\end{keyword}
-\end{frontmatter}
+\end{keywords}
+\begin{highlights}
+\item A provenance-preserving graph-context policy separates candidate generation from output acceptance.
+\item Deterministic gates retain source-linked, type-compatible entity and relation assertions.
+\item Relation-F1 gains persist across ADE, CoNLL04, repeated runs, and overlap sensitivity analysis.
+\end{highlights}
+\maketitle
 \linenumbers
 
 \section{Introduction}
@@ -664,6 +671,6 @@ figure preparation, and manuscript organization. The authors are responsible
 for reviewing the resulting material and for the final content. The language
 models evaluated as research systems are described separately in the Methods.
 
-\bibliographystyle{elsarticle-num}
+\bibliographystyle{cas-model2-names}
 \bibliography{references}
 \end{document}

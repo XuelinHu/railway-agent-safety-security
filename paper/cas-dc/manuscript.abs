@@ -1,0 +1,26 @@
+{Introduction:} Graph-augmented extraction can retrieve useful
+associations, but a retrieved association is not necessarily a fact stated in
+the current sentence. Fluent generators also make it difficult to trace a
+predicted relation to its source span and to audit why it was accepted. This
+gap is consequential when extracted assertions are used in safety-related
+knowledge systems.\\
+\textbf{Methods:} We develop a provenance-preserving, evidence-gated
+framework that separates graph-informed candidate generation from output
+acceptance. A graph derived only from training annotations supplies bounded
+concept and relation hints to QLoRA-adapted Qwen3-4B extractors. Deterministic
+span reconstruction, entity acceptance, and relation verification then retain
+only source-linked, type-compatible assertions. We evaluate the framework on
+ADE and CoNLL04 using a shared strict character-span protocol and report the
+underlying dataset distributions.\\
+\textbf{Results:} The completed test comparisons show that the provenance-gated
+system improves relation F1 over its matched source-only generator on both
+benchmarks and records explicit acceptance decisions. The relation improvement
+is retained in two additional training repetitions on both datasets, although the
+CoNLL04 entity score does not improve, and after exact CoNLL04 train--test text
+overlaps are excluded.\\
+\textbf{Discussion:} The results support controlled graph augmentation as an
+auditable extraction layer for human review. The gates establish structural
+admissibility and source linkage, making extracted entities and relations more
+strongly connected to the original text than outputs produced without these
+constraints, while recording an explicit acceptance path for each assertion,
+without claiming universal accuracy dominance.

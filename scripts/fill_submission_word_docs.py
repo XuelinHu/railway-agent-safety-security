@@ -10,7 +10,7 @@ from docx.shared import Inches, Pt
 
 
 ROOT = Path(__file__).resolve().parents[1]
-OUT = ROOT / "paper" / "elsarticle" / "words"
+OUT = ROOT / "paper" / "cas-dc" / "words"
 TITLE = (
     "Provenance-Preserving Evidence-Gated Knowledge-Graph Augmentation "
     "for Auditable Entity-Relation Extraction"

@@ -12,7 +12,7 @@ OUT = ROOT / "tmp/pdfs/ade-conll04-review"
 
 def main():
     OUT.mkdir(parents=True, exist_ok=True)
-    for stem in ("manuscript", "manuscript-zh", "title-page"):
+    for stem in ("manuscript", "title-page"):
         directory = OUT / stem
         directory.mkdir(exist_ok=True)
         subprocess.run(["pdftoppm", "-scale-to", "1300", "-png",

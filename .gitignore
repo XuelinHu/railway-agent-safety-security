@@ -31,6 +31,7 @@ checkpoints/
 wandb/
 mlruns/
 lightning_logs/
+paper/ref/
 tensorboard/
 events.out.tfevents.*
 *.npy
@@ -60,32 +61,21 @@ Desktop.ini
 .cache/
 
 # LaTeX build products and extracted template documentation
-paper/elsarticle/*
-!paper/elsarticle/elsarticle.cls
-!paper/elsarticle/elsarticle-num.bst
-!paper/elsarticle/manuscript.tex
-!paper/elsarticle/manuscript-zh.tex
-!paper/elsarticle/title-page.tex
-!paper/elsarticle/references.bib
-paper/elsarticle/*.aux
-paper/elsarticle/*.bbl
-paper/elsarticle/*.blg
-paper/elsarticle/*.fdb_latexmk
-paper/elsarticle/*.fls
-paper/elsarticle/*.log
-paper/elsarticle/*.out
-paper/elsarticle/*.pdf
-paper/elsarticle/*.synctex.gz
-paper/elsarticle/*.synctex
-paper/elsarticle/*.xdv
-paper/elsarticle/*.toc
-paper/elsarticle/*.lof
-paper/elsarticle/*.lot
-paper/elsarticle/*.nav
-paper/elsarticle/*.snm
-paper/elsarticle/*.vrb
-paper/elsarticle/*.spl
-paper/elsarticle/missfont.log
+paper/cas-dc/*.aux
+paper/cas-dc/*.bbl
+paper/cas-dc/*.blg
+paper/cas-dc/*.fdb_latexmk
+paper/cas-dc/*.fls
+paper/cas-dc/*.log
+paper/cas-dc/*.out
+paper/cas-dc/*.pdf
+paper/cas-dc/*.synctex.gz
+paper/cas-dc/*.synctex
+paper/cas-dc/*.xdv
+paper/cas-dc/*.toc
+paper/cas-dc/*.lof
+paper/cas-dc/*.lot
+paper/cas-dc/*.spl
 
 # Editor-generated figure and Office backups
 *.drawio.bkp
