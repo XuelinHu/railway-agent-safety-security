@@ -4,7 +4,7 @@ The manuscript uses four figures:
 
 | Purpose | Reproducible source | PDF | PNG | SVG |
 |---|---|---|---|---|
-| Method architecture | `methodology_detailed_draft.drawio` | `methodology_detailed_draft.pdf` | `methodology_detailed_draft.png` | `methodology_detailed_draft.svg` |
+| Method architecture | `methodology.drawio` | `methodology.pdf` | `methodology.png` | `methodology.svg` |
 | Dataset and sentence-length distributions | `../../scripts/build_paper_result_figures.py` | `dataset_distribution.pdf` | `dataset_distribution.png` | -- |
 | Frozen test-result analysis | `../../scripts/build_paper_result_figures.py` | `result_analysis.pdf` | `result_analysis.png` | -- |
 | Audited seed-42 training loss | `../../scripts/extract_paper_training_loss.py`, `../../scripts/build_training_loss_figure.py` | `training_loss.pdf` | `training_loss.png` | -- |

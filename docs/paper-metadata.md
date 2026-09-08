@@ -19,6 +19,7 @@ This file preserves the author information supplied for the planned manuscript. 
 4. Jingchao Wang
 5. Ruishen Liu
 6. Charles Jumaa Katila
+7. Pengming Hu
 
 ## Affiliations and contacts
 
@@ -48,6 +49,8 @@ Zhengzhou 450007, China.
 - Jingchao Wang
   - Corresponding author
   - Email: static@zut.edu.cn
+- Pengming Hu
+  - Email: hupengming@zut.edu.cn
 
 ### School of Artificial Intelligence, Luoyang Normal University
 
@@ -61,6 +64,8 @@ Luoyang 471000, China.
 - Charles Jumaa Katila
   - Email: ckatila@cuk.ac.ke
 
-## Acknowledgement
+## Funding
 
-This work was supported by Science and Technology Research Project of Henan Province (grant no. 262102211055).
+This work was supported by the Science and Technology Research Project of Henan
+Province (grant no. 262102211055) and the Key Scientific Research Project of
+Colleges and Universities in Henan Province (grant no. 27AQ520018).

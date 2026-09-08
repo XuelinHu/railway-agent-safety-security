@@ -26,12 +26,9 @@ data/external/
 tmp/
 .playwright-mcp/
 
-# Generated output is local by default. Keep only the reviewed paper delivery.
-output/*
-!output/pdf/
-output/pdf/*
-!output/pdf/ade-conll04/
-!output/pdf/ade-conll04/**
+# Generated experiment output is always local. Reviewed paper files live under
+# paper/submission/ and are tracked explicitly.
+output/
 
 # Never version large datasets, model weights, or logs, including within a
 # whitelisted delivery directory.
@@ -99,6 +96,21 @@ paper/cas-dc/*.toc
 paper/cas-dc/*.lof
 paper/cas-dc/*.lot
 paper/cas-dc/*.spl
+paper/cas-dc/*.abs
+paper/zh-cn/*.aux
+paper/zh-cn/*.bbl
+paper/zh-cn/*.blg
+paper/zh-cn/*.fdb_latexmk
+paper/zh-cn/*.fls
+paper/zh-cn/*.log
+paper/zh-cn/*.out
+paper/zh-cn/*.synctex.gz
+paper/zh-cn/*.synctex
+paper/zh-cn/*.xdv
+paper/zh-cn/*.toc
+paper/zh-cn/*.lof
+paper/zh-cn/*.lot
+paper/zh-cn/*.pdf
 
 # Editor-generated figure and Office backups
 *.drawio.bkp
@@ -107,13 +119,6 @@ paper/cas-dc/*.spl
 
 # Locally downloaded template bundles
 paper/elsarticle.zip
-
-# Historical paper archives and superseded experiment dumps
-paper/archive/
-paper/results/api_validation_pilot_20260903/
-paper/results/document_level_metrics/
-paper/results/external_baselines_d100/
-paper/results/topk_d100_ablation/
 
 # Superseded multi-figure architecture exports (not referenced by the active manuscript)
 paper/figures/pge_*_submission.*

@@ -1,0 +1,25 @@
+{
+  "datasets": [
+    "ade",
+    "conll04"
+  ],
+  "study_uses_released_test_results": true,
+  "packaging_reads_raw_test_data": false,
+  "documents": {
+    "manuscript": {
+      "pages": 12,
+      "sha256": "1ce2588928b8d38568df846b515f35a4085460caa4e43e0aee032a5bbd104e15"
+    },
+    "title-page": {
+      "pages": 1,
+      "sha256": "8fba3ca22f62897d05b78976d264217287ec0a6e2395d30176d944d7e79d1b05"
+    },
+    "manuscript-zh": {
+      "pages": 11,
+      "sha256": "3a8bad101fdfc5a2f74c00586df50b9bf77854cbdd829006108b99ebf8795cab"
+    }
+  },
+  "figure_count": 4,
+  "table_count": 5,
+  "visual_review_required": true
+}

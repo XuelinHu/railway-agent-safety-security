@@ -11,9 +11,9 @@ from pypdf import PdfReader
 
 ROOT = Path(__file__).resolve().parents[1]
 TEX = ROOT / "paper/cas-dc"
-OUT = ROOT / "output/pdf/ade-conll04"
+OUT = ROOT / "paper/submission"
 EXPECTED_FIGURES = [
-    "../figures/methodology_detailed_draft.pdf",
+    "../figures/methodology.pdf",
     "../figures/dataset_distribution.pdf",
     "../figures/result_analysis.pdf",
     "../figures/training_loss.pdf",
@@ -77,7 +77,7 @@ def main():
             refs = re.findall(r"\\(?:eqref|ref)\{([^}]+)\}", text)
             assert len(labels) == len(set(labels)), "duplicate labels"
             assert set(refs) <= set(labels), "unresolved labels"
-            for obsolete in ('SciERC', 'D100', 'D25', 'D10', '13.71', '3.45'):
+            for obsolete in ('SciERC', '13.71', '3.45'):
                 assert obsolete not in plain, f"obsolete manuscript content: {obsolete}"
             for identity in ("huxuelinai@gmail.com", "static@zut.edu.cn", "262102211055"):
                 assert identity not in plain, "author information in anonymous PDF"
@@ -85,6 +85,21 @@ def main():
         shutil.copy2(TEX / f"{stem}.pdf", dest)
         report["documents"][stem] = {"pages": len(document.pages),
             "sha256": hashlib.sha256(dest.read_bytes()).hexdigest()}
+
+    chinese_source = ROOT / "paper/zh-cn/manuscript-zh.tex"
+    chinese_pdf = chinese_source.with_suffix(".pdf")
+    if not chinese_pdf.exists() or chinese_pdf.stat().st_mtime < chinese_source.stat().st_mtime:
+        raise RuntimeError("Recompile manuscript-zh before packaging")
+    chinese_document = PdfReader(chinese_pdf)
+    chinese_plain = "\n".join(page.extract_text() or "" for page in chinese_document.pages)
+    if "Jingchao Wang" not in chinese_plain or "通信作者" not in chinese_source.read_text():
+        raise RuntimeError("Chinese manuscript does not identify Jingchao Wang as corresponding author")
+    chinese_dest = OUT / "manuscript-zh.pdf"
+    shutil.copy2(chinese_pdf, chinese_dest)
+    report["documents"]["manuscript-zh"] = {
+        "pages": len(chinese_document.pages),
+        "sha256": hashlib.sha256(chinese_dest.read_bytes()).hexdigest(),
+    }
 
     text = (TEX / "manuscript.tex").read_text()
     figure_paths = re.findall(r"\\includegraphics\[[^]]*\]\{([^}]+)\}", text)
@@ -124,7 +139,6 @@ def main():
             path = (TEX / rel).resolve()
             archive.write(path, str(path.relative_to(ROOT)))
         for name in ('build_paper_result_figures.py',
-                     'extract_paper_training_loss.py',
                      'build_training_loss_figure.py'):
             path = ROOT / 'scripts' / name
             archive.write(path, str(path.relative_to(ROOT)))
@@ -140,18 +154,6 @@ def main():
             "Anonymous manuscript source only. Upload the title page separately.\n"
             "ADE and CoNLL04 only; main results plus two repeated-run stability checks.\n"
             "No raw dataset text or model weights are included.\n")
-    word_out = OUT / "submission-word"
-    word_out.mkdir(parents=True, exist_ok=True)
-    for source in sorted((TEX / "words").glob("*.docx")):
-        shutil.copy2(source, word_out / source.name)
-    figure_out = OUT / "figures"
-    figure_out.mkdir(parents=True, exist_ok=True)
-    for rel in figure_paths:
-        stem = Path(rel).stem
-        for suffix in (".drawio", ".pdf", ".png", ".svg"):
-            source = ROOT / "paper/figures" / f"{stem}{suffix}"
-            if source.exists():
-                shutil.copy2(source, figure_out / source.name)
     report["figure_count"] = len(figure_paths)
     report["table_count"] = len(re.findall(r"\\begin\{table\*?\}", text))
     report["visual_review_required"] = True

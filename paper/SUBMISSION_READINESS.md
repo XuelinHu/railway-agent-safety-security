@@ -1,67 +1,35 @@
-# ADE–CoNLL04 全文交付与核对
+# ADE-CoNLL04 submission readiness
 
-## 当前论文范围
+## Current delivery
 
-正文只使用 ADE 与 CoNLL04，采用英文句级实体关系抽取定位。标题、摘要、引言、
-相关工作、数据统计、方法、实验、结果、讨论、局限性和结论均已按此范围重写。
-原有其他语料、低资源文档预算与多语言实验证据未进入当前正文，原始记录没有删除。
+- English anonymous manuscript: `submission/manuscript.pdf`
+- Chinese synchronized manuscript: `submission/manuscript-zh.pdf`
+- Separate author title page: `submission/title-page.pdf`
+- Editable review package: `submission/review-source.zip`
+- Figure captions: `submission/figure-captions.tex`
+- Word submission documents: `submission/submission-word/`
+- Build checks: `submission/submission-build-checks.json`
 
-摘要以问题、方法、主要发现和价值为主，不集中罗列训练参数和结果数字。
-完整数字、外部基线和负向消融仍在正文中，未因缩小范围而删除两套保留数据集上的不利比较。
+The four final figures are maintained once in `figures/`; temporary renderings
+and historical manuscript versions are not retained.
 
-## 当前交付路径
+## Evidence boundary
 
-- 英文匿名稿：`../output/pdf/ade-conll04/manuscript.pdf`
-- CAS 双列匿名正文：`../paper/cas-dc/manuscript.pdf`
-- 独立作者页：`../output/pdf/ade-conll04/title-page.pdf`
-- 可编辑审稿源码：`../output/pdf/ade-conll04/review-source.zip`
-- 三张独立编号矢量插图及架构 TIFF：`../output/pdf/ade-conll04/figures/`
-- 独立英文图注：`../output/pdf/ade-conll04/figure-captions.tex`
-- 机器构建检查：`../output/pdf/ade-conll04/submission-build-checks.json`
+The paper reports ADE and CoNLL04 only. Its main SOE/PGE relation F1 values are
+73.67/78.85% on ADE and 55.37/60.02% on CoNLL04. SpERT remains stronger at
+84.08% and 69.72%. Bootstrap intervals describe fixed-prediction sentence
+sampling, and the two additional repetitions are only a limited stability check.
+The 19 exact CoNLL04 train-test text overlaps are separately excluded in a
+sensitivity analysis; this does not rule out near duplicates or pretraining
+exposure.
 
-## 统计与结果口径
+Both imported benchmarks contain relation-bearing sentences. The results do
+not establish false-positive behavior on unrestricted streams, clinical truth,
+multilingual performance, or long-document performance.
 
-| 数据集 | 训练句 | 验证句 | 测试句 | 实体类型 | 关系类型 |
-| --- | ---: | ---: | ---: | ---: | ---: |
-| ADE | 3461 | 384 | 427 | 2 | 1 |
-| CoNLL04 | 922 | 231 | 288 | 4 | 5 |
+## Author checks before upload
 
-数字对应实际使用的 SpERT 预处理分布，不等于原始来源语料的全部句子。
-ADE 开发集通过固定哈希从提供的训练池划出；本稿不是 ADE 多折评估。
-
-全部正文模型均用 `evaluate_public_validation_spans.py` 重新计分。精确跨度、实体
-类型、有向端点和关系类型共同决定正确性；重复键只计一次。不修改任何预测。
-
-| 已完成测试 | SOE 关系F1 | PGE 关系F1 | SpERT 关系F1 |
-| --- | ---: | ---: | ---: |
-| ADE | 73.67% | 78.85% | 84.08% |
-| CoNLL04 | 55.37% | 60.02% | 69.72% |
-
-与旧摘要中 73.61%、55.24%、59.95% 等数字的小幅差异来自统一去重规则，
-不是重新推理或改变阈值。详情在 `results/ade_conll04/evaluator_reconciliation.json`。
-零样本对照使用原有验证器后的预测，SpERT 与 GLiNER+GLiREL 的已完成对照均保留。
-
-数据分布包括全划分句数、实体数、关系数、句长统计和逐标签计数，正文统一以表格与
-文字概括呈现，不再增加次要分布图。测试区间采用固定预测上的配对句子 bootstrap。
-CoNLL04 的 19 个训练—测试完全重合句另行排除分析，PGE/SOE 关系F1为59.10%/53.79%。
-
-## 需要作者理解并确认的边界
-
-1. 双基准报告范围是在查看结果之后收敛，正文已如实披露；不能声称是预注册的
-   全领域代表性抽样，也不声称只曾尝试过这两套数据。
-2. 两次追加运行作为单独的有限稳定性表报告，不与主表混算。句子 bootstrap 不代表
-   训练初始化稳定性，$n=2$样本标准差也不能
-   解释为可靠总体方差。
-3. SpERT 总体F1仍更高；本文贡献是受控图谱增强与可审计接受路径，不是全面SOTA。
-4. 两套导入数据均为含关系句；不据此主张开放文本流上的低误报或临床因果有效性。
-5. 句级证据共现较容易满足；本次结果不支持“无支持率从非零降为零”的结论。
-6. 投稿Word附件已与当前标题、作者、机构、摘要和期刊同步；缺失的通讯电话、
-   CRediT角色、全体作者批准和竞争利益确认仍须作者最终补充，不代填未知信息。
-7. 数据与模型许可、匿名代码发布、期刊范围、特刊入口与APC在实际投稿时再次核对。
-
-## 保存与复现
-
-旧稿保存在 `archive/pre-ade-conll04-20260907/`，旧PDF在
-`../output/pdf/archive/pre-ade-conll04-20260907/`。原始实验、检查点与Draw.io未删除。
-复现命令见本目录README。修改期间没有启动训练、付费API或新的模型推理，也没有
-停止其他实验服务。本次只读取已经开放的ADE/CoNLL04测试结果并派生论文分析。
+Jingchao Wang is the corresponding author. The authors must still confirm the
+telephone number, complete postal data, author order, CRediT roles, competing
+interests, journal scope, special-issue entry, licenses, and APC before formal
+submission.

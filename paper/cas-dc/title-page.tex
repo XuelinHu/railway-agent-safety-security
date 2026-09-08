@@ -1,65 +1,55 @@
-\documentclass[a4paper,fleqn]{cas-dc}
-
-\setlength{\parskip}{0pt}
-\hypersetup{hidelinks}
+\documentclass[11pt,a4paper]{article}
+\usepackage[left=2.2cm,right=2.2cm,top=2cm,bottom=2cm]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage{newtxtext}
+\usepackage{xurl}
+\usepackage[hidelinks]{hyperref}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{5pt}
 
 \begin{document}
+\thispagestyle{empty}
 
-\let\WriteBookmarks\relax
-\shorttitle{Evidence-Gated Knowledge-Graph Augmentation}
-\shortauthors{Hu et al.}
-\title{Provenance-Preserving Evidence-Gated Knowledge-Graph Augmentation for Auditable Entity--Relation Extraction}
+\begin{center}
+{\LARGE\bfseries Provenance-Preserving Evidence-Gated Knowledge-Graph\\
+Augmentation for Auditable Entity--Relation Extraction\par}
+\vspace{1.2em}
+{\large
+Xuelin Hu$^{1}$, Xiaoqin Fu$^{1}$, Youjing Fu$^{2}$,
+Jingchao Wang$^{3,*}$,\\
+Ruishen Liu$^{4}$, Charles Jumaa Katila$^{5}$, and Pengming Hu$^{3}$\par}
+\vspace{1em}
+\end{center}
 
-\author[aff1]{Xuelin Hu}
-\ead{huxuelinai@gmail.com}
-\ead{huxl@ltzy.edu.cn}
+\begin{flushleft}\small
+$^{1}$Liuzhou Railway Vocational Technical College, No. 2 Wenyuan Road,
+Yufeng District, Liuzhou 545000, Guangxi Zhuang Autonomous Region, China.\\
+$^{2}$College of Earth and Environmental Sciences, Lanzhou University,
+Lanzhou 730000, China.\\
+$^{3}$School of Computer Science, Zhongyuan University of Technology,
+Zhengzhou 450007, China.\\
+$^{4}$School of Artificial Intelligence, Luoyang Normal University,
+Luoyang 471000, China.\\
+$^{5}$School of Computing and Mathematics, The Co-operative University of Kenya,
+Kenya.
+\end{flushleft}
 
-\author[aff1]{Xiaoqin Fu}
-\ead{xiaoqin.fu@qq.com}
-\ead{fuxiaoqin@ltzy.edu.cn}
+\section*{Corresponding author}
+\textbf{Jingchao Wang}\quad
+School of Computer Science, Zhongyuan University of Technology,
+Zhengzhou 450007, China.\quad
+Email: \href{mailto:static@zut.edu.cn}{static@zut.edu.cn}.
 
-\author[aff2]{Youjing Fu}
-\ead{fuyj2025@lzu.edu.cn}
-
-\author[aff3]{Jingchao Wang\corref{cor1}}
-\ead{static@zut.edu.cn}
-\cortext[cor1]{Corresponding author}
-
-\author[aff4]{Ruishen Liu}
-\ead{liuruishen@lynu.edu.cn}
-
-\author[aff5]{Charles Jumaa Katila}
-\ead{ckatila@cuk.ac.ke}
-
-\author[aff3]{Pengming Hu}
-\ead{hupengming@zut.edu.cn}
-
-\affiliation[aff1]{organization={Liuzhou Railway Vocational Technical College},
-  addressline={No. 2 Wenyuan Road, Yufeng District},
-  city={Liuzhou},
-  postcode={545000},
-  state={Guangxi Zhuang Autonomous Region},
-  country={China}}
-
-\affiliation[aff2]{organization={College of Earth and Environmental Sciences, Lanzhou University},
-  city={Lanzhou},
-  postcode={730000},
-  country={China}}
-
-\affiliation[aff3]{organization={School of Computer Science, Zhongyuan University of Technology},
-  city={Zhengzhou},
-  postcode={450007},
-  country={China}}
-
-\affiliation[aff4]{organization={School of Artificial Intelligence, Luoyang Normal University},
-  city={Luoyang},
-  postcode={471000},
-  country={China}}
-
-\affiliation[aff5]{organization={School of Computing and Mathematics, The Co-operative University of Kenya},
-  country={Kenya}}
-
-\maketitle
+\section*{Author email addresses}
+Xuelin Hu: \href{mailto:huxuelinai@gmail.com}{huxuelinai@gmail.com};
+\href{mailto:huxl@ltzy.edu.cn}{huxl@ltzy.edu.cn}.\\
+Xiaoqin Fu: \href{mailto:xiaoqin.fu@qq.com}{xiaoqin.fu@qq.com};
+\href{mailto:fuxiaoqin@ltzy.edu.cn}{fuxiaoqin@ltzy.edu.cn}.\\
+Youjing Fu: \href{mailto:fuyj2025@lzu.edu.cn}{fuyj2025@lzu.edu.cn}.\\
+Jingchao Wang: \href{mailto:static@zut.edu.cn}{static@zut.edu.cn}.\\
+Ruishen Liu: \href{mailto:liuruishen@lynu.edu.cn}{liuruishen@lynu.edu.cn}.\\
+Charles Jumaa Katila: \href{mailto:ckatila@cuk.ac.ke}{ckatila@cuk.ac.ke}.\\
+Pengming Hu: \href{mailto:hupengming@zut.edu.cn}{hupengming@zut.edu.cn}.
 
 \section*{ORCID identifiers}
 Xuelin Hu: \href{https://orcid.org/0000-0002-4475-3034}{0000-0002-4475-3034}.\\
@@ -68,13 +58,7 @@ Youjing Fu: \href{https://orcid.org/0009-0004-1369-7879}{0009-0004-1369-7879}.
 
 \section*{Funding}
 This work was supported by the Science and Technology Research Project of
-Henan Province (grant no. 262102211055). The funder had no role in study design,
-data collection and analysis, decision to publish, or preparation of the
-manuscript. This work was also funded by the Key Scientific Research Project
+Henan Province (grant no. 262102211055) and the Key Scientific Research Project
 of Colleges and Universities in Henan Province (grant no. 27AQ520018).
-
-% Before submission, add the corresponding-author telephone number and confirm
-% the complete postal address, author order, CRediT roles, and competing
-% interests in Editorial Manager. These details must not be invented in draft.
 
 \end{document}

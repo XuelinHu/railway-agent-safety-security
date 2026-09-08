@@ -12,13 +12,13 @@ OUT = ROOT / "tmp/pdfs/ade-conll04-review"
 
 def main():
     OUT.mkdir(parents=True, exist_ok=True)
-    for stem in ("manuscript", "title-page"):
+    for stem in ("manuscript", "manuscript-zh", "title-page"):
         directory = OUT / stem
         directory.mkdir(exist_ok=True)
         subprocess.run(["pdftoppm", "-scale-to", "1300", "-png",
-                        str(ROOT / "output/pdf/ade-conll04" / f"{stem}.pdf"),
+                        str(ROOT / "paper/submission" / f"{stem}.pdf"),
                         str(directory / "page")], check=True)
-        page_count = len(PdfReader(ROOT / "output/pdf/ade-conll04" / f"{stem}.pdf").pages)
+        page_count = len(PdfReader(ROOT / "paper/submission" / f"{stem}.pdf").pages)
         pages = sorted(p for p in directory.glob("page-*.png")
                        if int(p.stem.split("-")[-1]) <= page_count)
         assert len(pages) == page_count
