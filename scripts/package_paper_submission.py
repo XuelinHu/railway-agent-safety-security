@@ -57,7 +57,7 @@ def main():
               "packaging_reads_raw_test_data": False, "documents": {}}
     for stem, target in (("manuscript", "manuscript"),
                          ("title-page", "title-page")):
-        log = (TEX / f"{stem}.log").read_text()
+        log = (TEX / f"{stem}.log").read_text(errors="replace")
         source = TEX / f"{stem}.tex"
         source_text = source.read_text()
         reject_layout_overflows(log, source_text, stem)
@@ -117,7 +117,7 @@ def main():
     with zipfile.ZipFile(OUT / "review-source.zip", "w",
                          compression=zipfile.ZIP_DEFLATED) as archive:
         for name in ("manuscript.tex", "manuscript.bbl",
-                     "cas-dc.cls", "cas-common.sty", "cas-model2-names.bst"):
+                     "cas-dc.cls", "cas-common.sty"):
             archive.write(TEX / name, f"paper/cas-dc/{name}")
         cited = {key.strip() for group in re.findall(r"\\cite\w*\{([^}]+)\}",text)
                  for key in group.split(',')}

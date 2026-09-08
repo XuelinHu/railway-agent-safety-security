@@ -8,7 +8,7 @@
   "documents": {
     "manuscript": {
       "pages": 12,
-      "sha256": "1ce2588928b8d38568df846b515f35a4085460caa4e43e0aee032a5bbd104e15"
+      "sha256": "d015132fcc103c5b2a60f61e372261e3cb6cf6028e1c02e16c21e19aa9a7461f"
     },
     "title-page": {
       "pages": 1,
@@ -16,7 +16,7 @@
     },
     "manuscript-zh": {
       "pages": 11,
-      "sha256": "3a8bad101fdfc5a2f74c00586df50b9bf77854cbdd829006108b99ebf8795cab"
+      "sha256": "8f3c4a446d16a730970b3bf91863857a83e8c8045834db6d52152689f44ff885"
     }
   },
   "figure_count": 4,

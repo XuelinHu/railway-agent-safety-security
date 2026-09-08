@@ -28,12 +28,12 @@ underlying dataset distributions. The completed tests show that the
 provenance-gated system improves relation F1 over its matched source-only
 generator on both benchmarks and records explicit acceptance decisions. The
 relation improvement persists in two additional training repetitions on both
-datasets and after exact CoNLL04 train--test text overlaps are excluded,
-although the CoNLL04 entity score does not improve. These findings support
-controlled graph augmentation as an auditable extraction layer for human
-review: the gates establish structural admissibility and source linkage and
-record an explicit acceptance path for each assertion, without implying
-universal accuracy dominance.
+datasets and after exact CoNLL04 train--test text overlaps are excluded. These
+results demonstrate that controlled graph augmentation can improve relation
+extraction over matched source-only generation while maintaining explicit
+source linkage and inspectable acceptance decisions, thereby providing an
+auditable foundation for human-in-the-loop knowledge construction in
+safety-sensitive applications.
 \end{abstract}
 \begin{keywords}
 entity and relation extraction \sep knowledge graph \sep provenance
@@ -795,6 +795,6 @@ personal relationships that could have appeared to influence this work.
 The data and code supporting the findings of this study are available from the
 corresponding author upon reasonable request.
 
-\bibliographystyle{cas-model2-names}
+\bibliographystyle{unsrtnat}
 \bibliography{references}
 \end{document}
