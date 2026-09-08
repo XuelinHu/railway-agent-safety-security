@@ -88,9 +88,12 @@ structural and source-evidence requirements. A complementary entity gate uses
 agreement, source-matched anchors, or verified relation endpoints to accept a
 subset of the graph-conditioned candidates. The final system combines the
 accepted entities with verified relations whose endpoints survive. The
-architecture uses existing representation and adaptation methods; its
-contribution is their governed composition, not a new backbone or a new
-optimization algorithm.
+architecture uses existing representation and adaptation methods, but
+introduces a provenance-constrained augmentation--acceptance protocol: graph
+records may influence candidate generation, yet only source-supported and
+type-compatible candidates can become assertions. This separates the
+authority of retrieved context from acceptance semantics and makes both
+decisions independently inspectable.
 
 This paper concentrates on ADE~\cite{gurulingappa2012ade} and
 CoNLL04~\cite{roth2004conll}. ADE supplies a drug-safety-related extraction
@@ -103,15 +106,16 @@ cross-dataset zero-shot transfer experiment.
 
 The contributions are threefold:
 \begin{itemize}
-\item A provenance-aware graph-context policy that uses only training
-annotations, excludes candidates supported only by the current example, and
-clears graph hints for exact train/evaluation text overlaps.
-\item A deterministic composition of source-span reconstruction, entity
-selection, and relation verification that retains evidence-linked assertions
-and records the reasons behind output decisions.
-\item A reproducible two-benchmark analysis that combines split and label
-statistics, uniform strict-span scoring, validation ablations, completed test
-comparisons, and an exact-overlap sensitivity analysis.
+\item A provenance-constrained augmentation policy that separates graph
+eligibility from candidate generation, uses training annotations only, excludes
+current-example-only support, and clears graph hints for exact split overlaps.
+\item An explicit assertion semantics that converts generated candidates into
+auditable outputs through source-span reconstruction, typed endpoint checks,
+and deterministic evidence gates, while recording acceptance or rejection
+reasons.
+\item A reproducible two-benchmark evaluation that tests the protocol under
+matched source-only comparisons, repeated runs, paired uncertainty, rule
+compliance, ablations, and exact-overlap sensitivity.
 \end{itemize}
 
 \section{Related work}
@@ -301,8 +305,8 @@ denominator. These experiments do not use annotation-guided rescue windows or
 label-dependent sentence truncation.
 
 \subsection{QLoRA adaptation and training objective}
-All three generators use one-epoch QLoRA adaptation of the same frozen
-Qwen3-4B backbone. Low-rank updates are applied to the attention and
+All three generators use the same frozen Qwen3-4B backbone and a matched
+QLoRA adaptation configuration. Low-rank updates are applied to the attention
 feed-forward projections. For an adapted projection $\ell$, QLoRA parameterizes
 the effective weight as
 \begin{equation}
