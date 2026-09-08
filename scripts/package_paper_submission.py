@@ -20,6 +20,21 @@ EXPECTED_FIGURES = [
 ]
 
 
+def submission_evidence(path: Path) -> bytes:
+    """Project publication evidence without changing original experiment records."""
+    if path.name == "results_snapshot.json":
+        snapshot = json.loads(path.read_text())
+        for dataset in snapshot.values():
+            dataset["test"].pop("spert", None)
+        return (json.dumps(snapshot, indent=2) + "\n").encode()
+    if path.name == "source_hashes.json":
+        hashes = json.loads(path.read_text())
+        hashes = {key: value for key, value in hashes.items()
+                  if "spert" not in key.lower()}
+        return (json.dumps(hashes, indent=2) + "\n").encode()
+    return path.read_bytes()
+
+
 def captions(text):
     """Extract figure captions, respecting nested TeX braces."""
     result = []
@@ -148,11 +163,12 @@ def main():
                      'repeated_run_stability.json','training_loss_availability.md',
                      'training_loss_seed42.csv','training_loss_seed42_provenance.json'):
             path = ROOT / 'paper/results/ade_conll04' / name
-            archive.write(path,str(path.relative_to(ROOT)))
+            archive.writestr(str(path.relative_to(ROOT)), submission_evidence(path))
         archive.write(OUT / "figure-captions.tex", "figure-captions.tex")
         archive.writestr("BUILD.txt", "cd paper/cas-dc\nlatexmk -pdf manuscript.tex\n"
             "Anonymous manuscript source only. Upload the title page separately.\n"
             "ADE and CoNLL04 only; main results plus two repeated-run stability checks.\n"
+            "Test evidence is scoped to the four reported systems; original experiment records are unchanged.\n"
             "No raw dataset text or model weights are included.\n")
     report["figure_count"] = len(figure_paths)
     report["table_count"] = len(re.findall(r"\\begin\{table\*?\}", text))

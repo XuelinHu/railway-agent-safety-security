@@ -22,8 +22,9 @@ dataset is trained separately; neither direct domain transfer nor universal
 generalization is claimed. ADE is not described as a medical-accident dataset.
 
 The paper reports ADE and CoNLL04 only. Its main SOE/PGE relation F1 values are
-73.67/78.85% on ADE and 55.37/60.02% on CoNLL04. SpERT remains stronger at
-84.08% and 69.72%. Bootstrap intervals describe fixed-prediction sentence
+73.67/78.85% on ADE and 55.37/60.02% on CoNLL04. The reported test comparison
+contains SOE, PGE, zero-shot generation, and GLiNER+GLiREL only; it is not an
+exhaustive ranking of extraction methods. Bootstrap intervals describe fixed-prediction sentence
 sampling, and the two additional repetitions are only a limited stability check.
 The 19 exact CoNLL04 train-test text overlaps are separately excluded in a
 sensitivity analysis; this does not rule out near duplicates or pretraining

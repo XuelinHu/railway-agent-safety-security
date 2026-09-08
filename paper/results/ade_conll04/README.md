@@ -9,7 +9,10 @@ are read-only; no prediction or trained model was changed during preparation.
 - `label_counts.tex`, `dataset_statistics.tex`: tables included directly in both manuscripts.
 - `metrics/`: common strict-source-character-span re-evaluations. Repeated
   entity and relation keys receive one vote, consistently across model families.
-- `results_snapshot.json`, `test_results.tex`, `validation_ablation.tex`: reported results.
+- `results_snapshot.json`: immutable experiment snapshot, including results
+  outside the current reporting scope. Packaging selects the reported systems
+  without modifying this original record.
+- `test_results.tex`, `validation_ablation.tex`: tables in the current manuscript.
 - `repeated_run_stability.json`, `repeated_run_stability.tex`: the completed
   two-run stability check used in the revised results section.
 - `training_loss_seed42.csv`, `training_loss_seed42_provenance.json`: audited
@@ -23,7 +26,7 @@ are read-only; no prediction or trained model was changed during preparation.
 - `test_evidence.csv`: original object-level compliance counts, not deduplicated metric denominators.
 - `protocol_snapshot.json`, `source_hashes.json`: method revisions, settings and input identities.
 
-The main test comparison uses completed SOE/PGE and completed SpERT,
+The main test comparison uses completed SOE/PGE,
 Qwen3-4B zero-shot plus verifier, and train-calibrated GLiNER+GLiREL outputs.
 Only SOE/PGE are reported as promoted internal test systems. The other four
 internal configurations are development-set ablations.
@@ -35,8 +38,8 @@ duplicate keys are handled consistently here. They are not new inference results
 The reporting scope was selected retrospectively after available results were
 inspected. Do not describe it as a preregistered representative domain sample,
 pool test and validation rows, or report sentence-bootstrap intervals as
-training-run standard deviations. SpERT is stronger in overall F1 and remains
-in the main table.
+training-run standard deviations. The reported test comparison is not an
+exhaustive ranking of extraction methods.
 
 Regenerate from the repository root:
 

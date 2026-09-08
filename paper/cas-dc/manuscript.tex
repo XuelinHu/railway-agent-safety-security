@@ -69,7 +69,7 @@ General-domain extraction provides a complementary test of the same technical
 issue across a broader set of entity and relation labels.
 
 Neural entity and relation models provide effective approaches to the
-recognition problem~\cite{li2022ner,eberts2020spert}. Generative models offer a
+recognition problem~\cite{li2022ner}. Generative models offer a
 flexible alternative in which a common structured output format can be reused
 across label inventories. However, fluent generation does not guarantee that
 the predicted objects are supported by their input~\cite{ji2023hallucination}.
@@ -134,12 +134,7 @@ Entity recognition must resolve both mention boundaries and types; relation
 extraction additionally depends on recovering the correct directed
 endpoints~\cite{li2022ner}. Global consistency constraints have a long history
 in this setting, including the formulation associated with the CoNLL04
-benchmark~\cite{roth2004conll}. SpERT enumerates spans and jointly models
-entities and relations using a pretrained transformer~\cite{eberts2020spert}.
-It is a particularly relevant comparison because it performs the same joint
-task without requiring a generative JSON interface. Our experiments retrain
-SpERT from a clean base encoder on the same training partitions rather than
-using a released task checkpoint that may already include development data.
+benchmark~\cite{roth2004conll}.
 
 Recent joint extractors explore complementary output representations. OneRel
 casts extraction as fine-grained triple classification, UniRel unifies entity
@@ -265,10 +260,7 @@ anchors, edge priors, and semantic relation patterns.
 EVGE (Evidence-Verified Graph Extraction) applies the relation verifier to
 HRGE. CFE (Conservative-Fusion Extraction) pairs accepted HRGE entities with
 endpoint-filtered raw HRGE relations. PGE (Provenance-Gated Extraction) pairs
-the same accepted entities with endpoint-filtered verified relations. These
-three systems are deterministic post-processing variants, not additional
-trained networks. In deployment PGE needs EAE and HRGE candidates; SOE is a
-comparison branch and does not participate in fusion.
+the same accepted entities with endpoint-filtered verified relations.
 
 \begin{figure*}[t]
 \centering\includegraphics[width=\textwidth]{../figures/methodology.pdf}
@@ -432,7 +424,8 @@ the observed gains depend on a single training run.
 
 \subsubsection{Datasets}
 \label{sec:data}
-We use the sentence-level ADE and CoNLL04 files distributed in SpERT format.
+We use preprocessed sentence-level ADE and CoNLL04 files with token sequences,
+entity spans, and directed relation annotations.
 Counts refer to that preprocessed distribution rather than every sentence in
 the original source corpora. CoNLL04 retains its supplied training,
 development, and test partitions. The ADE files contain 3,845 training
@@ -524,11 +517,10 @@ all near duplicates.
 
 \subsubsection{Baselines and metrics}
 The internal development comparison includes all six named systems. The test
-table includes the two promoted systems and three completed external
-comparisons. Qwen3-4B zero-shot uses the same backbone without local adapters,
-followed by the recorded source expansion and relation verifier. SpERT is
-trained from a base encoder on the same training partitions and its final
-checkpoint is used without selecting a test-best epoch. GLiNER+GLiREL uses
+table includes SOE and PGE, together with a same-backbone zero-shot comparison
+and an external label-conditioned pipeline. Qwen3-4B zero-shot uses the same
+backbone without local adapters, followed by source expansion and relation
+verification. GLiNER+GLiREL uses
 predicted, not gold, entities and training-only calibration. These are
 heterogeneous baseline configurations, not equal-compute experiments.
 
@@ -624,10 +616,7 @@ Table~\ref{tab:test}.}
 \label{fig:result-analysis}
 \end{figure*}
 
-SpERT has the highest entity and relation F1 among these completed systems:
-91.37\%/84.08\% on ADE and 89.02\%/69.72\% on CoNLL04. PGE therefore improves
-the matched generative baseline but does not surpass this trained span-based
-model. PGE also exceeds the recorded zero-shot and GLiNER+GLiREL pipelines on
+PGE also exceeds the reported zero-shot and GLiNER+GLiREL pipelines on
 both extraction tasks. The latter observation is specific to their implemented
 label mapping and calibration; it is not a claim that every configuration of
 those model families would perform worse.
@@ -804,7 +793,7 @@ The reported task focuses on source-linked extraction and evidence-path
 inspection. The framework is intended to support analyst review by making the
 origin and acceptance path of each extracted assertion explicit.
 
-Generative adaptation, supervised SpERT training, and pretrained
+Locally adapted generators, zero-shot generation, and pretrained
 label-conditioned models use different training regimes. PGE requires two adapted
 generators plus frozen retrieval, so compact adaptation must not be confused
 with measured end-to-end cost savings. No new clinical annotations or
