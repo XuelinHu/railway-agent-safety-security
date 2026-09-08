@@ -31,6 +31,11 @@
 
 ## Contribution-focused revision
 
+- Discussion is condensed into exactly three prose paragraphs without
+  subsections: relation-extraction benefits, distribution-informed component
+  interpretation, and auditability for medical-text review. Limitations are
+  summarized briefly, and the duplicated licensing statement is removed.
+
 - Abstracts, introductions, experimental setup, conclusions, and the cover
   letter position ADE as the primary medical drug--adverse-effect benchmark
   and CoNLL04 as a supplementary general-domain evaluation. Dataset-specific

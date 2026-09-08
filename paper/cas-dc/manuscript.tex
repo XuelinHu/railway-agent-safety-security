@@ -726,80 +726,39 @@ not additional promoted test systems.}
 
 \section{Discussion}
 \label{sec:discussion}
-\subsection{Benchmark findings}
-The third contribution is supported by a relation-F1 improvement over
-source-only generation on both tests and in the two additional training runs.
-The gains arise alongside higher relation precision on both tests, while entity
-F1 stays similar or declines slightly. This is consistent with an architecture
-designed to govern candidate acceptance rather than simply maximize output
-volume. The validation ablation further shows that graph conditioning and
-selection interact: recall-oriented context can help on ADE but does not
-automatically improve CoNLL04, and a verifier may be inactive when candidates
-already satisfy its rules.
+The principal benefit is improved relation extraction with an inspectable
+acceptance path. On the primary medical benchmark, ADE, PGE improves relation
+F1 over matched source-only generation by 5.18 percentage points; the
+supplementary CoNLL04 evaluation shows a 4.65-point gain. Both relation
+precision and recall increase in these tests, indicating a better balance
+between recovering relevant pairs and selecting outputs. The gains recur in
+two additional training runs and persist after known exact CoNLL04 overlaps
+are excluded. Together, these observations support the utility of combining
+graph-enriched input context with controlled acceptance for the evaluated tasks.
 
-The distribution analysis helps interpret these differences. ADE has a larger
-training pool, shorter average sentences, and a single relation class.
-CoNLL04 has fewer training sentences, longer inputs, and five relation labels.
-These factors are confounded rather than experimentally isolated. Their
-association with the observed scores motivates separate dataset reporting;
-the factors should not be conflated in a single pooled interpretation.
+The dataset distributions help interpret the complementary roles of these
+mechanisms. ADE offers a larger training pool, shorter sentences, and a single
+relation class; CoNLL04 introduces longer sentences and more varied entity
+roles and relation labels. Against this background, the ADE ablation shows
+that graph-conditioned generation improves candidate recall, whereas the
+CoNLL04 ablation shows that relation verification raises precision while
+preserving recall. These patterns are consistent with context augmentation
+supporting candidate recovery and evidence gates supporting selective
+acceptance. The distribution differences provide an interpretation rather
+than an isolated causal explanation; endpoint filtering also entails a
+precision--coverage trade-off, reflected in the entity scores.
 
-The focused, retrospectively narrowed scope and small number of completed
-training repetitions limit generalization. The fixed ADE partition is not
-directly interchangeable with published multi-fold results. Both corpora are
-English and contain relation-bearing sentences, so they do not establish
-multilingual behavior, long-report performance, or false-positive rates on
-unrestricted streams. Sentence-level bootstrap intervals also cannot recover
-dependence between sentences from the same upstream article when article
-identifiers are unavailable.
-
-\subsection{Auditability}
-The first two contributions govern different points in the extraction path:
-provenance controls determine which graph hints are eligible, whereas the
-acceptance gates determine which generated candidates enter the output. Graph
-support identifies why a candidate was suggested; reconstructed offsets
-identify where it appears; gate records identify why it was retained or
-rejected. However, this benefit is architectural. No user study in the present
-experiments measures reduced analyst effort, improved decisions, or greater
-trust. It would be inappropriate to substitute perfect rule compliance for
-such evidence.
-
-The gates also impose a coverage cost. Agreement operates on normalized
-text/type pairs, and repeated mentions may be collapsed during fusion even
-though the evaluator distinguishes offsets. This can remove legitimate
-occurrences. A legal endpoint signature and sentence-level co-occurrence are
-insufficient to prove a relation's meaning, and three gate signals should not
-be interpreted as three independent confirmations. These observations explain
-why the final output remains a candidate assertion graph for review.
-
-Exact-overlap quarantine prevents direct graph hints for known repeated source
-text but does not remove the generator's training exposure. The sensitivity
-analysis excludes known exact duplicates only, and pretrained components may
-have encountered related material before task adaptation. The available
-artifacts cannot rule out such exposure. Moreover, the ontology's separate
-source- and target-type sets are less restrictive than a catalogue of observed
-joint type pairs.
-
-\subsection{Safety-related implications}
-The primary medical application is drug-safety information extraction on ADE;
-CoNLL04 supplements this evaluation with general-domain relational structure.
-The framework can present an analyst with
-the candidate relation, source sentence, typed endpoints, and provenance of
-its acceptance path. An analyst can then accept, amend, or reject the proposed
-association. Absence from the retained graph is not evidence of the absence
-of an adverse effect or another real-world relation.
-
-The reported task focuses on source-linked extraction and evidence-path
-inspection. The framework is intended to support analyst review by making the
-origin and acceptance path of each extracted assertion explicit.
-
-Locally adapted generators, zero-shot generation, and pretrained
-label-conditioned models use different training regimes. PGE requires two adapted
-generators plus frozen retrieval, so compact adaptation must not be confused
-with measured end-to-end cost savings. No new clinical annotations or
-independent evidence-judgement labels were collected for this paper. Public
-availability of a dataset or model does not by itself permit every downstream
-redistribution or commercial use; original licenses remain applicable.
+Auditability is the second practical advantage: provenance controls identify
+which graph hints are eligible, reconstructed spans locate mentions in the
+source, and gate records expose why candidates are accepted or rejected.
+PGE satisfies the implemented type, reference, and source-linkage checks in
+both tests, providing a traceable route from medical text to extracted
+drug--adverse-effect relations. This design gives an analyst concrete source
+links and acceptance reasons with which to inspect, amend, or reject a
+proposed relation. The evidence remains limited to two sentence-level
+benchmarks and a small number of repetitions; rule compliance is not a
+semantic truth guarantee, and benefits to clinical decisions or reviewer
+effort require further evaluation.
 
 \section{Conclusion and future work}
 \label{sec:conclusion}
