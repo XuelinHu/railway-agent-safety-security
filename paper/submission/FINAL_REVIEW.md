@@ -31,6 +31,11 @@
 
 ## Contribution-focused revision
 
+- Abstracts, introductions, experimental setup, conclusions, and the cover
+  letter position ADE as the primary medical drug--adverse-effect benchmark
+  and CoNLL04 as a supplementary general-domain evaluation. Dataset-specific
+  training is stated explicitly; no direct cross-domain transfer is claimed.
+
 - The argument now distinguishes provenance eligibility, evidence-gated
   acceptance, and empirical relation-extraction gains with component analysis.
 - Experiments contain five subsections: setup, main results, loss diagnostics,

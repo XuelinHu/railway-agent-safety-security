@@ -15,6 +15,12 @@ and historical manuscript versions are not retained.
 
 ## Evidence boundary
 
+The primary application is drug--adverse-effect extraction from medical text,
+evaluated on ADE. CoNLL04 is a supplementary general-domain benchmark for
+applicability under different entity roles and relation structures. Each
+dataset is trained separately; neither direct domain transfer nor universal
+generalization is claimed. ADE is not described as a medical-accident dataset.
+
 The paper reports ADE and CoNLL04 only. Its main SOE/PGE relation F1 values are
 73.67/78.85% on ADE and 55.37/60.02% on CoNLL04. SpERT remains stronger at
 84.08% and 69.72%. Bootstrap intervals describe fixed-prediction sentence

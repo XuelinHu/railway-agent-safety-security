@@ -14,6 +14,7 @@
 \title[mode = title]{Provenance-Controlled Graph Augmentation for Auditable Entity--Relation Extraction}
 \author{Anonymous Authors}
 \begin{abstract}
+Drug--adverse-effect extraction from medical text requires traceable relations.
 Graph-augmented extraction can retrieve useful associations, but a retrieved
 association is not necessarily a fact stated in the current sentence, and
 fluent generators make it difficult to trace a predicted relation to its source
@@ -22,9 +23,10 @@ evidence-gated framework that separates graph-informed candidate generation
 from output acceptance. A graph derived only from training annotations supplies
 bounded concept and relation hints to QLoRA-adapted Qwen3-4B extractors;
 deterministic span reconstruction, entity acceptance, and relation verification
-then retain only source-linked, type-compatible assertions. Evaluation on ADE
-and CoNLL04 uses a shared strict character-span protocol and reports the
-underlying dataset distributions. The completed tests show that the
+then retain only source-linked, type-compatible assertions. ADE serves as the
+primary medical benchmark, with CoNLL04 providing a supplementary general-domain
+evaluation under separate training and a shared strict character-span protocol.
+The completed tests show that the
 provenance-gated system improves relation F1 over its matched source-only
 generator on both benchmarks and records explicit acceptance decisions. The
 relation improvement persists in two additional training repetitions on both
@@ -56,7 +58,8 @@ entities, typed relations, and downstream knowledge systems. In applications
 related to safety, an extracted association must also be inspectable: users
 need to know which mention was identified, which sentence supported the
 relation, and which transformations produced the final assertion. Drug-related
-adverse-effect extraction illustrates this requirement directly. A model that
+adverse-effect extraction from medical text is the primary application in this
+study. A model that
 recognizes a drug and an adverse effect but invents an association between them
 can create a misleading record even when its output is syntactically valid.
 General-domain extraction provides a complementary test of the same technical
@@ -95,11 +98,12 @@ source-linkage and type checks before entering the output. This separates the
 authority of retrieved context from acceptance semantics and makes both
 decisions independently inspectable.
 
-This paper concentrates on ADE~\cite{gurulingappa2012ade} and
-CoNLL04~\cite{roth2004conll}. ADE supplies a drug-safety-related extraction
-task with two entity labels and one relation label. CoNLL04 supplies a
-general-domain control with four entity labels and five directed relation
-labels. Both use English sentence-level inputs, making it possible to examine
+ADE~\cite{gurulingappa2012ade} is the primary medical benchmark, addressing
+drug--adverse-effect extraction with two entity labels and one relation label.
+CoNLL04~\cite{roth2004conll} provides a supplementary general-domain evaluation
+with four entity labels and five directed relation labels, testing applicability
+beyond the medical task under different entity roles and relation structures.
+Both use English sentence-level inputs, making it possible to examine
 the extraction and verification mechanisms without importing a long-document
 windowing problem. They are trained and evaluated separately; this is not a
 cross-dataset zero-shot transfer experiment.
@@ -113,7 +117,8 @@ current-example-only support, and clears graph hints for exact split overlaps.
 output acceptance, combining source-span reconstruction, entity selection,
 relation verification, and endpoint consistency with inspectable decisions.
 \item Empirical evidence of relation-extraction gains over matched source-only
-generation on two benchmarks, retained across two additional training runs and
+generation on the primary medical and supplementary general-domain benchmarks,
+retained across two additional training runs and
 exact-overlap exclusion, together with ablations that characterize how graph
 context and acceptance gates affect precision and recall.
 \end{itemize}
@@ -402,6 +407,11 @@ examine acceptance rules, and matched comparisons and ablations examine
 relation-extraction gains and component effects.
 
 \subsection{Experimental setup}
+ADE evaluates the primary medical application; CoNLL04 tests the same method
+in a supplementary general-domain setting. Each dataset has its own training
+graph and adapted generators. This design examines applicability across two
+domains under local adaptation, not direct transfer of a medically trained
+model to general-domain text.
 The experiments compare PGE with its matched source-only generator under a
 common strict-span protocol and examine component effects, training behavior,
 run-to-run stability, and exact-overlap sensitivity. The two-benchmark scope is
@@ -770,8 +780,9 @@ source- and target-type sets are less restrictive than a catalogue of observed
 joint type pairs.
 
 \subsection{Safety-related implications}
-ADE links the experiments to drug-safety information extraction, while CoNLL04
-tests general relational structure. The framework can present an analyst with
+The primary medical application is drug-safety information extraction on ADE;
+CoNLL04 supplements this evaluation with general-domain relational structure.
+The framework can present an analyst with
 the candidate relation, source sentence, typed endpoints, and provenance of
 its acceptance path. An analyst can then accept, amend, or reject the proposed
 association. Absence from the retained graph is not evidence of the absence
@@ -792,12 +803,14 @@ redistribution or commercial use; original licenses remain applicable.
 \section{Conclusion and future work}
 \label{sec:conclusion}
 This study introduces provenance-constrained graph augmentation and an
-evidence-gated acceptance mechanism that decouples candidate generation from
-output acceptance. Training-source eligibility controls the use of graph
+evidence-gated acceptance mechanism for auditable drug--adverse-effect
+extraction from medical text, with a supplementary general-domain evaluation.
+The mechanism decouples candidate generation from output acceptance.
+Training-source eligibility controls the use of graph
 hints, while source-span reconstruction and entity--relation checks expose
 the acceptance path of retained outputs. Under a
 unified strict-span evaluator, the completed PGE tests improve relation F1
-over SOE by 5.18 and 4.65 percentage points, respectively, while offering an
+over SOE by 5.18 percentage points on ADE and 4.65 points on CoNLL04, while offering an
 explicit source-linked acceptance path. The CoNLL04 relation advantage remains
 after exact train/test overlaps are excluded, and two additional runs retain
 positive relation-F1 differences. Ablations distinguish the contribution of

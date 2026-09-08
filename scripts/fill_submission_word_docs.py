@@ -171,9 +171,12 @@ def cover_letter() -> None:
         "precision and coverage effects of deterministic acceptance."
     )
     document.add_paragraph(
-        "The connection to safety science is the construction of inspectable knowledge "
-        "from source text: ADE provides a drug-safety-related extraction task, while "
-        "CoNLL04 tests general relational structure. The framework exposes source links "
+        "The primary application is drug-adverse-effect extraction from medical text, "
+        "evaluated on ADE. CoNLL04 provides a supplementary general-domain benchmark "
+        "to examine applicability under different entity roles and relation structures. "
+        "The datasets are trained separately; this is not a direct cross-domain transfer "
+        "experiment. The connection to safety science is inspectable knowledge "
+        "construction for drug-safety-related information. The framework exposes source links "
         "and acceptance decisions for analyst review. The study evaluates extraction and "
         "rule compliance, not clinical truth or measured downstream safety outcomes."
     )
