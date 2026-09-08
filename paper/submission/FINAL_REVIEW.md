@@ -57,8 +57,10 @@
   contribution record: all seven author roles require
   confirmation. The cover letter does not assert unverified originality,
   exclusive submission, or unanimous approval. See `../SUBMISSION_READINESS.md`.
-- The author-approved shorter title, *Provenance-Controlled Graph Augmentation
-  for Auditable Entity-Relation Extraction*, is applied across delivery formats.
+- The author-approved title, *Provenance-Controlled Graph Context Augmentation
+  for Auditable Drug-Adverse Effect Relation Extraction*, is applied across
+  delivery formats. Abstracts and contributions explicitly locate augmentation
+  in the generator's input context and distinguish it from output acceptance.
 
 ## Evidence boundary
 

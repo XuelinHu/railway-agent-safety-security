@@ -9,21 +9,24 @@
 \let\WriteBookmarks\relax
 \def\floatpagepagefraction{1}
 \def\textpagefraction{.001}
-\shorttitle{Evidence-Gated Knowledge-Graph Augmentation}
+\shorttitle{Provenance-Controlled Graph Context Augmentation}
 \shortauthors{Anonymous Authors}
-\title[mode = title]{Provenance-Controlled Graph Augmentation for Auditable Entity--Relation Extraction}
+\title[mode = title]{Provenance-Controlled Graph Context Augmentation for Auditable Drug--Adverse Effect Relation Extraction}
 \author{Anonymous Authors}
 \begin{abstract}
 Drug--adverse-effect extraction from medical text requires traceable relations.
 Graph-augmented extraction can retrieve useful associations, but a retrieved
 association is not necessarily a fact stated in the current sentence, and
 fluent generators make it difficult to trace a predicted relation to its source
-span and audit why it was accepted. We develop a provenance-preserving,
-evidence-gated framework that separates graph-informed candidate generation
-from output acceptance. A graph derived only from training annotations supplies
-bounded concept and relation hints to QLoRA-adapted Qwen3-4B extractors;
-deterministic span reconstruction, entity acceptance, and relation verification
-then retain only source-linked, type-compatible assertions. ADE serves as the
+span and audit why it was accepted. We propose provenance-controlled graph
+context augmentation: a training-only knowledge graph supplies concept hints,
+source-matched anchors, relation priors, and retrieved semantic relation
+patterns to QLoRA-adapted Qwen3-4B extractors, supplementing source text and
+the label ontology. Provenance rules exclude current-example-only support
+and clear graph hints for exact split overlaps. A separate evidence-gated
+acceptance mechanism reconstructs source spans and checks entity acceptance,
+relation types, and endpoint consistency to retain source-linked outputs.
+ADE serves as the
 primary medical benchmark, with CoNLL04 providing a supplementary general-domain
 evaluation under separate training and a shared strict character-span protocol.
 The completed tests show that the
@@ -31,7 +34,7 @@ provenance-gated system improves relation F1 over its matched source-only
 generator on both benchmarks and records explicit acceptance decisions. The
 relation improvement persists in two additional training repetitions on both
 datasets and after exact CoNLL04 train--test text overlaps are excluded. These
-results demonstrate that controlled graph augmentation can improve relation
+results demonstrate that controlled graph context augmentation can improve relation
 extraction over matched source-only generation while maintaining explicit
 source linkage and inspectable acceptance decisions, thereby providing an
 auditable foundation for human-in-the-loop knowledge construction in
@@ -42,7 +45,7 @@ entity and relation extraction \sep knowledge graph \sep provenance
 \sep evidence grounding
 \end{keywords}
 \begin{highlights}
-\item Provenance controls restrict graph hints to eligible training-derived context.
+\item Provenance-controlled graph context augments source text with eligible hints.
 \item Evidence gates separate candidate generation from source-linked output acceptance.
 \item Relation-F1 gains recur on ADE and CoNLL04 across runs and overlap exclusion.
 \end{highlights}
@@ -110,9 +113,10 @@ cross-dataset zero-shot transfer experiment.
 
 The contributions are threefold:
 \begin{itemize}
-\item A provenance-constrained augmentation policy that separates graph
-eligibility from candidate generation, uses training annotations only, excludes
-current-example-only support, and clears graph hints for exact split overlaps.
+\item Provenance-controlled graph context augmentation that supplements source
+text and the label ontology with training-derived concept hints, source-matched
+anchors, relation priors, and semantic relation patterns. Eligibility rules
+exclude current-example-only support and clear graph hints for exact split overlaps.
 \item An evidence-gated acceptance mechanism that decouples generation from
 output acceptance, combining source-span reconstruction, entity selection,
 relation verification, and endpoint consistency with inspectable decisions.
@@ -245,6 +249,12 @@ each evaluated relation tied to a concrete source sentence and makes the
 evidence path available for inspection.
 
 \subsection{Framework overview}
+Augmentation operates on the generator's input context, not on the backbone
+architecture: graph-derived hints supplement the source text and label ontology
+used by the source-only baseline. Provenance controls determine which hints
+are eligible; evidence gates subsequently determine which generated candidates
+are retained. QLoRA provides the shared adaptation method rather than the
+proposed augmentation mechanism.
 Figure~\ref{fig:architecture} summarizes the implemented flow. SOE
 (Source-Only Extraction), EAE (Exact-Anchor Extraction), and HRGE (High-Recall
 Graph Extraction) are separately trained QLoRA adapters on the same Qwen3-4B
@@ -671,6 +681,8 @@ column is the mean PGE-minus-SOE relation-F1 difference.}
 \end{table*}
 
 \subsection{Ablation study}
+The ablations assess graph-conditioned generation and subsequent acceptance
+stages; they do not independently isolate the contribution of each hint channel.
 Table~\ref{tab:ablation} separates graph-conditioned candidate generation,
 relation verification, and entity-gated fusion on the development sets.
 HRGE--SOE comparisons assess the graph-conditioned generator as a whole;
@@ -802,7 +814,7 @@ redistribution or commercial use; original licenses remain applicable.
 
 \section{Conclusion and future work}
 \label{sec:conclusion}
-This study introduces provenance-constrained graph augmentation and an
+This study introduces provenance-controlled graph context augmentation and an
 evidence-gated acceptance mechanism for auditable drug--adverse-effect
 extraction from medical text, with a supplementary general-domain evaluation.
 The mechanism decouples candidate generation from output acceptance.

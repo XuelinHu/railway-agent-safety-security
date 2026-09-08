@@ -61,9 +61,11 @@ competing-interests statement already used in the manuscript.
 The following shorter title is applied consistently to the manuscript, title
 page, and Word documents following the author's approval:
 
-*Provenance-Controlled Graph Augmentation for Auditable Entity-Relation Extraction*
+*Provenance-Controlled Graph Context Augmentation for Auditable Drug-Adverse Effect Relation Extraction*
 
-Chinese: 面向可审计实体—关系抽取的来源受控图谱增强。
+Chinese: 面向可审计药物—不良反应关系抽取的来源受控图谱上下文增强。
 
-This preserves provenance control, auditability, and the extraction task while
-leaving the evidence-gating mechanism to the abstract and method sections.
+The title identifies the medical relation-extraction task and locates
+augmentation in the generator's input context. Provenance controls determine
+hint eligibility; evidence gates determine output acceptance. The ablations
+evaluate generation and acceptance stages, not each hint channel independently.

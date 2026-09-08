@@ -1,7 +1,7 @@
 # ADE and CoNLL04 manuscript
 
-The current manuscript is titled *Provenance-Controlled Graph Augmentation
-for Auditable Entity-Relation Extraction* and is
+The current manuscript is titled *Provenance-Controlled Graph Context Augmentation
+for Auditable Drug-Adverse Effect Relation Extraction* and is
 prepared for double-blind review at the *Journal of Safety Science and
 Resilience*.
 ADE is the primary medical benchmark for drug--adverse-effect extraction;
