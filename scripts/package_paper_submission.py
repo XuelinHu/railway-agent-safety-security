@@ -13,8 +13,8 @@ ROOT = Path(__file__).resolve().parents[1]
 TEX = ROOT / "paper/cas-dc"
 OUT = ROOT / "output/pdf/ade-conll04"
 EXPECTED_FIGURES = [
-    "../figures/dataset_distribution.pdf",
     "../figures/methodology_detailed_draft.pdf",
+    "../figures/dataset_distribution.pdf",
     "../figures/result_analysis.pdf",
     "../figures/training_loss.pdf",
 ]

@@ -1,34 +1,33 @@
-# ADE–CoNLL04 全文检查（2026-09-08）
+# ADE-CoNLL04 final review (2026-09-08)
 
-## 版本
+## Delivery
 
-- 英文：20页，SHA-256 `1681ed8430ebd0b029646b5ea536d50060ae042aaa40c546059f68d98ff6af35`
-- 中文：15页，SHA-256 `c75c1119624790b69d7ba5055546c3efa4b56d2662442532bc06b4d1c1f60f5c`
-- 作者页：1页；标题与英文稿一致。
+- Anonymous manuscript: 12 PDF pages, comprising a separate Highlights sheet
+  and 11 numbered double-column manuscript pages.
+- Title page: one page, with a title matching the anonymous manuscript.
+- Source package: anonymized LaTeX, cited bibliography entries, generated
+  tables, result evidence, figure sources, and build scripts.
 
-## 完成检查
+## Checks completed
 
-- 中英文全文、独立作者页编译通过；可编辑包在新临时目录解压并独立编译通过。
-- 1张主方法图、5张表、6个公式与14条引用；图表公式均被正文引用，无重复或未解析标签。
-- 无Overfull版面警告；中文只保留CJK斜体字形回退提示，没有缺字或黑块。
-- 主方法图页、主测试表、两种子稳定性表、中文对应页和作者页已逐页渲染复核。
-- 主方法图只来自`methodology_detailed_draft.drawio`，并提供PDF、PNG和SVG导出。
-- 主动扫描正文，未残留被移出数据集、旧D10/D25/D100结果和旧低资源指标。
-- 数据统计和所有主表模型用共同严格跨度评估器生成；重复计数差异可追踪至
-  `../../../paper/results/ade_conll04/evaluator_reconciliation.json`。
-- 源码包只携带实际引用的BibTeX条目，不附无关参考文献或作者页；匿名PDF不含
-  所检查的作者邮箱与资助编号。
+- The manuscript and title page compile successfully with embedded fonts and
+  no unresolved citations, references, or labels.
+- All 4 figures, 5 tables, 14 numbered equation environments, and 14 cited
+  references are present and referenced from the text.
+- The only reported overfull box is the known empty CAS highlights-sheet
+  container at `maketitle`; rendered pages show no visible overflow, clipping,
+  overlap, missing glyphs, or black boxes.
+- Figure 2 dataset-distribution panel titles and Figure 3 result-analysis panel
+  titles were checked at manuscript size and no longer overlap their plots or
+  neighboring panels.
+- The anonymous manuscript contains no checked author emails, identifiers, or
+  funding numbers. Author-identifying material remains in the separate title
+  page.
+- The dataset statistics, strict-span results, bootstrap intervals, overlap
+  sensitivity, repeated-run summary, ablation table, and seed-42 loss traces
+  remain linked to their tracked CSV/JSON provenance artifacts.
+- The review-source archive contains no raw dataset text or model weights.
 
-本次只读取已完成、已开放的ADE/CoNLL04预测进行计分、统计和敏感性分析。
-没有训练、推理、阈值调优、删除原始数据、提交期刊或推送仓库。
-
-## 研究与作者确认边界
-
-两基准范围是在已有结果可见后收敛，正文已披露这一点；该稿不能宣称覆盖全部
-尝试领域或全面优于SpERT。外部基线主表为seed 42，种子2026与3407作为独立有限
-稳定性检查；bootstrap区间是句级抽样区间。投稿Word附件已同步，但利益冲突、
-资助方角色、CRediT、通讯电话及投稿许可仍须作者确认。
-完整说明见`../../../paper/SUBMISSION_READINESS.md`。
-
-旧稿与原始实验均保留。PDF旧版位于`../archive/pre-ade-conll04-20260907/`，
-旧LaTeX位于`../../../paper/archive/pre-ade-conll04-20260907/`。
+This revision reorganized the paper, regenerated figures, and repackaged
+existing completed results. It did not launch new training, inference, or
+test-set tuning.

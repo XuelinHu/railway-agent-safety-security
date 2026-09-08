@@ -114,10 +114,6 @@ and records the reasons behind output decisions.
 statistics, uniform strict-span scoring, validation ablations, completed test
 comparisons, and an exact-overlap sensitivity analysis.
 \end{itemize}
-The intended contribution is an auditable extraction layer for analyst-facing
-knowledge systems. Its primary advantage is to preserve the connection between
-each extracted assertion and its supporting source text through explicit,
-inspectable acceptance rules.
 
 \section{Related work}
 \label{sec:related}
@@ -171,111 +167,16 @@ constraints.
 
 \section{Method}
 \label{sec:materials-methods}
-\subsection{Datasets and data preparation}
-\label{sec:data}
-\subsubsection{Benchmark sources and partitions}
-We use the sentence-level ADE and CoNLL04 files distributed in SpERT format.
-Counts refer to that preprocessed distribution rather than every sentence in
-the original source corpora.
-CoNLL04 retains its supplied training, development, and test partitions. The
-ADE files contain 3,845 training sentences and 427 test sentences; a
-deterministic development slice of 384 sentences is removed from the supplied
-training pool, leaving 3,461 training sentences. The slice is selected by a
-fixed identifier-based procedure, not by validation performance. This is one
-fixed ADE split, not an average over the multiple folds sometimes used in the
-literature.
-
-Table~\ref{tab:data} gives counts recomputed from the exact imported artifacts.
-The unit called a document in the software is one benchmark sentence, not a
-whole medical case report or news article. Both datasets are English; the
-results therefore support neither multilingual nor cross-lingual claims.
-Published annotations are imported rather than locally re-annotated.
-
-\begin{table*}[t]
-\centering\small\setlength{\tabcolsep}{4pt}
-\caption{Dataset inventory for the exact experimental partitions. Length is
-the number of whitespace-delimited tokens in the reconstructed source text.}
-\label{tab:data}
-\input{../results/ade_conll04/dataset_statistics.tex}
-\end{table*}
-
-\subsubsection{Entity and relation distributions}
-ADE contains \textsc{Drug} and \textsc{Adverse Effect} entities and a single
-\textsc{Adverse Effect} relation label. The imported endpoint convention is
-\emph{adverse effect to drug}; we preserve it rather than reversing it to a
-more intuitive drug-to-effect direction. CoNLL04 contains \textsc{Location},
-\textsc{Organization}, \textsc{Person}, and \textsc{Other} entities, with
-\textsc{Work For}, \textsc{Kill}, \textsc{Organization Based In},
-\textsc{Live In}, and \textsc{Located In} relations.
-
-The training-label distributions are summarized in the accompanying tables, and
-Table~\ref{tab:labels} lists exact label counts for every partition.
-The single ADE relation label eliminates inter-class relation confusion but
-does not eliminate endpoint detection, direction, or false-pair errors.
-CoNLL04 introduces a broader relation inventory and more heterogeneous entity
-roles. Consequently, a higher aggregate F1 on ADE should not be interpreted as
-evidence that drug-safety reasoning is inherently easier than general-domain
-reasoning; the supervised extraction tasks differ in structure and size.
-
-\begin{table*}[t]
-\centering\small\setlength{\tabcolsep}{4pt}
-\caption{Exact entity and relation annotation counts in the imported files.}
-\label{tab:labels}
-\input{../results/ade_conll04/label_counts.tex}
-\end{table*}
-
-\subsubsection{Sentence lengths and coverage}
-The mean training lengths are 21.17 reconstructed tokens for ADE and 28.77 for
-CoNLL04. Their test means are 21.24 and 28.94, respectively. The cumulative
-distributions describe all three partitions rather
-than only the training set. These lengths are descriptive whitespace-token
-counts, not Qwen tokenizer counts. The largest observed reconstructed length
-is 97 for ADE and 118 for CoNLL04 across the imported partitions.
-
-Every imported sentence contains at least one annotated relation. This is an
-important property of the selected benchmark files: they do not measure
-false-positive behavior over a deployment stream dominated by sentences with
-no relevant relations. We retain the supplied benchmark composition and do
-not create additional negative sentences for the reported tests.
-
-Figure~\ref{fig:data-distribution} visualizes the complementary distributional
-evidence. Panel (a) reports training-label proportions within the entity or
-relation inventory, rather than raw counts, so that class imbalance remains
-comparable across the differently sized datasets. Panel (b) shows empirical
-cumulative sentence-length distributions for every partition. CoNLL04 is
-consistently shifted toward longer sentences, whereas the train, validation,
-and test curves within each dataset remain broadly aligned.
-
-\begin{figure*}[t]
-\centering
-\includegraphics[width=\textwidth]{../figures/dataset_distribution.pdf}
-\caption{Dataset distribution analysis. (a) Training-label composition within
-each dataset's entity (E) or relation (R) inventory. Percentages sum to 100\%
-separately within each dataset--kind combination. (b) Empirical cumulative
-distributions of reconstructed sentence length for the train, validation, and
-test partitions. Length is measured in whitespace-delimited tokens.}
-\label{fig:data-distribution}
-\end{figure*}
-
-\subsubsection{Split overlap and graph-context isolation}
-The graph is built separately for each dataset from its training annotations
-only. An exact-overlap check compares case-folded source strings after
-collapsing whitespace. ADE has no train/development or train/test exact-text
-overlap under this check. CoNLL04 has 14 development sentences and 19 test
-sentences whose text matches training content. For these sentences, both
-exact-anchor and high-recall graph context are cleared before generation.
-
-Clearing graph hints does not undo exposure of the trained generator to
-duplicate training text. We therefore retain the supplied partitions for the
-main comparison and report an additional fixed-prediction test analysis that
-excludes the 19 overlapping CoNLL04 test sentences. We do not claim that the
-benchmark is duplicate-cluster isolated or that this exact-match check detects
-all near duplicates.
-
-\subsection{Task formulation and source-grounded representation}
+\subsection{Task formulation}
 \label{sec:method}
-Let a sentence $x$ be the deterministic single-space concatenation of its
-released tokens. An entity mention is represented as
+Let the annotated corpus be
+\begin{equation}
+\mathcal D=\{(x_i,\mathcal E_i,\mathcal R_i)\}_{i=1}^{N},
+\label{eq:dataset}
+\end{equation}
+where $x_i$ is the deterministic single-space concatenation of the released
+tokens, $\mathcal E_i$ is its entity set, and $\mathcal R_i$ is its directed
+relation set. An entity mention is represented as
 \begin{equation}
 e=(b,u,y),\qquad x[b:u]=m,
 \label{eq:entity}
@@ -286,6 +187,17 @@ and relation label $z$. Source identifiers and evidence spans are stored with
 these objects. Repeated strings at different offsets remain distinct mentions.
 The character-span requirement in Equation~\eqref{eq:entity} prevents a
 normalized name alone from receiving credit for the wrong occurrence.
+
+For a bounded graph context $\mathcal C_i$, the extraction task is
+\begin{equation}
+f_{\theta}(x_i,\mathcal C_i)
+=\bigl(\widehat{\mathcal E}_i,\widehat{\mathcal R}_i\bigr),
+\label{eq:task}
+\end{equation}
+where both predicted sets must be reconstructed against $x_i$ before they can
+be scored or accepted. Setting $\mathcal C_i=\varnothing$ recovers the
+source-only input condition; nonempty context remains advisory and does not
+bypass the evidence gates.
 
 The imported benchmark assigns every relation the status \texttt{explicit}
 and uses its source sentence as the evidence span. This representation keeps
@@ -327,6 +239,19 @@ support statistics are not recomputed as a fully leave-one-out graph. This
 distinction prevents interpreting the provenance policy as complete removal
 of every contribution from the current example.
 
+Formally, let $\mathcal G_{\rm tr}=(\mathcal V_{\rm tr},\mathcal A_{\rm tr})$
+be the graph constructed from training annotations and let $\pi(c)$ denote the
+set of training-sentence identifiers supporting a context item $c$. During
+adapter training, the provenance-eligible pool for current training item $i$ is
+\begin{equation}
+\mathcal C_i^{\rm elig}
+=\{c\in\mathcal C_i^{\rm raw}:\pi(c)\setminus\{i\}\neq\varnothing\}.
+\label{eq:provenance-eligible}
+\end{equation}
+Evaluation identifiers are disjoint from training identifiers. Exact source-text
+overlap is handled separately by the quarantine rule below, which clears the
+entire context rather than treating duplicated text as independent evidence.
+
 EAE uses type-balanced, exact-matching concept hints. HRGE uses three context
 channels. First, source-matched anchors must pass type-purity and mention-form
 filters. Second, a typed edge prior requires support outside the current
@@ -346,7 +271,7 @@ objects as hints. Exact-overlap
 quarantine overrides retrieval and clears all graph context for the affected
 evaluation sentences.
 
-\subsection{Compact generation, reconstruction, and training}
+\subsection{Structured generation and span reconstruction}
 The generator emits entity identifiers, copied text and types, plus relation
 identifiers, directed endpoint references, types, and explicit status. It is
 not asked to calculate source offsets. Deterministic expansion assigns copied
@@ -354,37 +279,65 @@ mentions to occurrences in the supplied sentence and reconstructs character
 spans; unmatched strings and invalid references are recorded. This separates
 language-model candidate generation from source-coordinate bookkeeping.
 
-All three generators use one-epoch QLoRA adaptation of the same frozen
-Qwen3-4B backbone. Low-rank updates are applied to the attention and
-feed-forward projections, while prompt tokens are excluded from the training
-loss. The same dataset partition and optimization configuration are used for
-all branches and repetitions; full settings are retained in the artifact
-manifest rather than repeated in the narrative.
-
 Inference uses the full supplied sentence and a fixed generation policy.
 Failed jobs are represented by empty predictions, not removed from the
-denominator. These experiments do not use
-annotation-guided rescue windows or label-dependent sentence truncation.
+denominator. These experiments do not use annotation-guided rescue windows or
+label-dependent sentence truncation.
 
-\subsection{Relation verification and entity acceptance}
+\subsection{QLoRA adaptation and training objective}
+All three generators use one-epoch QLoRA adaptation of the same frozen
+Qwen3-4B backbone. Low-rank updates are applied to the attention and
+feed-forward projections. For an adapted projection $\ell$, QLoRA parameterizes
+the effective weight as
+\begin{equation}
+W_{\ell}=W_{\ell}^{(0)}+\frac{\alpha}{r}B_{\ell}A_{\ell},
+\qquad \operatorname{rank}(B_{\ell}A_{\ell})\leq r,
+\label{eq:qlora}
+\end{equation}
+where $W_{\ell}^{(0)}$ is the frozen quantized weight, $r$ is the adapter rank,
+and $A_{\ell}$ and $B_{\ell}$ are the trainable low-rank factors.
+
+Let $y_{1:T}$ denote the serialized target and let $\omega_t$ equal one for a
+target token and zero for a prompt token. The optimized objective is
+\begin{equation}
+\mathcal L(\theta)
+=-\frac{1}{\sum_{t=1}^{T}\omega_t}
+\sum_{t=1}^{T}\omega_t
+\log p_{\theta}(y_t\mid y_{<t},x,\mathcal C).
+\label{eq:training-objective}
+\end{equation}
+Thus prompt tokens are excluded from the loss. The same dataset partition and
+optimization configuration are used for all branches and repetitions; full
+settings are retained in the artifact manifest rather than repeated in the
+narrative.
+
+\subsection{Provenance-aware candidate validation and fusion}
 For each relation label $z$, training annotations define permitted source-type
 and target-type sets $S_z$ and $T_z$. The implemented type constraint is
 $y_s\in S_z$ and $y_t\in T_z$; it does not additionally require that every
-specific source/target type pair has been observed together. The verifier
-$V(r)$ also requires existing distinct entity references, a known relation
-label, explicit status, valid evidence, and both endpoint strings in a common
-source-evidence span. Its accepted set is
+specific source/target type pair has been observed together. With component
+checks for valid references, label, endpoint types, explicit status, and source
+evidence, the relation predicate is
+\begin{equation}
+V(r)=V_{\rm ref}(r)\land V_{\rm label}(r)\land V_{\rm type}(r)
+\land V_{\rm status}(r)\land V_{\rm evidence}(r).
+\label{eq:verifier-predicate}
+\end{equation}
+Here $V_{\rm evidence}$ requires valid evidence and both endpoint strings in a
+common source-evidence span. The accepted relation set is
 \begin{equation}
 R_V=\{r\in R_H:V(r)=1\}.
 \label{eq:verifier}
 \end{equation}
 The entity gate uses three Boolean signals:
 \begin{equation}
-\begin{aligned}
-A(e)&=A_{\rm agree}(e)\lor A_{\rm anchor}(e)\lor A_{\rm endpoint}(e),\\
-E_A&=\{e\in E_H:A(e)=1\}.
-\end{aligned}
+ A(e)=A_{\rm agree}(e)\lor A_{\rm anchor}(e)\lor A_{\rm endpoint}(e).
 \label{eq:accept}
+\end{equation}
+The corresponding accepted entity set is
+\begin{equation}
+E_A=\{e\in E_H:A(e)=1\}.
+\label{eq:accepted-entities}
 \end{equation}
 Agreement means that EAE predicts the same case-folded, whitespace-normalized
 text and type. Anchor support requires a same-type source-gated HRGE anchor.
@@ -392,10 +345,13 @@ Endpoint support means that the entity participates in a relation retained by
 Equation~\eqref{eq:verifier}. The three signals in Equation~\eqref{eq:accept}
 are complementary but not statistically independent; verified endpoints are
 a rule-based signal, not a second human judgement. Duplicate normalized
-text/type candidates are collapsed within the sentence.
-
-Let $F(R,E)$ retain relations in $R$ only when both referenced entities survive
-in $E$. The two compositions are
+text/type candidates are collapsed within the sentence. Relations are retained
+only when both referenced entities survive:
+\begin{equation}
+F(R,E)=\{(e_s,z,e_t)\in R:e_s\in E\land e_t\in E\}.
+\label{eq:endpoint-filter}
+\end{equation}
+The two output compositions are
 \begin{equation}
 G_{\rm CFE}=(E_A,F(R_H,E_A)),\qquad
 G_{\rm PGE}=(E_A,F(R_V,E_A)).
@@ -413,20 +369,107 @@ held-out comparison, and then examines training behavior, stability,
 component effects, compliance, and split-overlap sensitivity.
 
 \subsection{Experimental setup}
-\paragraph{Research questions and scope.}
-We ask whether PGE improves strict entity and relation extraction over SOE;
-how graph context and deterministic selection contribute on development data;
-and whether observed gains persist after exact-overlap sentences are removed.
-External baselines provide a direct reference for the generative design and
-help separate source-linkage gains from changes in the underlying extractor.
+The experiments compare PGE with its matched source-only generator under a
+common strict-span protocol and examine component effects, training behavior,
+run-to-run stability, and exact-overlap sensitivity. The two-benchmark scope is
+a focused retrospective analysis rather than a preregistered representative
+sample of extraction domains. Model and gate settings were fixed before the
+reported test evaluation, and two additional complete repetitions provide a
+limited stability check.
 
-The two-benchmark scope is a focused retrospective analysis rather than a
-preregistered representative sample of extraction domains. Model and gate
-settings were fixed before the reported test evaluation. Two additional
-complete repetitions provide a limited stability check for SOE and PGE on the
-same datasets.
+\subsubsection{Datasets}
+\label{sec:data}
+We use the sentence-level ADE and CoNLL04 files distributed in SpERT format.
+Counts refer to that preprocessed distribution rather than every sentence in
+the original source corpora. CoNLL04 retains its supplied training,
+development, and test partitions. The ADE files contain 3,845 training
+sentences and 427 test sentences; a deterministic development slice of 384
+sentences is removed from the supplied training pool, leaving 3,461 training
+sentences. The slice is selected by a fixed identifier-based procedure, not by
+validation performance. This is one fixed ADE split, not an average over the
+multiple folds sometimes used in the literature.
 
-\paragraph{Baselines and metrics.}
+Table~\ref{tab:data} gives counts recomputed from the exact imported artifacts.
+The unit called a document in the software is one benchmark sentence, not a
+whole medical case report or news article. Both datasets are English; the
+results therefore support neither multilingual nor cross-lingual claims.
+Published annotations are imported rather than locally re-annotated.
+
+\begin{table*}[t]
+\centering\small\setlength{\tabcolsep}{4pt}
+\caption{Dataset inventory for the exact experimental partitions. Length is
+the number of whitespace-delimited tokens in the reconstructed source text.}
+\label{tab:data}
+\input{../results/ade_conll04/dataset_statistics.tex}
+\end{table*}
+
+ADE contains \textsc{Drug} and \textsc{Adverse Effect} entities and a single
+\textsc{Adverse Effect} relation label. The imported endpoint convention is
+\emph{adverse effect to drug}; we preserve it rather than reversing it to a
+more intuitive drug-to-effect direction. CoNLL04 contains \textsc{Location},
+\textsc{Organization}, \textsc{Person}, and \textsc{Other} entities, with
+\textsc{Work For}, \textsc{Kill}, \textsc{Organization Based In},
+\textsc{Live In}, and \textsc{Located In} relations.
+
+Table~\ref{tab:labels} lists exact label counts for every partition. The single
+ADE relation label eliminates inter-class relation confusion but does not
+eliminate endpoint detection, direction, or false-pair errors. CoNLL04 has a
+broader relation inventory and more heterogeneous entity roles. Consequently,
+a higher aggregate F1 on ADE should not be interpreted as evidence that
+drug-safety reasoning is inherently easier than general-domain reasoning; the
+supervised extraction tasks differ in structure and size.
+
+\begin{table*}[t]
+\centering\small\setlength{\tabcolsep}{4pt}
+\caption{Exact entity and relation annotation counts in the imported files.}
+\label{tab:labels}
+\input{../results/ade_conll04/label_counts.tex}
+\end{table*}
+
+The mean training lengths are 21.17 reconstructed tokens for ADE and 28.77 for
+CoNLL04. Their test means are 21.24 and 28.94, respectively. The cumulative
+distributions describe all three partitions rather than only the training set.
+These lengths are descriptive whitespace-token counts, not Qwen tokenizer
+counts. The largest observed reconstructed length is 97 for ADE and 118 for
+CoNLL04 across the imported partitions.
+
+Every imported sentence contains at least one annotated relation. The selected
+benchmark files therefore do not measure false-positive behavior over a
+deployment stream dominated by sentences with no relevant relations. We retain
+the supplied benchmark composition and do not create additional negative
+sentences for the reported tests.
+
+Figure~\ref{fig:data-distribution} reports training-label proportions and
+empirical cumulative sentence-length distributions for every partition.
+CoNLL04 is consistently shifted toward longer sentences, whereas the train,
+validation, and test curves within each dataset remain broadly aligned.
+
+\begin{figure*}[t]
+\centering
+\includegraphics[width=\textwidth]{../figures/dataset_distribution.pdf}
+\caption{Dataset distribution analysis. (a) Training-label composition within
+each dataset's entity (E) or relation (R) inventory. Percentages sum to 100\%
+separately within each dataset--kind combination. (b) Empirical cumulative
+distributions of reconstructed sentence length for the train, validation, and
+test partitions. Length is measured in whitespace-delimited tokens.}
+\label{fig:data-distribution}
+\end{figure*}
+
+The graph is built separately for each dataset from its training annotations
+only. An exact-overlap check compares case-folded source strings after
+collapsing whitespace. ADE has no train/development or train/test exact-text
+overlap under this check. CoNLL04 has 14 development sentences and 19 test
+sentences whose text matches training content. For these sentences, both
+exact-anchor and high-recall graph context are cleared before generation.
+
+Clearing graph hints does not undo exposure of the trained generator to
+duplicate training text. We therefore retain the supplied partitions for the
+main comparison and report an additional fixed-prediction test analysis that
+excludes the 19 overlapping CoNLL04 test sentences. We do not claim that the
+benchmark is duplicate-cluster isolated or that this exact-match check detects
+all near duplicates.
+
+\subsubsection{Baselines and metrics}
 The internal development comparison includes all six named systems. The test
 table includes the two promoted systems and three completed external
 comparisons. Qwen3-4B zero-shot uses the same backbone without local adapters,
@@ -458,7 +501,7 @@ benchmark. The unified evaluator removes small denominator differences caused
 by legacy duplicate handling; unchanged source artifacts and a reconciliation
 report preserve the earlier metrics.
 
-\paragraph{Statistical analysis and compliance.}
+\subsubsection{Statistical analysis and compliance evaluation}
 We compute paired bootstrap resamples of test sentences from fixed predictions
 and recompute pooled F1 within each resample.
 The percentile interval describes sentence-sampling uncertainty for the
@@ -485,7 +528,6 @@ thresholds in this revision.
 
 \subsection{Main results}
 \label{sec:results}
-\paragraph{Completed test comparisons.}
 Table~\ref{tab:test} reports the completed test results under the common
 evaluator. PGE raises ADE relation precision from 80.62\% to 87.00\% and
 recall from 67.82\% to 72.10\%, giving relation F1 of 78.85\% compared with
@@ -553,7 +595,7 @@ are reconstructed or interpolated.}
 \label{fig:training-loss}
 \end{figure*}
 
-\subsection{Additional-run stability check}
+\subsection{Additional-run stability}
 Table~\ref{tab:repeated-runs} summarizes the two later repetitions. On ADE, PGE
 improves relation F1 over SOE in both repetitions (81.20\% versus 78.31\%, and
 80.62\% versus 78.06\%). On CoNLL04, the corresponding differences are positive
@@ -582,7 +624,7 @@ Entity-F1 differences are $-0.04$ points on ADE, interval [$-1.75$, 1.62], and
 $-0.63$ on CoNLL04, interval [$-2.38$, 1.04]; neither supports an entity-F1
 improvement claim.
 
-\subsection{Rule compliance and its interpretation}
+\subsection{Rule-compliance analysis}
 The test SOE output contains 31 rule-invalid relation objects among 610 ADE
 objects and 16 among 436 CoNLL04 objects. PGE retains 600 and 392 relation
 objects, respectively, with zero rule-invalid objects. HRGE already has zero
@@ -634,15 +676,15 @@ not additional promoted test systems.}
 
 \section{Discussion}
 \label{sec:discussion}
-\subsection{What the two benchmarks establish}
-The common result is a relation-F1 improvement over source-only generation. The gains arise
-alongside higher relation precision on both tests, while entity F1 stays
-similar or declines slightly. This is consistent with an architecture designed
-to govern candidate acceptance rather than simply maximize output volume.
-The validation ablation further shows that graph conditioning and selection
-interact: recall-oriented context can help on ADE but does not automatically
-improve CoNLL04, and a verifier may be inactive when candidates already satisfy
-its rules.
+\subsection{Benchmark findings}
+The common result is a relation-F1 improvement over source-only generation.
+The gains arise alongside higher relation precision on both tests, while entity
+F1 stays similar or declines slightly. This is consistent with an architecture
+designed to govern candidate acceptance rather than simply maximize output
+volume. The validation ablation further shows that graph conditioning and
+selection interact: recall-oriented context can help on ADE but does not
+automatically improve CoNLL04, and a verifier may be inactive when candidates
+already satisfy its rules.
 
 The distribution analysis helps interpret these differences. ADE has a larger
 training pool, shorter average sentences, and a single relation class.
@@ -651,14 +693,24 @@ These factors are confounded rather than experimentally isolated. Their
 association with the observed scores motivates separate dataset reporting;
 the factors should not be conflated in a single pooled interpretation.
 
-\subsection{Auditability as a distinct design objective}
+The focused, retrospectively narrowed scope and small number of completed
+training repetitions limit generalization. The fixed ADE partition is not
+directly interchangeable with published multi-fold results. Both corpora are
+English and contain relation-bearing sentences, so they do not establish
+multilingual behavior, long-report performance, or false-positive rates on
+unrestricted streams. Sentence-level bootstrap intervals also cannot recover
+dependence between sentences from the same upstream article when article
+identifiers are unavailable.
+
+\subsection{Auditability}
 A system exposes a useful acceptance mechanism for generated graph objects.
-The contribution is strongest when the entire path is inspectable: graph support identifies why a candidate
-was suggested; reconstructed offsets identify where it appears; gate records
-identify why it was retained or rejected. However, this benefit is architectural.
-No user study in the present experiments measures reduced analyst effort,
-improved decisions, or greater trust. It would be inappropriate to substitute
-perfect rule compliance for such evidence.
+The contribution is strongest when the entire path is inspectable: graph
+support identifies why a candidate was suggested; reconstructed offsets
+identify where it appears; gate records identify why it was retained or
+rejected. However, this benefit is architectural. No user study in the present
+experiments measures reduced analyst effort, improved decisions, or greater
+trust. It would be inappropriate to substitute perfect rule compliance for
+such evidence.
 
 The gates also impose a coverage cost. Agreement operates on normalized
 text/type pairs, and repeated mentions may be collapsed during fusion even
@@ -668,7 +720,15 @@ insufficient to prove a relation's meaning, and three gate signals should not
 be interpreted as three independent confirmations. These observations explain
 why the final output remains a candidate assertion graph for review.
 
-\subsection{Implications for safety-related applications}
+Exact-overlap quarantine prevents direct graph hints for known repeated source
+text but does not remove the generator's training exposure. The sensitivity
+analysis excludes known exact duplicates only, and pretrained components may
+have encountered related material before task adaptation. The available
+artifacts cannot rule out such exposure. Moreover, the ontology's separate
+source- and target-type sets are less restrictive than a catalogue of observed
+joint type pairs.
+
+\subsection{Safety-related implications}
 ADE links the experiments to drug-safety information extraction, while CoNLL04
 tests general relational structure. The framework can present an analyst with
 the candidate relation, source sentence, typed endpoints, and provenance of
@@ -680,24 +740,6 @@ The reported task focuses on source-linked extraction and evidence-path
 inspection. The framework is intended to support analyst review by making the
 origin and acceptance path of each extracted assertion explicit.
 
-\section{Limitations and responsible use}
-\label{sec:limitations}
-The focused, retrospectively narrowed dataset scope and small number of
-completed training repetitions limit generalization. The fixed ADE partition is not directly
-interchangeable with published multi-fold results. Both corpora are English
-and consist of relation-bearing sentences; multilingual behavior, long-report
-processing, and false-positive rates on unrestricted text streams are outside
-the evaluated setting. Sentence-level bootstrap intervals cannot recover
-dependence between sentences originating from the same upstream article when
-those article identifiers are unavailable.
-
-Exact-overlap quarantine prevents direct graph hints for known repeated source
-text but does not remove the generator's training exposure. The sensitivity
-analysis excludes known exact duplicates only. Frozen pretrained encoders and
-generators may also have seen related material during pretraining, which the
-available artifacts cannot rule out. The ontology's allowed source and target
-sets are less restrictive than a catalogue of observed joint type pairs.
-
 The one-epoch generative systems, 20-epoch SpERT, and pretrained label-conditioned
 models use different training schedules. PGE requires two adapted
 generators plus frozen retrieval, so compact adaptation must not be confused
@@ -706,7 +748,7 @@ independent evidence-judgement labels were collected for this paper. Public
 availability of a dataset or model does not by itself permit every downstream
 redistribution or commercial use; original licenses remain applicable.
 
-\section{Conclusion}
+\section{Conclusion and future work}
 \label{sec:conclusion}
 This study presents a provenance-preserving, evidence-gated graph-augmentation
 framework and evaluates it on ADE and CoNLL04. Dataset statistics expose the
@@ -719,6 +761,15 @@ positive, though smaller on CoNLL04, relation-F1 differences. The supported outc
 controlled, auditable graph-informed extraction layer that keeps generated
 entities and relations strongly connected to their source text and exposes the
 acceptance path for human review.
+
+Future work should test the framework on preregistered multi-fold splits,
+multilingual and long-document corpora, and deployment-like streams containing
+many sentences with no relevant relation. Near-duplicate grouping can extend
+the present exact-overlap analysis, while calibrated gate confidence and joint
+source--target type constraints may improve the precision--coverage trade-off.
+Larger repeated-run studies, end-to-end latency and resource measurements, and
+analyst studies are also needed to determine whether inspectable acceptance
+paths reduce review effort or improve downstream decisions.
 
 \section*{Acknowledgements and funding}
 Author-identifying funding and acknowledgement information is supplied on the

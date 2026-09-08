@@ -1,19 +1,20 @@
-# 当前交付：ADE + CoNLL04
+# Current ADE + CoNLL04 paper delivery
 
-本目录是最新论文版本。上一级目录的旧文件名为历史稿，不再作为当前正文。
+This directory contains the reviewed submission files for the current
+double-column manuscript.
 
-- [英文匿名全文（20页）](manuscript.pdf)
-- [中文全文核对稿（15页）](manuscript-zh.pdf)
-- [独立作者页](title-page.pdf)
-- [可编辑匿名LaTeX包](review-source.zip)
-- [独立图注](figure-captions.tex)
-- [构建与审阅记录](FINAL_REVIEW.md)
+- `manuscript.pdf`: anonymous manuscript, 12 PDF pages (one Highlights sheet
+  followed by 11 numbered manuscript pages)
+- `title-page.pdf`: separate one-page author and funding information
+- `review-source.zip`: anonymized, buildable LaTeX and reproducibility package
+- `figure-captions.tex`: standalone captions for all four manuscript figures
+- `submission-word/`: completed journal submission forms
+- `figures/`: publication figures and the editable method-diagram source
+- `submission-build-checks.json`: automated delivery checks
+- `FINAL_REVIEW.md`: final format and reproducibility review
 
-正文包含一个主方法图和五个表（规模统计、标签计数、测试比较、两种子稳定性、
-开发集消融）。DrawIO源文件及其PDF、PNG、SVG导出在`figures/`，已填充的投稿
-Word附件在`submission-word/`。
-统计CSV及可复现结果在`../../../paper/results/ade_conll04/`。
-
-全文已围绕两套公开英文句级数据重写，不再混入旧语料、其他数据集或文档预算实验。
-摘要减少参数和数字罗列；所有保留数据集上的真实基线、消融与限制仍如实报告。
-本次没有启动新的模型训练或推理；种子2026与3407只读取已完成指标。
+The manuscript contains four figures, five tables, fourteen numbered equation
+environments, and fourteen cited references. The tracked result evidence is in
+`paper/results/ade_conll04/`. Model weights, raw datasets, caches, and full
+training-output directories are intentionally excluded from the repository and
+the review-source archive.

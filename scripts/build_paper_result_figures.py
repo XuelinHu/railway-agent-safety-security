@@ -53,8 +53,8 @@ def save(fig: plt.Figure, stem: str) -> None:
 def build_result_analysis() -> None:
     results = load("results_snapshot.json")
     bootstrap = load("paired_test_bootstrap.json")
-    fig, axes = plt.subplots(1, 2, figsize=(7.15, 2.8),
-                             gridspec_kw={"wspace": 0.34})
+    fig, axes = plt.subplots(1, 2, figsize=(7.15, 3.05),
+                             gridspec_kw={"wspace": 0.38})
 
     ax = axes[0]
     groups = [(dataset, metric) for dataset in DATASETS
@@ -73,7 +73,7 @@ def build_result_analysis() -> None:
                     rotation=90)
     ax.set_ylabel("Strict-span F1 (%)")
     ax.set_xticks(x, ("Entity", "Relation", "Entity", "Relation"))
-    ax.set_ylim(0, 100)
+    ax.set_ylim(0, 105)
     ax.grid(axis="y", color="#D0D0D0", linewidth=0.55)
     ax.set_axisbelow(True)
     ax.legend(frameon=False, ncol=2, loc="lower left")
@@ -81,7 +81,7 @@ def build_result_analysis() -> None:
                 ha="center", fontsize=9)
     ax.annotate("CoNLL04", (0.75, -0.22), xycoords="axes fraction",
                 ha="center", fontsize=9)
-    ax.set_title("(a) Matched test comparison", loc="left", fontweight="bold")
+    ax.set_title("(a) Matched test F1", loc="left", fontweight="bold", pad=12)
 
     ax = axes[1]
     items = [(dataset, metric) for dataset in DATASETS
@@ -106,18 +106,20 @@ def build_result_analysis() -> None:
         ax.text(estimate + (0.35 if estimate >= 0 else -0.35), index - 0.17,
                 f"{estimate:+.2f}", ha="left" if estimate >= 0 else "right",
                 fontsize=8)
-    ax.set_yticks(y, [f"{DATASET_NAMES[d]} {'Entity' if m == 'entity_strict' else 'Relation'}"
+    ax.set_yticks(y, [f"{DATASET_NAMES[d]}-{'E' if m == 'entity_strict' else 'R'}"
                       for d, m in items])
+    ax.tick_params(axis="y", labelsize=8.5)
     ax.invert_yaxis()
     ax.set_xlabel("PGE minus SOE F1 (percentage points)")
     ax.grid(axis="x", color="#D0D0D0", linewidth=0.55)
     ax.set_axisbelow(True)
-    ax.set_title("(b) Paired difference (95% CI)", loc="left", fontweight="bold")
+    ax.set_title("(b) Paired F1 difference (95% CI)", loc="left",
+                 fontweight="bold", pad=12)
 
     for axis in axes:
         axis.spines["top"].set_visible(False)
         axis.spines["right"].set_visible(False)
-    fig.subplots_adjust(left=0.08, right=0.99, top=0.87, bottom=0.27)
+    fig.subplots_adjust(left=0.08, right=0.99, top=0.82, bottom=0.27)
     save(fig, "result_analysis")
 
 
@@ -135,8 +137,8 @@ def build_dataset_distribution() -> None:
     dataset_color = {"ade": "#0072B2", "conll04": "#D55E00"}
     dataset_hatch = {"entity": "", "relation": "///"}
 
-    fig, axes = plt.subplots(1, 2, figsize=(7.15, 3.55),
-                             gridspec_kw={"width_ratios": (1.08, 1), "wspace": 0.3})
+    fig, axes = plt.subplots(1, 2, figsize=(7.15, 3.7),
+                             gridspec_kw={"width_ratios": (1.08, 1), "wspace": 0.34})
     ax = axes[0]
     values = [100 * float(row["proportion"]) for row in labels]
     names = [f"{DATASET_NAMES[row['dataset']]} · {display[row['label']]} "
@@ -153,7 +155,7 @@ def build_dataset_distribution() -> None:
     ax.set_xlabel("Share within entity/relation inventory (%)")
     ax.grid(axis="x", color="#D0D0D0", linewidth=0.55)
     ax.set_axisbelow(True)
-    ax.set_title("(a) Training-label composition", loc="left", fontweight="bold")
+    ax.set_title("(a) Label composition", loc="left", fontweight="bold", pad=12)
 
     ax = axes[1]
     split_style = {"train": "-", "validation": "--", "test": ":"}
@@ -176,12 +178,13 @@ def build_dataset_distribution() -> None:
     ax.set_axisbelow(True)
     ax.legend(frameon=False, ncol=2, loc="lower right", fontsize=7.6,
               columnspacing=0.8, handlelength=2.2)
-    ax.set_title("(b) Sentence-length distributions", loc="left", fontweight="bold")
+    ax.set_title("(b) Sentence-length CDFs", loc="left", fontweight="bold",
+                 pad=12)
 
     for axis in axes:
         axis.spines["top"].set_visible(False)
         axis.spines["right"].set_visible(False)
-    fig.subplots_adjust(left=0.22, right=0.99, top=0.91, bottom=0.17)
+    fig.subplots_adjust(left=0.22, right=0.99, top=0.84, bottom=0.17)
     save(fig, "dataset_distribution")
 
 

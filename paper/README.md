@@ -20,8 +20,9 @@ CoNLL04 is a general-domain structural comparison, not a safety-outcome dataset.
 - `results/archive/`: result audits retained for traceability but not cited by
   the active manuscript.
 - `SUBMISSION_READINESS.md`: scope, known limitations, and author checks.
-- `../output/pdf/ade-conll04/`: generated delivery PDFs and submission package;
-  this directory is ignored by default except for already tracked final PDFs.
+- `../output/pdf/ade-conll04/`: reviewed delivery PDFs, figures, forms, and
+  submission package; this directory is explicitly versioned as the paper
+  delivery whitelist while other generated output remains ignored.
 
 Historical low-resource protocols were moved to
 [`../docs/legacy-experiments/`](../docs/legacy-experiments/README.md). Raw data,

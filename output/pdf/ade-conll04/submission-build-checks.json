@@ -7,8 +7,8 @@
   "packaging_reads_raw_test_data": false,
   "documents": {
     "manuscript": {
-      "pages": 11,
-      "sha256": "d01fd8d8152fb21d61a4b3b75b4ab6568d1cd0fb63ab49c274ed3447904809ad"
+      "pages": 12,
+      "sha256": "b98a5dc66123e1299eabc0bfa731010077fba3b0497fc20053eda37f1cb37208"
     },
     "title-page": {
       "pages": 1,
