@@ -201,7 +201,7 @@ more intuitive drug-to-effect direction. CoNLL04 contains \texttt{Loc},
 \texttt{Work\_For}, \texttt{Kill}, \texttt{OrgBased\_In},
 \texttt{Live\_In}, and \texttt{Located\_In} relations.
 
-Figure~\ref{fig:labels} shows the training-label distributions, and
+The training-label distributions are summarized in the accompanying tables, and
 Table~\ref{tab:labels} lists exact label counts for every partition.
 The single ADE relation label eliminates inter-class relation confusion but
 does not eliminate endpoint detection, direction, or false-pair errors.
@@ -209,14 +209,6 @@ CoNLL04 introduces a broader relation inventory and more heterogeneous entity
 roles. Consequently, a higher aggregate F1 on ADE should not be interpreted as
 evidence that drug-safety reasoning is inherently easier than general-domain
 reasoning; the supervised extraction tasks differ in structure and size.
-
-\begin{figure}[htbp]
-\centering\includegraphics[width=\textwidth]{../figures/ade_conll04/01-label-distribution.pdf}
-\caption{Training annotation distributions. Each panel uses its own entity or
-relation total as the denominator; entity and relation percentages are not
-pooled. Different colors and hatching distinguish the two benchmarks.}
-\label{fig:labels}
-\end{figure}
 
 \begin{table}[htbp]
 \centering\small\setlength{\tabcolsep}{4pt}
@@ -228,7 +220,7 @@ pooled. Different colors and hatching distinguish the two benchmarks.}
 \subsection{Sentence lengths and coverage}
 The mean training lengths are 21.17 reconstructed tokens for ADE and 28.77 for
 CoNLL04. Their test means are 21.24 and 28.94, respectively. The cumulative
-distributions in Figure~\ref{fig:lengths} describe all three partitions rather
+distributions describe all three partitions rather
 than only the training set. These lengths are descriptive whitespace-token
 counts, not Qwen tokenizer counts. The largest observed reconstructed length
 is 97 for ADE and 118 for CoNLL04 across the imported partitions.
@@ -238,14 +230,6 @@ important property of the selected benchmark files: they do not measure
 false-positive behavior over a deployment stream dominated by sentences with
 no relevant relations. We retain the supplied benchmark composition and do
 not create additional negative sentences for the reported tests.
-
-\begin{figure}[htbp]
-\centering\includegraphics[width=\textwidth]{../figures/ade_conll04/02-sentence-length-distribution.pdf}
-\caption{Empirical cumulative sentence-length distributions by partition.
-Length is computed on deterministically reconstructed text; no label-informed
-window selection is used for these sentence-level inputs.}
-\label{fig:lengths}
-\end{figure}
 
 \subsection{Split overlap and graph-context isolation}
 The graph is built separately for each dataset from its training annotations
@@ -301,13 +285,10 @@ trained networks. In deployment PGE needs EAE and HRGE candidates; SOE is a
 comparison branch and does not participate in fusion.
 
 \begin{figure}[htbp]
-\centering\includegraphics[width=\textwidth]{../figures/ade_conll04/03-pge-architecture.pdf}
-\caption{Two-benchmark architecture. Dataset-specific training graphs supply
-candidate context; the current sentence supplies evidence. Three independent
-adapters share the backbone configuration. Entity acceptance uses any of the
-listed signals; relation verification requires all checks. PGE retains only
-verified relations with surviving endpoints. Dashed boxes identify comparison
-paths, and no gate is a learned neural component.}
+\centering\includegraphics[width=\textwidth]{../figures/methodology_detailed_draft.pdf}
+\caption{Detailed methodology for source-grounded Qwen3-4B extraction with
+QLoRA adaptation, dataset-specific training graphs, deterministic evidence
+gates, provenance-preserving graph output, and automatic audit records.}
 \label{fig:architecture}
 \end{figure}
 

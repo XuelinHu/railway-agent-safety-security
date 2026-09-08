@@ -1,16 +1,10 @@
-# Figure naming and order
+# Paper figure
 
-Figure assets use lowercase kebab-case names. Every editable source and export
-for the same figure shares one basename.
+The manuscript uses one figure only:
 
-## Active ADE/CoNLL04 manuscript
+| Source | PDF | PNG | SVG |
+|---|---|---|---|
+| `methodology_detailed_draft.drawio` | `methodology_detailed_draft.pdf` | `methodology_detailed_draft.png` | `methodology_detailed_draft.svg` |
 
-The files under `ade_conll04/` follow their first appearance in the manuscript:
-
-| Order | Basename | Purpose | Available formats |
-|---:|---|---|---|
-| 01 | `01-label-distribution` | ADE and CoNLL04 entity/relation label counts | PDF, PNG |
-| 02 | `02-sentence-length-distribution` | Train/validation/test sentence-length distributions | PDF, PNG |
-| 03 | `03-pge-architecture` | Provenance-gated extraction architecture | Draw.io, SVG, PDF, PNG |
-
-The English and Chinese manuscripts use the same filenames and order.
+The editable Draw.io source is the authoritative figure source for the current
+English and Chinese manuscripts.

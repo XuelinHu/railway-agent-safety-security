@@ -1,6 +1,6 @@
 <mxfile host="65bd71144e">
     <diagram id="methodology-detailed" name="Detailed Qwen3-4B methodology">
-        <mxGraphModel dx="1741" dy="761" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1900" pageHeight="1100" math="1" shadow="0">
+        <mxGraphModel dx="1759" dy="921" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1900" pageHeight="1100" math="1" shadow="0">
             <root>
                 <mxCell id="0"/>
                 <mxCell id="1" parent="0"/>
@@ -456,7 +456,7 @@
                     </mxGeometry>
                 </mxCell>
                 <mxCell id="261" value="&lt;span data-slate-fragment=&quot;JTVCJTdCJTIydHlwZSUyMiUzQSUyMnBhcmFncmFwaCUyMiUyQyUyMmNoaWxkcmVuJTIyJTNBJTVCJTdCJTIyaWQlMjIlM0ElMjJ6bmROWjliUmRlJTIyJTJDJTIycGFyYUlkeCUyMiUzQTQlMkMlMjJzcmMlMjIlM0ElMjIlNUJhY3V0ZSUyMHBuZXVtb25pdGlzJTVEQWR2ZXJzZS1FZmZlY3QlMjIlMkMlMjJkc3QlMjIlM0ElMjIlNUIlRTYlODAlQTUlRTYlODAlQTclRTglODIlQkElRTclODIlOEUlNUQlRTQlQjglOEQlRTglODklQUYlRTUlOEYlOEQlRTUlQkElOTQlMjIlMkMlMjJtZXRhZGF0YSUyMiUzQSUyMiUyMiUyQyUyMm1hdGNoZXMlMjIlM0FudWxsJTJDJTIydHJhbnNsYXRlZEJ5JTIyJTNBbnVsbCUyQyUyMm1ldGFEYXRhJTIyJTNBJTVCJTVEJTJDJTIydGV4dCUyMiUzQSUyMmFjdXRlJTIwcG5ldW1vbml0aXMlMjIlN0QlNUQlN0QlNUQ=&quot; style=&quot;white-space: pre;&quot;&gt;Acute&lt;br&gt; pneumonitis&lt;/span&gt;" style="ellipse;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=16;fontFamily=Times New Roman;" vertex="1" parent="1">
-                    <mxGeometry x="565" y="829" width="100" height="83" as="geometry"/>
+                    <mxGeometry x="600" y="827.25" width="100" height="83" as="geometry"/>
                 </mxCell>
                 <mxCell id="262" value="&lt;span style=&quot;white-space: pre;&quot;&gt;Bleomycin&lt;/span&gt;" style="ellipse;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=16;fontFamily=Times New Roman;" vertex="1" parent="1">
                     <mxGeometry x="770" y="814.5" width="80" height="55.5" as="geometry"/>

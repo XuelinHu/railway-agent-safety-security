@@ -16,8 +16,7 @@ CoNLL04 is a general-domain structural comparison, not a safety-outcome dataset.
 - `elsarticle/references.bib`: cited literature, including benchmark and baseline sources.
 - `results/ade_conll04/`: source-hashed statistics, common-evaluator scores,
   generated tables, bootstrap intervals, and exact-overlap sensitivity.
-- `figures/ade_conll04/`: the three active figures, numbered in manuscript order:
-  label distribution, sentence-length distribution, and the editable PGE architecture.
+- `figures/methodology_detailed_draft.drawio`: the single active editable methodology figure.
 - `../output/pdf/ade-conll04/`: current PDFs, figure files, captions, and review source ZIP.
 - [SUBMISSION_READINESS.md](SUBMISSION_READINESS.md): scope and final checks.
 
