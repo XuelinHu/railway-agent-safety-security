@@ -2,11 +2,11 @@ import matplotlib.pyplot as plt
 from matplotlib.patches import FancyBboxPatch, FancyArrowPatch
 plt.rcParams.update({'font.family':'serif','font.serif':['Times New Roman','Times','DejaVu Serif'],'font.size':9,'figure.facecolor':'white','axes.facecolor':'white','savefig.dpi':400})
 fig,ax=plt.subplots(figsize=(7.0,1.75)); ax.set_xlim(0,15); ax.set_ylim(0,3); ax.axis('off')
-items=[(.2,'CrossNER\nJSON'),(3.1,'BIO alignment\nand split'),(6.0,'BiGRU /\nCross-Residual'),(8.9,'Three-seed\ntraining'),(11.8,'Exact-span\nevaluation')]
+items=[(.2,'CrossNER\nJSON'),(3.1,'Train / validation\n/ test split'),(6.0,'General + adapted\nspan scores'),(8.9,'Residual grid\nselection'),(11.8,'Exact-span\nevaluation')]
 cols=['#e6f2f8','#fff2cc','#d9ead3','#fce5cd','#eadcf8']
 for (x,t),c in zip(items,cols):
-    ax.add_patch(FancyBboxPatch((x,.9),2.1,1.1,boxstyle='round,pad=.04,rounding_size=.08',facecolor=c,edgecolor='#333333',linewidth=1)); ax.text(x+1.05,1.45,t,ha='center',va='center')
+    ax.add_patch(FancyBboxPatch((x,.9),2.1,1.1,boxstyle='round,pad=.04,rounding_size=.08',facecolor=c,edgecolor='#333333',linewidth=1)); ax.text(x+1.05,1.45,t,ha='center',va='center',fontsize=8)
 for i in range(4):
     ax.add_patch(FancyArrowPatch((items[i][0]+2.1,1.45),(items[i+1][0],1.45),arrowstyle='-|>',mutation_scale=12,color='#333333',linewidth=1.1))
-ax.text(7.5,.28,'Outputs: run metrics, loss history, aggregate table, and publication figures',ha='center',fontsize=8)
+ax.text(7.5,.28,'Outputs: strict precision, recall, F1, runtime, aggregate table, and figures',ha='center',fontsize=8)
 fig.tight_layout(pad=.2); fig.savefig('system_pipeline.pdf',bbox_inches='tight'); fig.savefig('system_pipeline.png',bbox_inches='tight')

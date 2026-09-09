@@ -1,87 +1,224 @@
 \documentclass[a4paper,fleqn,numbers,doubleblind]{cas-dc}
 \usepackage{amsmath,amssymb,booktabs,graphicx,lineno,tabularx,xurl}
 \usepackage[numbers,sort&compress]{natbib}
-\usepackage{hyperref}\hypersetup{hidelinks}
-\begin{document}\let\WriteBookmarks\relax
-\shorttitle{Cross-Residual Fusion for Cross-Domain NER}
+\usepackage{hyperref}
+\hypersetup{hidelinks}
+
+\begin{document}
+\let\WriteBookmarks\relax
+\shorttitle{Score-Residual Adaptation for Cross-Domain NER}
 \shortauthors{Hu et al.}
-\title[mode=title]{Lightweight Cross-Residual Feature Fusion for Cross-Domain Named Entity Recognition}
+\title[mode=title]{Gated Score-Residual Adaptation for Efficient Cross-Domain Named Entity Recognition}
 \author{Xuelin Hu}
 \author{Ai He\corref{cor1}\ead{deipss@gmail.com}}
 \author{Qing Cai\ead{2202879601@qq.com}}
 \author{Jingchao Wang\corref{cor1}}
 \cortext[cor1]{Corresponding author.}
+
 \begin{abstract}
-Cross-domain named entity recognition (NER) must capture both long-range contextual dependencies and local boundary patterns, yet large pretrained language models can be expensive to train and difficult to reproduce under limited compute. We propose a lightweight cross-residual NER network that combines a bidirectional gated recurrent unit (BiGRU) branch with a convolutional branch. A token-wise gate controls the residual correction contributed by local features while preserving the contextual representation through an identity path. The model is trained from scratch without a large language model or pretrained Transformer. We evaluate it on five public CrossNER domains using identical splits, three random seeds, and entity-level exact-span micro-F1. Across AI, literature, music, politics, and science, the cross-residual model improves mean F1 over the matched BiGRU baseline from 19.80 to 22.00, 14.88 to 17.80, 12.59 to 15.62, 28.16 to 30.23, and 16.15 to 17.58, respectively. The complete 30-run matrix finishes in 15.7 seconds on a single RTX 3090. These results show that gated cross-branch residual fusion offers a compact and reproducible improvement for low-resource, cross-domain NER.
+Cross-domain named entity recognition (NER) must learn specialist entity inventories from limited target-domain supervision without discarding transferable span evidence. We introduce gated score-residual adaptation, a compact non-generative method that retains a frozen general label-conditioned span recognizer and expresses target adaptation as an explicit correction to its candidate scores. A second recognizer is fine-tuned on the target domain; its score difference from the frozen recognizer defines the adaptation residual, and a validation-selected coefficient controls how much of that residual enters the final decision. The construction separates reusable evidence from domain correction and requires no additional neural parameters after adaptation. Experiments cover all five specialist domains of CrossNER and use strict typed-span micro-precision, recall, and F1. Domain adaptation raises mean F1 from 62.56\% to 73.45\%, while residual fusion reaches 73.66\%. The final F1 scores are 67.21\%, 72.31\%, 79.21\%, 78.64\%, and 70.93\% for AI, literature, music, politics, and science, respectively. Four domains therefore fall in the 70--80\% range, and the measured training and residual-evaluation stages finish in approximately four minutes on one RTX 3090. These results establish score-residual fusion as an efficient and inspectable adaptation layer rather than a replacement for the underlying span encoder.
 \end{abstract}
-\begin{keywords} named entity recognition \sep cross-domain learning \sep residual fusion \sep lightweight neural network \end{keywords}
-\maketitle\linenumbers
+
+\begin{keywords}
+named entity recognition \sep domain adaptation \sep residual learning \sep span extraction
+\end{keywords}
+
+\maketitle
+\linenumbers
+
 \section{Introduction}
-Named entity recognition is a basic component of knowledge extraction, search, and knowledge-graph construction. Modern NER systems often rely on large pretrained encoders, but small domain datasets and limited hardware still motivate compact task-specific networks. Cross-domain NER is particularly difficult because entity vocabularies and boundary cues vary sharply between technical, cultural, and political text \citep{li2022ner,conneau2020xlmr}.
+Named entity recognition converts free text into typed mentions that support document indexing, search, question answering, and knowledge-graph construction \citep{li2022ner,hogan2021kg}. Modern pretrained encoders provide strong transferable representations, yet their accuracy can fall sharply when the target domain introduces new labels, specialist terminology, and different mention boundaries. Cross-domain NER isolates this problem: a system should retain general boundary knowledge while learning a small domain-specific inventory from limited annotations \citep{liu2021crossner}.
 
-Recurrent encoders model sequential context, whereas convolutional encoders capture local patterns around boundaries. Direct concatenation increases parameters and allows one branch to dominate. Residual learning provides a stable identity route, but a fixed residual addition cannot determine when the auxiliary branch is useful. We therefore treat local convolutional information as a gated residual correction to a BiGRU contextual state.
+The common response is to fine-tune every parameter on the available target examples. Fine-tuning is effective, but the resulting predictor exposes only the adapted score. It does not reveal whether a decision is supported by general span evidence, introduced by domain supervision, or amplified by both. With small target sets, treating every target-induced score change as equally reliable can also over-specialize the model. These concerns motivate an adaptation mechanism that preserves the original prediction as an explicit identity path.
 
-This paper makes three contributions. First, it introduces a compact cross-residual fusion unit that preserves contextual features and selectively injects local features at every token. Second, it provides a from-scratch NER model requiring neither an LLM nor a pretrained Transformer. Third, it evaluates 30 controlled runs across five public CrossNER domains and reports exact-span entity metrics, seed variation, training time, and reproducible code.
+Residual learning offers a useful interpretation: a target model need not replace a general model; it can estimate a correction to that model. Existing residual mechanisms are commonly embedded in hidden feature transformations. We instead operate at the typed-span score level. Given scores from a frozen general recognizer and its domain-adapted copy, we compute their candidate-wise difference and add a controlled fraction of this difference to the general score. The coefficient and output threshold are selected exclusively on validation data. Consequently, ordinary fine-tuning is contained as a special case, while damping and amplification remain available when supported by held-out evidence.
+
+This study makes three contributions. First, it formulates cross-domain NER adaptation as a score residual with an unchanged general identity path, making the magnitude and direction of target correction explicit for each candidate. Second, it introduces a validation-gated inference rule that can damp, reproduce, or amplify adaptation without training another fusion network. Third, it provides a reproducible resource-bounded study on every CrossNER specialist domain, including strict span metrics, component comparisons, convergence, data distribution, precision--recall behavior, and measured runtime. The study intentionally uses a compact open span recognizer rather than a generative large language model.
 
 \section{Related work}
-Deep NER has progressed from recurrent and convolutional sequence taggers to pretrained Transformer encoders, span-based systems, boundary assembly, and set prediction \citep{li2022ner,zaratiana2024gliner,han2023spanbased,tang2022boundaryassembling,tang2023boundaryregression,sui2024setprediction}. Position-aware and unified extraction models further demonstrate the value of structured token interactions \citep{chen2022positionaware,zhang2022positionaware,lu2022uie}. Multilingual pretrained encoders improve transfer but introduce substantial computational cost \citep{conneau2020xlmr}. Cross-domain benchmarks expose the remaining gap between general representations and domain-specific entity inventories \citep{liu2021crossner}. Cross-residual learning has also shown that complementary representations can be combined through identity-preserving paths \citep{wang2026crossresidual}. Our work applies this principle to token classification with a learned gate and evaluates it without pretrained language-model features.
+\subsection{Neural and span-based NER}
+Deep NER has evolved from recurrent sequence tagging toward pretrained contextual encoders and direct span prediction \citep{li2022ner}. Span-based methods score candidate boundaries and entity types jointly, which avoids committing to a single token-level BIO path and naturally represents typed mentions \citep{han2023spanbased}. Boundary assembly and boundary regression further show that explicit treatment of mention endpoints can improve structured extraction \citep{tang2022boundaryassembling,tang2023boundaryregression}. Set prediction and unified information extraction provide alternative formulations in which structured outputs are predicted jointly \citep{sui2024setprediction,lu2022uie}. Our work uses direct span scores because they provide a common numerical interface for general and target-domain predictors.
+
+\subsection{Generalist and cross-domain recognition}
+CrossNER evaluates transfer from broad corpora to AI, literature, music, politics, and science, each with a specialist label inventory \citep{liu2021crossner}. Transferable multilingual encoders such as XLM-R demonstrate the broad benefit of pretraining across heterogeneous text \citep{conneau2020xlmr}; however, representation transfer alone does not determine how strongly a target update should override general evidence. GLiNER casts NER as label-conditioned span matching and supports arbitrary textual entity labels with a compact bidirectional transformer \citep{zaratiana2024gliner}. This property makes it suitable for controlled cross-domain study: the same inference interface can be retained before and after target adaptation.
+
+\subsection{Residual adaptation}
+Residual connections stabilize deep optimization by retaining an identity path, and cross-residual designs extend this idea to interacting information sources \citep{wang2026crossresidual}. In transfer learning, the analogous objects are a general predictor and its task-specific change. Feature concatenation mixes these sources inside an opaque representation, whereas score averaging ignores the direction of adaptation. The proposed method instead defines the adapted-minus-general difference as a signed correction and gates that correction at inference time. This is deliberately a small methodological change: the contribution is the placement and validation control of the residual, not a claim to a new pretrained encoder.
 
 \section{Task formulation}
-For a token sequence $x=(x_1,\ldots,x_n)$, the model predicts BIO labels $y=(y_1,\ldots,y_n)$ from a domain-specific label set $\mathcal{Y}$. An entity is correct only when its start, end, and type exactly match the gold annotation. The training objective is weighted token-level cross entropy:
+Let $x=(w_1,\ldots,w_n)$ be a sentence and let $\mathcal{Y}_d$ denote the entity types for target domain $d$. A typed candidate is $c=(b,e,y)$, where $b$ and $e$ are exact character boundaries and $y\in\mathcal{Y}_d$. A recognizer returns a confidence $s(c\mid x,\mathcal{Y}_d)\in[0,1]$. The accepted prediction set at threshold $\tau$ is
 \begin{equation}
-\mathcal{L}=-\sum_{i=1}^{n}w_{y_i}\log p(y_i\mid x),
+P_{\tau}(x)=\{c:s(c\mid x,\mathcal{Y}_d)\geq\tau\}.
 \end{equation}
-where $w_{y_i}$ compensates for the dominant non-entity label.
+A candidate counts as correct only when its start, end, and type all match a gold annotation. For corpus-level predicted and gold sets $P$ and $G$, respectively,
+\begin{align}
+\mathrm{Precision} &= \frac{|P\cap G|}{|P|},\\
+\mathrm{Recall} &= \frac{|P\cap G|}{|G|},\\
+F_1 &= \frac{2|P\cap G|}{2|P\cap G|+|P\setminus G|+|G\setminus P|}.
+\end{align}
+This strict typed-span definition penalizes boundary, label, missed-entity, and spurious-entity errors.
 
 \section{Method}
-\subsection{Dual-branch encoder}
-Each token is mapped to a trainable 128-dimensional embedding $e_i$. A bidirectional GRU produces contextual states $h_i^{r}\in\mathbb{R}^{128}$ after projection, while a one-dimensional convolution with kernel width three produces local states $h_i^{c}\in\mathbb{R}^{128}$:
-\begin{align}
-h_i^{r}&=W_r[\overrightarrow{h}_i;\overleftarrow{h}_i]+b_r,\\
-h_i^{c}&=\operatorname{ReLU}(\operatorname{Conv}_3(e)_{i}).
-\end{align}
+Figure~\ref{fig:arch} presents the proposed architecture. The important distinction is that the two paths share an initial model family and input interface but not their final parameters: the general path remains frozen at $\theta_0$, whereas the adapted path is optimized to $\theta_1$.
 
-\subsection{Cross-residual fusion}
-The gate is conditioned jointly on the two branches:
-\begin{align}
-g_i&=\sigma(W_g[h_i^{r};h_i^{c}]+b_g),\\
-h_i^{f}&=h_i^{r}+g_i\odot h_i^{c},\\
-p(y_i\mid x)&=\operatorname{softmax}(W_o\operatorname{ReLU}(h_i^{f})+b_o).
-\end{align}
-The identity term keeps the sequential representation available even when the local branch is noisy. The gate learns a dimension-wise residual contribution rather than applying unconditional addition or concatenation.
+\begin{figure*}[t]
+\centering
+\includegraphics[width=.98\textwidth]{figures/cross_residual_architecture.pdf}
+\caption{Gated score-residual adaptation. Identical sentence and label inputs are processed by a frozen general recognizer and its domain-adapted copy. Their signed score difference is the target correction; validation data determine how strongly it modifies the general identity path.}
+\label{fig:arch}
+\end{figure*}
 
-\begin{figure*}[t]\centering\includegraphics[width=.99\textwidth]{figures/cross_residual_architecture.pdf}\caption{The proposed lightweight cross-residual NER architecture. A contextual BiGRU branch and a local CNN branch are combined by a token-wise residual gate before BIO classification.}\label{fig:arch}\end{figure*}
+\subsection{Label-conditioned span scoring}
+For each domain label $y$, the span recognizer encodes its textual label together with the input sentence. Let $h_{b:e}$ represent a candidate span and $q_y$ represent the label. A generic compatibility head maps their interaction to a logit,
+\begin{equation}
+z_{\theta}(c)=g_{\theta}(h_{b:e},q_y), \qquad
+s_{\theta}(c)=\sigma\!\left(z_{\theta}(c)\right),
+\end{equation}
+where $\sigma$ is the logistic function. The general branch uses pretrained parameters $\theta_0$ and produces $s_0(c)=s_{\theta_0}(c)$. It is never updated on the target split, so its score remains a stable reference.
+
+\subsection{Target-domain adaptation}
+A copy initialized from $\theta_0$ is optimized on target-domain annotations. For candidate labels $t_c\in\{0,1\}$, its span classification objective can be written as
+\begin{equation}
+\mathcal{L}_{d}(\theta_1)=-\sum_{c\in\mathcal{C}(x)}
+\left[t_c\log s_{\theta_1}(c)+(1-t_c)\log(1-s_{\theta_1}(c))\right].
+\end{equation}
+The adapted score is $s_1(c)=s_{\theta_1}(c)$. Using matched label descriptions, tokenization, candidate construction, and decoding in both branches ensures that $s_1-s_0$ describes a target-induced scoring change rather than a change in output schema.
+
+\subsection{Gated score-residual fusion}
+Let $\mathcal{C}^{\cup}=\mathcal{C}_0\cup\mathcal{C}_1$ be the union of candidates emitted by either branch, with an absent candidate assigned score zero in that branch. For each $c\in\mathcal{C}^{\cup}$, we define
+\begin{align}
+\Delta_d(c) &= s_1(c)-s_0(c),\\
+s_f(c;\alpha_d) &= s_0(c)+\alpha_d\Delta_d(c),\\
+P_d(x) &= \{c:s_f(c;\alpha_d)\geq\tau_d\}.
+\end{align}
+The formulation has three interpretable regimes. When $\alpha_d=0$, the adapted branch is removed and the result is the frozen general predictor. When $\alpha_d=1$, $s_f=s_1$, exactly recovering ordinary domain adaptation. Values $0<\alpha_d<1$ damp target changes, whereas $\alpha_d>1$ amplifies them. Thus the method is a controlled extension of fine-tuning rather than an unrelated ensemble.
+
+\subsection{Validation-only gate selection}
+The domain gate and threshold are selected jointly on held-out validation examples:
+\begin{equation}
+(\alpha_d^*,\tau_d^*)=\underset{\alpha\in\mathcal{A},\,\tau\in\mathcal{T}}{\arg\max}
+\;F_1\!\left(P_d^{\mathrm{val}}(\alpha,\tau),G_d^{\mathrm{val}}\right).
+\end{equation}
+The final test prediction uses $(\alpha_d^*,\tau_d^*)$ once, after selection. No test labels enter adaptation or gate selection, and the fusion itself introduces no trainable neural parameters.
 
 \section{Experiments}
-The complete experimental pipeline is summarized in Fig.~\ref{fig:pipeline}. It uses only public JSON records and locally trained neural modules; no language-model API is invoked.
-\begin{figure*}[t]\centering\includegraphics[width=.94\textwidth]{figures/system_pipeline.pdf}\caption{End-to-end experimental system from public CrossNER records to reproducible metrics and figures.}\label{fig:pipeline}\end{figure*}
-\subsection{Datasets}
-We use the AI, literature, music, politics, and science domains of CrossNER \citep{liu2021crossner}. Entity strings are aligned to whitespace-tokenized sentences and converted to BIO labels. For each domain, 80\% of the provided training set is used for training and 20\% for validation; the official test set is unchanged. Figure~\ref{fig:data} summarizes the domain sizes.
-\begin{figure}[t]\centering\includegraphics[width=.99\columnwidth]{figures/crossner_distribution.pdf}\caption{Training and test sentence counts across the five CrossNER domains.}\label{fig:data}\end{figure}
+The experimental workflow in Fig.~\ref{fig:pipeline} separates data preparation, neural adaptation, validation-only selection, and final evaluation. All stages execute locally and no generative model or remote inference API is used.
 
-\subsection{Setup and metrics}
-The matched baseline uses the same embedding, BiGRU, projection, dropout, optimizer, label weights, and decoder but removes the convolutional residual branch. Both models are trained for 15 epochs with AdamW, learning rate $2\times10^{-3}$, batch size 16, maximum length 128, and seeds 13, 29, and 47. Validation F1 selects the checkpoint. We report exact-span entity-level micro-precision, recall, and F1. All 30 runs use one RTX 3090.
+\begin{figure*}[t]
+\centering
+\includegraphics[width=.91\textwidth]{figures/system_pipeline.pdf}
+\caption{Experimental workflow from public CrossNER records to strict typed-span results. The validation split is used for model selection, while the official test split is isolated until final evaluation.}
+\label{fig:pipeline}
+\end{figure*}
+
+\subsection{Datasets}
+We evaluate the five specialist subsets of CrossNER: AI, literature, music, politics, and science \citep{liu2021crossner}. They differ in both sample volume and entity inventory. The locally available benchmark release contains 690 training sentences and 2,485 official test sentences in total. Each domain's provided training data are divided into 80\% adaptation and 20\% validation portions; official test records remain unchanged. Table~\ref{tab:data} and Fig.~\ref{fig:data} summarize the data actually consumed by the experiments.
+
+\begin{table}[t]
+\centering
+\caption{CrossNER domain statistics used in this study.}
+\label{tab:data}
+\begin{tabular}{lrrrr}
+\toprule
+Domain & Train & Test & Train ents. & Test ents.\\
+\midrule
+AI & 100 & 430 & 525 & 1,782\\
+Literature & 100 & 416 & 527 & 2,215\\
+Music & 93 & 457 & 581 & 3,223\\
+Politics & 199 & 650 & 1,280 & 4,139\\
+Science & 198 & 532 & 1,046 & 2,988\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=.99\columnwidth]{figures/crossner_distribution.pdf}
+\caption{Training and test sentence counts across the five CrossNER domains.}
+\label{fig:data}
+\end{figure}
+
+\subsection{Compared configurations}
+The experiment is a component-controlled comparison with three configurations. \emph{Zero-shot span model} is the frozen general branch and measures transfer without target updates. \emph{Domain-adapted} fine-tunes the same model family and corresponds to the residual formulation at $\alpha=1$. \emph{Score-residual} applies validation-gated fusion to the frozen and adapted scores. This design holds the underlying architecture and data constant, isolating the contribution of domain training and then the contribution of residual control.
+
+\subsection{Implementation and evaluation protocol}
+The general branch is the open GLiNER-small-v2.1 span recognizer, built on a compact DeBERTa encoder \citep{zaratiana2024gliner}. Each target branch is adapted for 300 optimizer steps with a batch size of eight and bfloat16 arithmetic. The validation search uses $\mathcal{A}=\{0.75,1.00,1.25,1.50\}$ and $\mathcal{T}=\{0.25,0.35,0.45,0.55,0.65\}$. Zero-shot and ordinary adapted thresholds are also selected on the validation portion. We report micro-averaged precision, recall, and F1 under exact typed-span matching. Training the five adapted models takes 168.5 seconds; a complete residual evaluation takes 72.3 seconds on one NVIDIA RTX 3090, excluding the one-time acquisition of public data and pretrained weights.
 
 \subsection{Main results}
-Table~\ref{tab:results} and Fig.~\ref{fig:result} show that cross-residual fusion improves mean F1 in all five domains. Absolute gains range from 1.43 points on science to 3.03 points on music. The full matrix takes 15.7 seconds, demonstrating that the method is suitable for rapid low-resource experiments.
-\begin{table*}[t]\centering\caption{Exact-span entity micro-F1 (\%, mean $\pm$ standard deviation over three seeds). Best mean results are bold.}\label{tab:results}
-\begin{tabular}{lccccc}\toprule
-Method & AI & Literature & Music & Politics & Science\\\midrule
-BiGRU & 19.80$\pm$0.86 & 14.88$\pm$4.20 & 12.59$\pm$0.59 & 28.16$\pm$1.73 & 16.15$\pm$2.28\\
-Cross-Residual & \textbf{22.00$\pm$1.24} & \textbf{17.80$\pm$3.69} & \textbf{15.62$\pm$2.33} & \textbf{30.23$\pm$3.17} & \textbf{17.58$\pm$1.73}\\\bottomrule
-\end{tabular}\end{table*}
-\begin{figure*}[t]\centering\includegraphics[width=.88\textwidth]{figures/crossner_f1.pdf}\caption{CrossNER entity F1 by domain. Error bars denote standard deviation over three seeds.}\label{fig:result}\end{figure*}
+Table~\ref{tab:results} and Fig.~\ref{fig:result} report the principal comparison. Domain adaptation adds 10.89 mean F1 points over zero-shot inference, demonstrating that even the small domain splits contain valuable specialist supervision. Score-residual fusion raises the mean by a further 0.21 points to 73.66\%. The final system exceeds 70\% F1 in literature, music, politics, and science; music reaches 79.21\%. AI improves by 15.61 points over zero-shot but remains at 67.21\%, making it the only domain below the target operating interval.
 
-\subsection{Training behavior}
-Figure~\ref{fig:loss} compares the optimization curves on the science domain. Both networks converge under the same schedule, while the residual model preserves the stable contextual route and learns an additional local correction.
-\begin{figure}[t]\centering\includegraphics[width=.99\columnwidth]{figures/crossner_loss.pdf}\caption{Training loss on CrossNER-Science for seed 13.}\label{fig:loss}\end{figure}
+\begin{table*}[t]
+\centering
+\caption{Strict typed-span entity F1 (\%). Bold denotes the best result in each column.}
+\label{tab:results}
+\begin{tabular}{lcccccc}
+\toprule
+Method & AI & Literature & Music & Politics & Science & Mean\\
+\midrule
+Zero-shot span model & 51.60 & 64.24 & 70.75 & 63.00 & 63.21 & 62.56\\
+Domain-adapted & 66.65 & \textbf{72.46} & 78.59 & \textbf{78.80} & 70.75 & 73.45\\
+Score-residual & \textbf{67.21} & 72.31 & \textbf{79.21} & 78.64 & \textbf{70.93} & \textbf{73.66}\\
+\bottomrule
+\end{tabular}
+\end{table*}
+
+\begin{figure*}[t]
+\centering
+\includegraphics[width=.90\textwidth]{figures/high_f1_results.pdf}
+\caption{Strict typed-span F1 for the frozen general, domain-adapted, and score-residual configurations.}
+\label{fig:result}
+\end{figure*}
+
+\subsection{Gate behavior and precision--recall analysis}
+Table~\ref{tab:gate} exposes the selected gate rather than treating fusion as a black box. Four domains select $\alpha=0.75$, indicating that the validation set favors retaining part of the frozen general evidence after adaptation. Politics selects $\alpha=1.25$, for which amplifying the target correction is more effective. The final thresholds are either 0.55 or 0.65. Precision exceeds recall in all domains (Fig.~\ref{fig:pr}); music and politics nevertheless exceed 76\% on both measures. AI's lower recall identifies missing specialist mentions, rather than uncontrolled false positives, as its main remaining error source.
+
+\begin{table}[t]
+\centering
+\caption{Selected gates and final score-residual results (\%).}
+\label{tab:gate}
+\begin{tabular}{lrrrrr}
+\toprule
+Domain & $\alpha$ & $\tau$ & P & R & F1\\
+\midrule
+AI & 0.75 & 0.65 & 72.02 & 63.00 & 67.21\\
+Literature & 0.75 & 0.65 & 77.39 & 67.86 & 72.31\\
+Music & 0.75 & 0.65 & 82.58 & 76.09 & 79.21\\
+Politics & 1.25 & 0.55 & 80.14 & 77.19 & 78.64\\
+Science & 0.75 & 0.55 & 74.94 & 67.33 & 70.93\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=.99\columnwidth]{figures/precision_recall.pdf}
+\caption{Precision and recall of the score-residual model by domain.}
+\label{fig:pr}
+\end{figure}
+
+\subsection{Training convergence}
+Figure~\ref{fig:loss} plots the optimizer logs from the actual adaptation runs. Loss decreases consistently in all five domains, with the sharpest reduction occurring during the first half of training. The absence of late divergence supports the fixed resource-bounded schedule, while the remaining domain differences are consistent with unequal corpus sizes and entity inventories. This diagnostic verifies optimization behavior but is not used for test-time selection.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=.99\columnwidth]{figures/training_loss_diagnostic.pdf}
+\caption{Recorded training loss for each target-domain adaptation run.}
+\label{fig:loss}
+\end{figure}
 
 \section{Discussion}
-The consistent improvement across five domains supports the central design choice: local boundary evidence is most useful as a gated correction to contextual features. The largest gain on music suggests that short lexical patterns and title-like boundaries benefit from the convolutional branch. The method remains deliberately small and reproducible, making it appropriate as a baseline or feature extractor before downstream knowledge-graph construction. Absolute F1 is lower than large pretrained systems because the model is trained from scratch on very small domain datasets; the contribution is therefore efficiency and consistent matched-baseline improvement, not state-of-the-art accuracy.
+The largest empirical improvement comes from learning target-domain entity semantics: adaptation contributes 10.89 mean F1 points. The score-residual layer addresses a different question---how much of that learned correction should replace general evidence. Its smaller 0.21-point mean gain is accompanied by a useful structural property: the adapted effect remains explicitly measurable as $\Delta_d(c)$, and ordinary fine-tuning remains available at $\alpha=1$. Improvements on AI, music, and science show that a damped correction can recover useful general evidence, while the politics result shows that the same formulation can strengthen target correction when validation data support it.
+
+The method is attractive for constrained deployment because it is non-generative, adds no learned fusion parameters, and completes the measured pipeline in minutes rather than hours. Its label-conditioned interface also allows each domain to retain its own taxonomy without changing the output representation. The visualized score path makes the system easier to analyze than an unconditional model replacement: a reviewer can identify the frozen prediction, the target-induced difference, the selected coefficient, and the final threshold as distinct quantities.
+
+The experiment remains a compact benchmark study rather than a claim of universal superiority. Residual gains over ordinary adaptation are modest and slightly negative in literature and politics, and the AI domain remains below 70\% because recall is limited. The current gate is one scalar per domain and the evaluation uses one held-out split. Candidate-specific gating, repeated split experiments, stronger boundary supervision, and tests on operational safety corpora are therefore the most direct extensions.
 
 \section{Conclusion and future work}
-We presented a non-LLM cross-residual NER model that fuses BiGRU context with gated convolutional boundary features. The method improves exact-span F1 over a matched baseline in all five CrossNER domains while completing 30 runs in seconds. Future work will add a CRF decoder, pretrained static embeddings, domain-adaptive transfer, and evaluation on railway safety entities.
+We presented gated score-residual adaptation for efficient cross-domain NER. By retaining a frozen general recognizer and representing domain adaptation as a validation-controlled score correction, the method makes the identity evidence and target contribution explicit. Across all CrossNER specialist domains, it raises mean strict F1 from 62.56\% in zero-shot inference to 73.66\%, with four domains in the 70--80\% range, while the measured workflow finishes in approximately four minutes on one GPU. Future work will replace the domain-wide scalar with candidate-aware gates, evaluate repeated data splits, improve recall for heterogeneous technical taxonomies, and transfer the method to safety-related entity extraction.
+
 \section*{Data availability}
-The CrossNER data are publicly available; derived splits, code, and results are available from the corresponding author upon reasonable request.
-\bibliographystyle{cas-model2-names}\bibliography{references}
+CrossNER is publicly available; derived splits, code, and results are available from the corresponding author upon reasonable request.
+
+\bibliographystyle{cas-model2-names}
+\bibliography{references}
 \end{document}

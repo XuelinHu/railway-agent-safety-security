@@ -15,6 +15,19 @@ tools/*.deb
 *.pkl
 *.pt
 *.ckpt
+*.pth
+*.safetensors
+paper/cross-residual/results/gliner_finetuned/*/checkpoint-*/
+
+# LaTeX intermediates (retain manuscript and title-page PDFs)
+paper/cross-residual/*.abs
+paper/cross-residual/*.aux
+paper/cross-residual/*.bbl
+paper/cross-residual/*.blg
+paper/cross-residual/*.fdb_latexmk
+paper/cross-residual/*.fls
+paper/cross-residual/*.log
+paper/cross-residual/*.out
 
 # Secrets and local configuration
 .env

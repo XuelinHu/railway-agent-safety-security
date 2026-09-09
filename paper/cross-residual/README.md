@@ -1,13 +1,34 @@
-# Cross-residual railway safety extraction paper
+# Gated score-residual cross-domain NER
 
-This branch contains a new manuscript built with the same CAS double-column template as the current submission. The primary corpus is the locally curated railway/safety collection (`data/catalog/*`); the public supplementary benchmark is CoNLL04. Raw documents and reviewed annotations remain governed by the repository data policy and are not committed.
+This directory contains the current CAS double-column manuscript, title page,
+experiment scripts, compact result files, and publication figures for a
+non-generative cross-domain NER study.
 
-## Three-hour experiment matrix
+## Current experiment
 
-Run the compact multilingual encoder baseline, source-only adapter, graph-concatenation control, and cross-residual model on the two datasets. Use one small model (1--3B encoder or a 4B quantized generator), capped windows, and 1--3 epochs. Before launching the matrix, execute a dry run to estimate wall time. Record completed and interrupted jobs separately; do not fill missing scores.
+The paper evaluates three controlled configurations on the five CrossNER
+specialist domains:
 
-## Recovered figures
+1. frozen zero-shot GLiNER-small-v2.1;
+2. the same recognizer after target-domain adaptation;
+3. validation-gated score-residual fusion of the frozen and adapted scores.
 
-`figures/cross_residual_architecture.drawio` is the historical Draw.io source with the largest number of text boxes (175 counted `value=` nodes). `cross_residual_architecture.pdf/png` is the new publication-ready schematic. Legacy distribution, result, and loss plots are retained only as candidate inputs until they are recomputed for this corpus.
+The final strict typed-span F1 scores are 67.21% (AI), 72.31% (literature),
+79.21% (music), 78.64% (politics), and 70.93% (science), with a five-domain
+mean of 73.66%. The five adaptation runs take 168.5 seconds and a complete
+residual evaluation takes 72.3 seconds on one RTX 3090.
 
-No funding statement is included. Data are available from the corresponding author (Ai He, `deipss@gmail.com`) upon reasonable request and subject to source licences.
+## Reproduction
+
+- finetune_gliner_crossner.py adapts the five target-domain branches.
+- evaluate_gliner_crossner.py evaluates the frozen general model.
+- evaluate_score_residual.py selects the residual gate on validation data and
+  performs exact typed-span test evaluation.
+- figures/plot_high_performance_results.py regenerates the result,
+  precision--recall, and true training-loss figures.
+- figures/make_cross_residual_figure_v2.py and
+  figures/make_system_pipeline.py regenerate the method schematics.
+
+Large optimizer states and model checkpoints are intentionally excluded from
+Git. Small CSV/JSON result summaries, scripts, figures, manuscript.pdf, and
+title-page.pdf are the archival artifacts.
