@@ -28,11 +28,12 @@ for system in sorted({r['system'] for r in loss}):
 ax.set_xlabel('Optimization step'); ax.set_ylabel('Loss'); ax.set_title('Training-loss diagnostic (committed pilot run)')
 ax.legend(frameon=False,ncol=2); fig.tight_layout(); fig.savefig(OUT/'training_loss_diagnostic.pdf',bbox_inches='tight'); fig.savefig(OUT/'training_loss_diagnostic.png',dpi=400,bbox_inches='tight'); plt.close(fig)
 
-# Results figure is generated only when a new experiment CSV exists.
+# Results figure is generated from the calibrated run CSV when available.
 result_file = ROOT/'paper/cross-residual/results/results.csv'
 if result_file.exists():
-    rr=list(csv.DictReader(result_file.open())); methods=sorted({r['method'] for r in rr})
-    fig, ax=plt.subplots(figsize=(6.2,3.2))
-    for m in methods:
-        q=[r for r in rr if r['method']==m]; ax.plot([r['dataset'] for r in q],[float(r['relation_f1']) for r in q],marker='o',label=m)
-    ax.set_ylabel('Relation F1'); ax.set_title('Cross-residual model comparison'); ax.legend(frameon=False); fig.tight_layout(); fig.savefig(OUT/'results_comparison.pdf',bbox_inches='tight'); fig.savefig(OUT/'results_comparison.png',dpi=400,bbox_inches='tight')
+    rr=list(csv.DictReader(result_file.open()))
+    totals=[sum(int(r[k]) for r in rr) for k in ('relations','valid_relations')]
+    fig, ax=plt.subplots(figsize=(5.8,3.2)); bars=ax.bar(['Generated relations','After residual filter'],totals,color=['#0072B2','#009E73'],width=.55)
+    ax.set_ylabel('Relation count'); ax.set_title('Calibrated run: residual consistency effect')
+    ax.bar_label(bars,fmt='%d',padding=3); ax.set_ylim(0,max(totals)*1.18); fig.tight_layout()
+    fig.savefig(OUT/'results_comparison.pdf',bbox_inches='tight'); fig.savefig(OUT/'results_comparison.png',dpi=400,bbox_inches='tight')

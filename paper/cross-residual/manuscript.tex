@@ -30,7 +30,7 @@ Given a document $d$ segmented into sentences $s$, the system predicts entity sp
 \section{Method}
 \subsection{Framework overview}
 The architecture (Fig.~\ref{fig:arch}) first encodes the source sentence and retrieves training-only graph context. Local and graph branches are fused by a cross-residual gate; span and relation heads decode a compact schema, after which deterministic verification reconstructs character offsets.
-\begin{figure*}[t]\centering\includegraphics[width=.94\textwidth]{figures/cross_residual_architecture.pdf}\caption{Cross-residual graph--text fusion. The dashed path is a residual shortcut that preserves local evidence when graph context is incompatible.}\label{fig:arch}\end{figure*}
+\begin{figure*}[t]\centering\includegraphics[width=.99\textwidth]{figures/cross_residual_architecture.pdf}\caption{Cross-residual graph--text fusion. The dashed path is a residual shortcut that preserves local evidence when graph context is incompatible.}\label{fig:arch}\end{figure*}
 \subsection{Cross-residual graph--text fusion}
 Let $h_s$ be the local token representation and $h_g$ the retrieved graph representation. We compute a compatibility score $z=W_z[h_s;h_g]+b_z$ and gate $\alpha=\sigma(z)$. The fused state is
 \begin{equation}h_f=h_s+\alpha\odot W_g h_g.\end{equation}
@@ -43,7 +43,7 @@ We compare a frozen compact encoder, a LoRA-adapted encoder, and the proposed re
 \subsection{Datasets and split control}
 The primary corpus combines public railway investigation reports (RAIB) with the reviewed subset of Chinese safety documents. Near-duplicate clusters are kept within a split and all source text used for test evaluation is excluded from graph construction. CoNLL04 is used as a public supplementary benchmark under its native relation labels. Dataset counts and annotation status are generated from the repository manifests before each run.
 Figure~\ref{fig:data} shows the currently committed public split summary; the railway distribution is regenerated automatically when the ignored reviewed corpus is restored.
-\begin{figure}[t]\centering\includegraphics[width=\columnwidth]{figures/data_distribution_public.pdf}\caption{Sentence distribution of the committed public benchmark summary.}\label{fig:data}\end{figure}
+\begin{figure}[t]\centering\includegraphics[width=.99\columnwidth]{figures/data_distribution_public.pdf}\caption{Sentence distribution of the committed public benchmark summary.}\label{fig:data}\end{figure}
 \subsection{Baselines and metrics}
 Baselines are a compact multilingual encoder, a source-only LoRA generator, and a graph-concatenation variant. Metrics include strict entity and relation micro-F1, evidence exact match, unsupported-claim rate, legal-signature validity, latency, and peak memory. Bootstrap confidence intervals are computed over documents; paired tests compare the residual model with the matched source-only system.
 \subsection{Three-hour execution protocol}
@@ -51,7 +51,16 @@ Each configuration uses a compact open model (for example, a 1--3B encoder or 4B
 \subsection{Results and ablations}
 The calibrated Ollama run produced 334 entities and 304 generated relations over 30 RAIB reports. The endpoint-consistency residual filter retained 232 relations (mean document-level validity 78.8\%). These figures are weak-label diagnostics rather than supervised F1 scores; they quantify how much of the generated graph can be connected to explicitly generated entity mentions. Ablations are interpreted component by component: a drop after removing the gate indicates that compatibility filtering is useful; a drop after removing evidence verification indicates that source alignment contributes independently of representation quality.
 The training-loss diagnostic in Fig.~\ref{fig:loss} is retained as a pilot optimization check and is not used as a test-set result.
-\begin{figure}[t]\centering\includegraphics[width=\columnwidth]{figures/training_loss_diagnostic.pdf}\caption{Pilot training-loss diagnostic from the committed run summary.}\label{fig:loss}\end{figure}
+\begin{figure}[t]\centering\includegraphics[width=.99\columnwidth]{figures/training_loss_diagnostic.pdf}\caption{Pilot training-loss diagnostic from the committed run summary.}\label{fig:loss}\end{figure}
+\begin{table}[t]\centering\caption{Calibrated Ollama extraction results.}\label{tab:results}\begin{tabular}{lr}\toprule
+Metric & Value\\\midrule
+Reports processed & 30\\
+Entities generated & 334\\
+Relations generated & 304\\
+Relations retained after residual filter & 232\\
+Mean relation validity & 78.8\%\\\bottomrule
+\end{tabular}\end{table}
+\begin{figure}[t]\centering\includegraphics[width=.99\columnwidth]{figures/results_comparison.pdf}\caption{Relation counts before and after cross-residual consistency filtering.}\label{fig:result}\end{figure}
 \section{Discussion}
 The proposed residual path makes the role of retrieved knowledge inspectable: local sentence evidence remains available even when graph context is noisy. This is particularly useful for railway reports, where a relation may be plausible globally but absent from the current incident. The corpus and public benchmark are deliberately separated, so improvements can be attributed to the fusion mechanism only when they survive leakage controls and paired uncertainty analysis. Remaining weaknesses include dependence on reviewed spans and sensitivity to PDF extraction quality; these are engineering limitations, not evidence of clinical or operational correctness.
 \section{Conclusion and future work}
