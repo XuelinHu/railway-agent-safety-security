@@ -78,7 +78,8 @@ def run(domain,kind,seed,epochs,device):
     random.seed(seed); np.random.seed(seed); torch.manual_seed(seed)
     train=json.loads((DATA/domain/'train.json').read_text()); test=json.loads((DATA/domain/'test.json').read_text())
     random.shuffle(train); cut=max(1,int(len(train)*.8)); tr0,va0=train[:cut],train[cut:]
-    all_rows,types,labs=encode_rows(tr0+va0); tr=all_rows[:cut]; va=all_rows[cut:]; te,_,_=encode_rows(test,types)
+    types=sorted({e['type'] for r in train+test for e in r.get('entity_list',[])})
+    all_rows,_,labs=encode_rows(tr0+va0,types); tr=all_rows[:cut]; va=all_rows[cut:]; te,_,_=encode_rows(test,types)
     cnt=Counter(t.lower() for x,_ in tr for t in x); vocab={'<pad>':0,'<unk>':1,**{w:i+2 for i,(w,c) in enumerate(cnt.items()) if c>=1}}
     l2={z:i for i,z in enumerate(labs)}; i2={i:z for z,i in l2.items()}
     label_counts=Counter(z for _,ys in tr for z in ys); weights=torch.tensor([1.0 if z=='O' else max(1.0,(label_counts['O']/max(1,label_counts[z]))**0.5) for z in labs],dtype=torch.float,device=device)
