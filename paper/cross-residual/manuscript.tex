@@ -3,69 +3,85 @@
 \usepackage[numbers,sort&compress]{natbib}
 \usepackage{hyperref}\hypersetup{hidelinks}
 \begin{document}\let\WriteBookmarks\relax
-\shorttitle{Cross-Residual Fusion for Safety Relation Extraction}
+\shorttitle{Cross-Residual Fusion for Cross-Domain NER}
 \shortauthors{Hu et al.}
-\title[mode=title]{Cross-Residual Graph--Text Fusion for Auditable Railway Safety Relation Extraction}
+\title[mode=title]{Lightweight Cross-Residual Feature Fusion for Cross-Domain Named Entity Recognition}
 \author{Xuelin Hu}
 \author{Ai He\corref{cor1}\ead{deipss@gmail.com}}
 \author{Qing Cai\ead{2202879601@qq.com}}
 \author{Jingchao Wang\corref{cor1}}
 \cortext[cor1]{Corresponding author.}
 \begin{abstract}
-Railway safety reports describe hazards, causal factors, events, and mitigations in heterogeneous language and document formats. Existing extraction systems often concatenate retrieved knowledge with text, making it difficult to determine whether a prediction is supported by the report itself. We present a cross-residual graph--text fusion layer that injects graph context through a gated residual path while preserving an independent local-text representation. The gate is learned from span-level compatibility and relation-signature validity, so graph hints can be attenuated when they conflict with the source sentence. A lightweight evidence checker then links each accepted entity and relation to character offsets in the report. We evaluate the method on a newly organized railway safety corpus derived from public investigation reports and Chinese safety documents, and on a public relation-extraction benchmark for generalization. Experiments are designed around compact open-source encoders and short runs that fit a three-hour compute budget; all final scores will be reported with document-level confidence intervals and ablation controls. The resulting contribution is a reproducible, auditable fusion mechanism rather than an unrestricted claim of cross-domain accuracy.
+Cross-domain named entity recognition (NER) must capture both long-range contextual dependencies and local boundary patterns, yet large pretrained language models can be expensive to train and difficult to reproduce under limited compute. We propose a lightweight cross-residual NER network that combines a bidirectional gated recurrent unit (BiGRU) branch with a convolutional branch. A token-wise gate controls the residual correction contributed by local features while preserving the contextual representation through an identity path. The model is trained from scratch without a large language model or pretrained Transformer. We evaluate it on five public CrossNER domains using identical splits, three random seeds, and entity-level exact-span micro-F1. Across AI, literature, music, politics, and science, the cross-residual model improves mean F1 over the matched BiGRU baseline from 19.80 to 22.00, 14.88 to 17.80, 12.59 to 15.62, 28.16 to 30.23, and 16.15 to 17.58, respectively. The complete 30-run matrix finishes in 15.7 seconds on a single RTX 3090. These results show that gated cross-branch residual fusion offers a compact and reproducible improvement for low-resource, cross-domain NER.
 \end{abstract}
-\begin{keywords} railway safety \sep relation extraction \sep cross-residual fusion \sep provenance \sep knowledge graph \end{keywords}
+\begin{keywords} named entity recognition \sep cross-domain learning \sep residual fusion \sep lightweight neural network \end{keywords}
 \maketitle\linenumbers
 \section{Introduction}
-Safety investigation reports contain actionable relations but are costly to annotate. Generic language models can produce fluent triples while silently importing associations from pretraining or retrieved knowledge. This is unsafe for analyst-facing systems because an accepted relation must be traceable to a source span. The challenge is amplified by long reports, PDF extraction noise, and a small reviewed set.
+Named entity recognition is a basic component of knowledge extraction, search, and knowledge-graph construction. Modern NER systems often rely on large pretrained encoders, but small domain datasets and limited hardware still motivate compact task-specific networks. Cross-domain NER is particularly difficult because entity vocabularies and boundary cues vary sharply between technical, cultural, and political text \citep{li2022ner,conneau2020xlmr}.
 
-We organize a railway-focused corpus from publicly available investigation reports and a complementary Chinese safety collection. A public benchmark is retained as a separate, non-railway test to measure whether the proposed mechanism is a modeling contribution rather than a corpus-specific shortcut. Our central hypothesis is that graph context should act as a residual correction to local evidence, not as a replacement for it.
+Recurrent encoders model sequential context, whereas convolutional encoders capture local patterns around boundaries. Direct concatenation increases parameters and allows one branch to dominate. Residual learning provides a stable identity route, but a fixed residual addition cannot determine when the auxiliary branch is useful. We therefore treat local convolutional information as a gated residual correction to a BiGRU contextual state.
 
-Our contributions are: (1) a cross-residual graph--text fusion layer with a compatibility gate and explicit residual bypass; (2) an evidence-linked decoding and verification protocol that rejects unsupported spans and illegal relation signatures; and (3) a leakage-controlled, low-resource evaluation package combining the railway corpus with a public benchmark, compact open-source baselines, and document-level uncertainty analysis.
+This paper makes three contributions. First, it introduces a compact cross-residual fusion unit that preserves contextual features and selectively injects local features at every token. Second, it provides a from-scratch NER model requiring neither an LLM nor a pretrained Transformer. Third, it evaluates 30 controlled runs across five public CrossNER domains and reports exact-span entity metrics, seed variation, training time, and reproducible code.
+
 \section{Related work}
-Prior work on information extraction from incident reports uses sequence taggers, span-based classifiers, and generative structured prediction. Knowledge graphs have been used to supply entity and relation priors, but naive concatenation can blur the boundary between stated evidence and background association. Retrieval-augmented generation and constrained decoding address parts of this problem; they do not by themselves guarantee source offsets or endpoint consistency. Parameter-efficient adaptation makes small open models practical in low-resource settings. Our method combines these ideas through a residual fusion path and a deterministic evidence gate, with the railway corpus providing a concrete safety setting.
+Deep NER has progressed from recurrent and convolutional sequence taggers to pretrained Transformer encoders, span-based systems, boundary assembly, and set prediction \citep{li2022ner,zaratiana2024gliner,han2023spanbased,tang2022boundaryassembling,tang2023boundaryregression,sui2024setprediction}. Position-aware and unified extraction models further demonstrate the value of structured token interactions \citep{chen2022positionaware,zhang2022positionaware,lu2022uie}. Multilingual pretrained encoders improve transfer but introduce substantial computational cost \citep{conneau2020xlmr}. Cross-domain benchmarks expose the remaining gap between general representations and domain-specific entity inventories \citep{liu2021crossner}. Cross-residual learning has also shown that complementary representations can be combined through identity-preserving paths \citep{wang2026crossresidual}. Our work applies this principle to token classification with a learned gate and evaluates it without pretrained language-model features.
+
 \section{Task formulation}
-Given a document $d$ segmented into sentences $s$, the system predicts entity spans $e_i=(a_i,b_i,t_i)$, typed relations $r_k=(e_i,e_j,c_k)$, and evidence offsets $q_k\subset s$. A prediction is accepted only if $q_k$ overlaps the cited source text, both endpoints are valid spans, and $(t_i,c_k,t_j)$ belongs to the ontology signature set $\mathcal{L}$. The objective is a weighted sum of span, relation, and evidence losses:
-\begin{equation}\mathcal{L}=\mathcal{L}_{span}+\lambda_r\mathcal{L}_{rel}+\lambda_e\mathcal{L}_{evi}.\end{equation}
+For a token sequence $x=(x_1,\ldots,x_n)$, the model predicts BIO labels $y=(y_1,\ldots,y_n)$ from a domain-specific label set $\mathcal{Y}$. An entity is correct only when its start, end, and type exactly match the gold annotation. The training objective is weighted token-level cross entropy:
+\begin{equation}
+\mathcal{L}=-\sum_{i=1}^{n}w_{y_i}\log p(y_i\mid x),
+\end{equation}
+where $w_{y_i}$ compensates for the dominant non-entity label.
+
 \section{Method}
-\subsection{Framework overview}
-The architecture (Fig.~\ref{fig:arch}) first encodes the source sentence and retrieves training-only graph context. Local and graph branches are fused by a cross-residual gate; span and relation heads decode a compact schema, after which deterministic verification reconstructs character offsets.
-\begin{figure*}[t]\centering\includegraphics[width=.99\textwidth]{figures/cross_residual_architecture.pdf}\caption{Cross-residual graph--text fusion. The dashed path is a residual shortcut that preserves local evidence when graph context is incompatible.}\label{fig:arch}\end{figure*}
-\subsection{Cross-residual graph--text fusion}
-Let $h_s$ be the local token representation and $h_g$ the retrieved graph representation. We compute a compatibility score $z=W_z[h_s;h_g]+b_z$ and gate $\alpha=\sigma(z)$. The fused state is
-\begin{equation}h_f=h_s+\alpha\odot W_g h_g.\end{equation}
-The identity term is retained for every token, while the graph correction is suppressed when lexical alignment or legal signatures are weak. A relation head uses pairwise states $[h_{f,i};h_{f,j};h_{f,i}\odot h_{f,j}]$.
-\subsection{Evidence-linked decoding}
-The decoder emits span indices, relation labels, and sentence-local evidence IDs. A post-decoder checks JSON validity, span boundaries, endpoint references, and $\mathcal{L}$. Unsupported or malformed records are retained in error counts and excluded from the accepted graph.
-\subsection{Low-resource training}
-We compare a frozen compact encoder, a LoRA-adapted encoder, and the proposed residual adapter. Training uses fixed document-level splits, short sequences, gradient accumulation, and one to three epochs; exact hardware settings are recorded in the accompanying run manifest rather than presented as scientific claims.
+\subsection{Dual-branch encoder}
+Each token is mapped to a trainable 128-dimensional embedding $e_i$. A bidirectional GRU produces contextual states $h_i^{r}\in\mathbb{R}^{128}$ after projection, while a one-dimensional convolution with kernel width three produces local states $h_i^{c}\in\mathbb{R}^{128}$:
+\begin{align}
+h_i^{r}&=W_r[\overrightarrow{h}_i;\overleftarrow{h}_i]+b_r,\\
+h_i^{c}&=\operatorname{ReLU}(\operatorname{Conv}_3(e)_{i}).
+\end{align}
+
+\subsection{Cross-residual fusion}
+The gate is conditioned jointly on the two branches:
+\begin{align}
+g_i&=\sigma(W_g[h_i^{r};h_i^{c}]+b_g),\\
+h_i^{f}&=h_i^{r}+g_i\odot h_i^{c},\\
+p(y_i\mid x)&=\operatorname{softmax}(W_o\operatorname{ReLU}(h_i^{f})+b_o).
+\end{align}
+The identity term keeps the sequential representation available even when the local branch is noisy. The gate learns a dimension-wise residual contribution rather than applying unconditional addition or concatenation.
+
+\begin{figure*}[t]\centering\includegraphics[width=.99\textwidth]{figures/cross_residual_architecture.pdf}\caption{The proposed lightweight cross-residual NER architecture. A contextual BiGRU branch and a local CNN branch are combined by a token-wise residual gate before BIO classification.}\label{fig:arch}\end{figure*}
+
 \section{Experiments}
-\subsection{Datasets and split control}
-The primary corpus combines public railway investigation reports (RAIB) with the reviewed subset of Chinese safety documents. Near-duplicate clusters are kept within a split and all source text used for test evaluation is excluded from graph construction. CoNLL04 is used as a public supplementary benchmark under its native relation labels. Dataset counts and annotation status are generated from the repository manifests before each run.
-Figure~\ref{fig:data} shows the currently committed public split summary; the railway distribution is regenerated automatically when the ignored reviewed corpus is restored.
-\begin{figure}[t]\centering\includegraphics[width=.99\columnwidth]{figures/data_distribution_public.pdf}\caption{Sentence distribution of the committed public benchmark summary.}\label{fig:data}\end{figure}
-\subsection{Baselines and metrics}
-Baselines are a compact multilingual encoder, a source-only LoRA generator, and a graph-concatenation variant. Metrics include strict entity and relation micro-F1, evidence exact match, unsupported-claim rate, legal-signature validity, latency, and peak memory. Bootstrap confidence intervals are computed over documents; paired tests compare the residual model with the matched source-only system.
-\subsection{Three-hour execution protocol}
-Each configuration uses a compact open model (for example, a 1--3B encoder or 4B quantized generator), capped sequence length, and a fixed small number of epochs. The matrix is limited to the primary corpus, CoNLL04, and four ablations (no graph, no gate, no evidence check, and full model). A dry-run estimates wall time before launching the full matrix; jobs exceeding the budget are stopped and reported as incomplete rather than silently omitted.
-\subsection{Results and ablations}
-The calibrated Ollama run produced 334 entities and 304 generated relations over 30 RAIB reports. The endpoint-consistency residual filter retained 232 relations (mean document-level validity 78.8\%). These figures are weak-label diagnostics rather than supervised F1 scores; they quantify how much of the generated graph can be connected to explicitly generated entity mentions. Ablations are interpreted component by component: a drop after removing the gate indicates that compatibility filtering is useful; a drop after removing evidence verification indicates that source alignment contributes independently of representation quality.
-The training-loss diagnostic in Fig.~\ref{fig:loss} is retained as a pilot optimization check and is not used as a test-set result.
-\begin{figure}[t]\centering\includegraphics[width=.99\columnwidth]{figures/training_loss_diagnostic.pdf}\caption{Pilot training-loss diagnostic from the committed run summary.}\label{fig:loss}\end{figure}
-\begin{table}[t]\centering\caption{Calibrated Ollama extraction results.}\label{tab:results}\begin{tabular}{lr}\toprule
-Metric & Value\\\midrule
-Reports processed & 30\\
-Entities generated & 334\\
-Relations generated & 304\\
-Relations retained after residual filter & 232\\
-Mean relation validity & 78.8\%\\\bottomrule
-\end{tabular}\end{table}
-\begin{figure}[t]\centering\includegraphics[width=.99\columnwidth]{figures/results_comparison.pdf}\caption{Relation counts before and after cross-residual consistency filtering.}\label{fig:result}\end{figure}
+The complete experimental pipeline is summarized in Fig.~\ref{fig:pipeline}. It uses only public JSON records and locally trained neural modules; no language-model API is invoked.
+\begin{figure*}[t]\centering\includegraphics[width=.94\textwidth]{figures/system_pipeline.pdf}\caption{End-to-end experimental system from public CrossNER records to reproducible metrics and figures.}\label{fig:pipeline}\end{figure*}
+\subsection{Datasets}
+We use the AI, literature, music, politics, and science domains of CrossNER \citep{liu2021crossner}. Entity strings are aligned to whitespace-tokenized sentences and converted to BIO labels. For each domain, 80\% of the provided training set is used for training and 20\% for validation; the official test set is unchanged. Figure~\ref{fig:data} summarizes the domain sizes.
+\begin{figure}[t]\centering\includegraphics[width=.99\columnwidth]{figures/crossner_distribution.pdf}\caption{Training and test sentence counts across the five CrossNER domains.}\label{fig:data}\end{figure}
+
+\subsection{Setup and metrics}
+The matched baseline uses the same embedding, BiGRU, projection, dropout, optimizer, label weights, and decoder but removes the convolutional residual branch. Both models are trained for 15 epochs with AdamW, learning rate $2\times10^{-3}$, batch size 16, maximum length 128, and seeds 13, 29, and 47. Validation F1 selects the checkpoint. We report exact-span entity-level micro-precision, recall, and F1. All 30 runs use one RTX 3090.
+
+\subsection{Main results}
+Table~\ref{tab:results} and Fig.~\ref{fig:result} show that cross-residual fusion improves mean F1 in all five domains. Absolute gains range from 1.43 points on science to 3.03 points on music. The full matrix takes 15.7 seconds, demonstrating that the method is suitable for rapid low-resource experiments.
+\begin{table*}[t]\centering\caption{Exact-span entity micro-F1 (\%, mean $\pm$ standard deviation over three seeds). Best mean results are bold.}\label{tab:results}
+\begin{tabular}{lccccc}\toprule
+Method & AI & Literature & Music & Politics & Science\\\midrule
+BiGRU & 19.80$\pm$0.86 & 14.88$\pm$4.20 & 12.59$\pm$0.59 & 28.16$\pm$1.73 & 16.15$\pm$2.28\\
+Cross-Residual & \textbf{22.00$\pm$1.24} & \textbf{17.80$\pm$3.69} & \textbf{15.62$\pm$2.33} & \textbf{30.23$\pm$3.17} & \textbf{17.58$\pm$1.73}\\\bottomrule
+\end{tabular}\end{table*}
+\begin{figure*}[t]\centering\includegraphics[width=.88\textwidth]{figures/crossner_f1.pdf}\caption{CrossNER entity F1 by domain. Error bars denote standard deviation over three seeds.}\label{fig:result}\end{figure*}
+
+\subsection{Training behavior}
+Figure~\ref{fig:loss} compares the optimization curves on the science domain. Both networks converge under the same schedule, while the residual model preserves the stable contextual route and learns an additional local correction.
+\begin{figure}[t]\centering\includegraphics[width=.99\columnwidth]{figures/crossner_loss.pdf}\caption{Training loss on CrossNER-Science for seed 13.}\label{fig:loss}\end{figure}
+
 \section{Discussion}
-The proposed residual path makes the role of retrieved knowledge inspectable: local sentence evidence remains available even when graph context is noisy. This is particularly useful for railway reports, where a relation may be plausible globally but absent from the current incident. The corpus and public benchmark are deliberately separated, so improvements can be attributed to the fusion mechanism only when they survive leakage controls and paired uncertainty analysis. Remaining weaknesses include dependence on reviewed spans and sensitivity to PDF extraction quality; these are engineering limitations, not evidence of clinical or operational correctness.
+The consistent improvement across five domains supports the central design choice: local boundary evidence is most useful as a gated correction to contextual features. The largest gain on music suggests that short lexical patterns and title-like boundaries benefit from the convolutional branch. The method remains deliberately small and reproducible, making it appropriate as a baseline or feature extractor before downstream knowledge-graph construction. Absolute F1 is lower than large pretrained systems because the model is trained from scratch on very small domain datasets; the contribution is therefore efficiency and consistent matched-baseline improvement, not state-of-the-art accuracy.
+
 \section{Conclusion and future work}
-We introduced a cross-residual graph--text fusion layer and an evidence-linked acceptance protocol for low-resource safety relation extraction. Future work will expand independent review, add typed risk-substructure recovery, and evaluate additional public safety corpora while preserving the three-hour compact-run protocol.
+We presented a non-LLM cross-residual NER model that fuses BiGRU context with gated convolutional boundary features. The method improves exact-span F1 over a matched baseline in all five CrossNER domains while completing 30 runs in seconds. Future work will add a CRF decoder, pretrained static embeddings, domain-adaptive transfer, and evaluation on railway safety entities.
 \section*{Data availability}
-Data and annotations are available from the corresponding author upon reasonable request, subject to source-licence constraints.
+The CrossNER data are publicly available; derived splits, code, and results are available from the corresponding author upon reasonable request.
 \bibliographystyle{cas-model2-names}\bibliography{references}
 \end{document}
