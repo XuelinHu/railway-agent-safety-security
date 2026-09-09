@@ -3,7 +3,7 @@ import json, subprocess, time
 from pathlib import Path
 import requests
 
-ROOT=Path(__file__).resolve().parents[1]
+ROOT=Path(__file__).resolve().parents[2]
 pdfs=sorted((ROOT/'data/raw/raib').glob('*.pdf'))[:30]
 out=ROOT/'paper/cross-residual/results/ollama_draft.jsonl'; out.parent.mkdir(parents=True,exist_ok=True)
 prompt_tpl='''Extract railway safety entities and relations from this report excerpt. Return JSON only with keys entities and relations. Entities: text,type. Relations: source,relation,target. Use only evidence explicitly stated in the excerpt.\n\nEXCERPT:\n{}'''
