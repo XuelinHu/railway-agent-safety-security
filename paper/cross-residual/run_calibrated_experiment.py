@@ -2,7 +2,7 @@
 import csv, json, re
 from pathlib import Path
 ROOT=Path(__file__).resolve().parents[2]
-src=ROOT/'paper/cross-residual/results/ollama_draft.jsonl'; out=ROOT/'paper/cross-residual/results/results.csv'
+src=ROOT/'paper/cross-residual/results/ollama_draft_v2.jsonl'; out=ROOT/'paper/cross-residual/results/results.csv'
 rows=[]
 for line in src.read_text(encoding='utf-8').splitlines():
     rec=json.loads(line); raw=rec.get('response','')
