@@ -1,14 +1,14 @@
 \documentclass[a4paper,fleqn,numbers,doubleblind]{cas-dc}
-\usepackage{amsmath,amssymb,booktabs,graphicx,lineno,tabularx,xurl}
+\usepackage{amsmath,amssymb,booktabs,graphicx,lineno,tabularx,xurl,multirow}
 \usepackage[numbers,sort&compress]{natbib}
 \usepackage{hyperref}
 \hypersetup{hidelinks}
 
 \begin{document}
 \let\WriteBookmarks\relax
-\shorttitle{Score-Residual Adaptation for Cross-Domain NER}
+\shorttitle{Validation-Gated Score-Residual Adaptation}
 \shortauthors{Hu et al.}
-\title[mode=title]{Gated Score-Residual Adaptation for Efficient Cross-Domain Named Entity Recognition}
+\title[mode=title]{Validation-Gated Score-Residual Adaptation for Cross-Domain Named Entity Recognition}
 \author{Xuelin Hu}
 \author{Ai He\corref{cor1}\ead{deipss@gmail.com}}
 \author{Qing Cai\ead{2202879601@qq.com}}
@@ -24,10 +24,9 @@ named entity recognition \sep domain adaptation \sep residual learning \sep span
 \end{keywords}
 
 \maketitle
-\linenumbers
 
 \section{Introduction}
-Named entity recognition converts free text into typed mentions that support document indexing, search, question answering, and knowledge-graph construction \citep{li2022ner,hogan2021kg}. Modern pretrained encoders provide strong transferable representations, yet their accuracy can fall sharply when the target domain introduces new labels, specialist terminology, and different mention boundaries. Cross-domain NER isolates this problem: a system should retain general boundary knowledge while learning a small domain-specific inventory from limited annotations \citep{liu2021crossner}.
+Named entity recognition converts free text into typed mentions that support document indexing, search, question answering, and knowledge-graph construction \citep{li2022ner,hogan2021kg}. Modern pretrained encoders provide strong transferable representations, yet their accuracy can fall sharply when the target domain introduces new labels, specialist terminology, and different mention boundaries. Cross-domain NER isolates this problem: a system should retain general boundary knowledge while learning a small domain-specific inventory from limited annotations \citep{liu2021crossner,conneau2020xlmr,han2023spanbased}. The setting is relevant to safety and biomedical information access, where a missed boundary or a wrong type can propagate into downstream review systems \citep{gurulingappa2012ade}.
 
 The common response is to fine-tune every parameter on the available target examples. Fine-tuning is effective, but the resulting predictor exposes only the adapted score. It does not reveal whether a decision is supported by general span evidence, introduced by domain supervision, or amplified by both. With small target sets, treating every target-induced score change as equally reliable can also over-specialize the model. These concerns motivate an adaptation mechanism that preserves the original prediction as an explicit identity path.
 
@@ -37,13 +36,13 @@ This study makes three contributions. First, it formulates cross-domain NER adap
 
 \section{Related work}
 \subsection{Neural and span-based NER}
-Deep NER has evolved from recurrent sequence tagging toward pretrained contextual encoders and direct span prediction \citep{li2022ner}. Span-based methods score candidate boundaries and entity types jointly, which avoids committing to a single token-level BIO path and naturally represents typed mentions \citep{han2023spanbased}. Boundary assembly and boundary regression further show that explicit treatment of mention endpoints can improve structured extraction \citep{tang2022boundaryassembling,tang2023boundaryregression}. Set prediction and unified information extraction provide alternative formulations in which structured outputs are predicted jointly \citep{sui2024setprediction,lu2022uie}. Our work uses direct span scores because they provide a common numerical interface for general and target-domain predictors.
+Deep NER has evolved from recurrent sequence tagging and contextual word representations \citep{lample2016ner,peters2018elmo,akbik2019flair} toward pretrained Transformer encoders \citep{devlin2019bert,he2021deberta} and direct span prediction \citep{li2022ner}. Span-based methods score candidate boundaries and entity types jointly, which avoids committing to a single token-level BIO path and naturally represents typed mentions \citep{han2023spanbased}. Boundary assembly and boundary regression further show that explicit treatment of mention endpoints can improve structured extraction \citep{tang2022boundaryassembling,tang2023boundaryregression}. Set prediction and unified information extraction provide alternative formulations in which structured outputs are predicted jointly \citep{sui2024setprediction,lu2022uie}. Related joint extraction systems also study position-aware interactions and global entity matching \citep{chen2022positionaware,gao2023ergm,tang2022unirel}. Our work uses direct span scores because they provide a common numerical interface for general and target-domain predictors.
 
 \subsection{Generalist and cross-domain recognition}
-CrossNER evaluates transfer from broad corpora to AI, literature, music, politics, and science, each with a specialist label inventory \citep{liu2021crossner}. Transferable multilingual encoders such as XLM-R demonstrate the broad benefit of pretraining across heterogeneous text \citep{conneau2020xlmr}; however, representation transfer alone does not determine how strongly a target update should override general evidence. GLiNER casts NER as label-conditioned span matching and supports arbitrary textual entity labels with a compact bidirectional transformer \citep{zaratiana2024gliner}. This property makes it suitable for controlled cross-domain study: the same inference interface can be retained before and after target adaptation.
+CrossNER evaluates transfer from broad corpora to AI, literature, music, politics, and science, each with a specialist label inventory \citep{liu2021crossner}. Few-NERD likewise emphasizes the effect of sparse and fine-grained supervision \citep{ding2021fewnerd}. Transferable multilingual encoders such as XLM-R demonstrate the broad benefit of pretraining across heterogeneous text \citep{conneau2020xlmr}; however, representation transfer alone does not determine how strongly a target update should override general evidence. GLiNER casts NER as label-conditioned span matching and supports arbitrary textual entity labels with a compact bidirectional transformer \citep{zaratiana2024gliner}. This property makes it suitable for controlled cross-domain study: the same inference interface can be retained before and after target adaptation.
 
 \subsection{Residual adaptation}
-Residual connections stabilize deep optimization by retaining an identity path, and cross-residual designs extend this idea to interacting information sources \citep{wang2026crossresidual}. In transfer learning, the analogous objects are a general predictor and its task-specific change. Feature concatenation mixes these sources inside an opaque representation, whereas score averaging ignores the direction of adaptation. The proposed method instead defines the adapted-minus-general difference as a signed correction and gates that correction at inference time. This is deliberately a small methodological change: the contribution is the placement and validation control of the residual, not a claim to a new pretrained encoder.
+Residual connections stabilize deep optimization by retaining an identity path, and cross-residual designs extend this idea to interacting information sources \citep{wang2026crossresidual}. In transfer learning, the analogous objects are a general predictor and its task-specific change. Feature concatenation mixes these sources inside an opaque representation, whereas an unexamined score average does not expose which branch changed a candidate. The proposed method instead defines the adapted-minus-general difference as a signed correction and gates that correction at inference time. Because this expression is algebraically related to linear score interpolation, our claim is not that the arithmetic is a new ensemble family. The contribution is the explicit diagnostic decomposition, the validation protocol, and the controlled evaluation of that decomposition in cross-domain NER.
 
 \section{Task formulation}
 Let $x=(w_1,\ldots,w_n)$ be a sentence and let $\mathcal{Y}_d$ denote the entity types for target domain $d$. A typed candidate is $c=(b,e,y)$, where $b$ and $e$ are exact character boundaries and $y\in\mathcal{Y}_d$. A recognizer returns a confidence $s(c\mid x,\mathcal{Y}_d)\in[0,1]$. The accepted prediction set at threshold $\tau$ is
@@ -57,6 +56,20 @@ A candidate counts as correct only when its start, end, and type all match a gol
 F_1 &= \frac{2|P\cap G|}{2|P\cap G|+|P\setminus G|+|G\setminus P|}.
 \end{align}
 This strict typed-span definition penalizes boundary, label, missed-entity, and spurious-entity errors.
+
+For a domain $d$, the target data are $D_d=\{(x_i,G_i)\}_{i=1}^{N_d}$, where $G_i$ is a set of gold spans. Candidate alignment is performed on the tuple rather than on surface text alone:
+\begin{equation}
+\mathcal{C}_d(x)=\{(b,e,y):0\leq b<e\leq |x|,\;y\in\mathcal{Y}_d\}.
+\end{equation}
+The exact-match indicator used in all analyses is
+\begin{equation}
+m(c,g)=\mathbb{I}[b_c=b_g\;\land\;e_c=e_g\;\land\;y_c=y_g].
+\end{equation}
+For a collection of sentences, domain macro-F1 is computed after aggregating exact matches within each domain and then averaging the five domain scores:
+\begin{equation}
+F_{1}^{\mathrm{macro}}=\frac{1}{|\mathcal{D}|}\sum_{d\in\mathcal{D}}F_{1,d}.
+\end{equation}
+This separates the reported domain macro mean from a micro score dominated by the largest test split.
 
 \section{Method}
 Figure~\ref{fig:arch} presents the proposed architecture. The important distinction is that the two paths share an initial model family and input interface but not their final parameters: the general path remains frozen at $\theta_0$, whereas the adapted path is optimized to $\theta_1$.
@@ -82,7 +95,11 @@ A copy initialized from $\theta_0$ is optimized on target-domain annotations. Fo
 \mathcal{L}_{d}(\theta_1)=-\sum_{c\in\mathcal{C}(x)}
 \left[t_c\log s_{\theta_1}(c)+(1-t_c)\log(1-s_{\theta_1}(c))\right].
 \end{equation}
-The adapted score is $s_1(c)=s_{\theta_1}(c)$. Using matched label descriptions, tokenization, candidate construction, and decoding in both branches ensures that $s_1-s_0$ describes a target-induced scoring change rather than a change in output schema.
+The adapted score is $s_1(c)=s_{\theta_1}(c)$. Using matched label descriptions, tokenization, candidate construction, and decoding in both branches ensures that $s_1-s_0$ describes a target-induced scoring change rather than a change in output schema. The parameter update is written abstractly as
+\begin{equation}
+\theta_1=\operatorname{Adapt}(\theta_0;D_d^{\mathrm{train}},\mathcal{L}_d),
+\end{equation}
+which emphasizes that the adapted branch starts from the general checkpoint. The reference branch remains frozen throughout target training and test inference.
 
 \subsection{Gated score-residual fusion}
 Let $\mathcal{C}^{\cup}=\mathcal{C}_0\cup\mathcal{C}_1$ be the union of candidates emitted by either branch, with an absent candidate assigned score zero in that branch. For each $c\in\mathcal{C}^{\cup}$, we define
@@ -92,6 +109,15 @@ s_f(c;\alpha_d) &= s_0(c)+\alpha_d\Delta_d(c),\\
 P_d(x) &= \{c:s_f(c;\alpha_d)\geq\tau_d\}.
 \end{align}
 The formulation has three interpretable regimes. When $\alpha_d=0$, the adapted branch is removed and the result is the frozen general predictor. When $\alpha_d=1$, $s_f=s_1$, exactly recovering ordinary domain adaptation. Values $0<\alpha_d<1$ damp target changes, whereas $\alpha_d>1$ amplifies them. Thus the method is a controlled extension of fine-tuning rather than an unrelated ensemble.
+
+The gate sensitivity is explicit:
+\begin{equation}
+\frac{\partial s_f(c;\alpha_d)}{\partial\alpha_d}=\Delta_d(c).
+\end{equation}
+A positive residual raises a candidate score as the gate grows, while a negative residual suppresses it. This concerns score movement only; thresholding and overlap resolution mean that corpus F1 need not be monotonic in the gate. For $0\leq\alpha_d\leq1$, the rule is also the linear interpolation
+\begin{equation}
+s_f(c;\alpha_d)=(1-\alpha_d)s_0(c)+\alpha_d s_1(c).
+\end{equation}
 
 \subsection{Validation-only gate selection}
 The domain gate and threshold are selected jointly on held-out validation examples:
@@ -138,8 +164,68 @@ Science & 200 & 450 & 543 & 1,075 & 2,538 & 3,089\\
 \label{fig:data}
 \end{figure}
 
+Table~\ref{tab:profile} and Fig.~\ref{fig:profile} provide a second view of corpus heterogeneity. The statistics are computed from the official BIO files before model inference. Entity density is the number of annotated mentions divided by sentence tokens; span length is measured in BIO tokens. These descriptive statistics are not used to select gates or thresholds.
+
+\begin{table*}[t]
+\centering
+\caption{Distribution profile of the official CrossNER domains. Density is entities per token; lengths are token counts.}
+\label{tab:profile}
+\begin{tabular}{lrrrrr}
+\toprule
+Domain & Types & Train ents. & Median span & 90th pct. span & Median density\\
+\midrule
+AI & 11 & 532 & 2 & 3 & 0.143\\
+Literature & 12 & 541 & 2 & 4 & 0.143\\
+Music & 13 & 648 & 2 & 4 & 0.167\\
+Politics & 14 & 1,304 & 2 & 5 & 0.143\\
+Science & 17 & 1,075 & 2 & 4 & 0.154\\
+\bottomrule
+\end{tabular}
+\end{table*}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=.99\columnwidth]{figures/dataset_profile_analysis.pdf}
+\caption{Entity taxonomy, span-length, and density profile computed from official CrossNER annotations.}
+\label{fig:profile}
+\end{figure}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=.99\columnwidth]{figures/label_frequency_longtail.pdf}
+\caption{Training-mention frequency by rank for each domain (logarithmic vertical axis). Ranks are computed independently within each domain.}
+\label{fig:longtail}
+\end{figure}
+
 \subsection{Compared configurations}
 The experiment is a component-controlled comparison with three configurations. \emph{Zero-shot span model} is the frozen general branch and measures transfer without target updates. \emph{Domain-adapted} fine-tunes the same model family and corresponds to the residual formulation at $\alpha=1$. \emph{Score-residual} applies validation-gated fusion to the frozen and adapted scores. This design holds the underlying architecture and data constant, isolating the contribution of domain training and then the contribution of residual control.
+
+\subsection{Split integrity and overlap audit}
+We audited exact sentence overlap across the official files before interpreting the test results. For split sentence sets $S_a$ and $S_b$, the overlap count and normalized rate are
+\begin{equation}
+O(S_a,S_b)=|S_a\cap S_b|,\qquad
+\rho(S_a,S_b)=\frac{|S_a\cap S_b|}{\min(|S_a|,|S_b|)}.
+\end{equation}
+The audit uses whitespace-tokenized sentence text and does not remove repeated examples from the official benchmark. Table~\ref{tab:overlap} reports the observed exact intersections. Several domains contain a small number of repeated sentences across development and test files. We therefore treat the official split as the primary benchmark protocol, disclose the overlap explicitly, and avoid describing it as a perfectly disjoint construction. Any future deduplicated sensitivity run must use the same model-selection rules and be reported separately rather than replacing the official result.
+
+\begin{table*}[t]
+\centering
+\caption{Exact sentence intersections among official CrossNER splits. Counts are computed before model inference.}
+\label{tab:overlap}
+\begin{tabular}{lrrr}
+\toprule
+Domain & Train--Dev & Train--Test & Dev--Test\\
+\midrule
+AI & 0 & 0 & 3\\
+Literature & 0 & 0 & 0\\
+Music & 1 & 6 & 17\\
+Politics & 0 & 0 & 1\\
+Science & 4 & 1 & 11\\
+\bottomrule
+\end{tabular}
+\end{table*}
+
+The overlap counts do not reveal whether annotations are identical, conflicting, or merely repeated templates. They do not justify removing examples after observing model performance. We retain the benchmark files exactly as released for the headline numbers, mark this as a protocol limitation, and reserve deduplication and conflict analysis for a separately versioned sensitivity experiment.
 
 \subsection{Implementation and evaluation protocol}
 The general branch is the open GLiNER-small-v2.1 span recognizer, built on a compact DeBERTa encoder \citep{zaratiana2024gliner}. Each target branch is adapted for 300 optimizer steps with batch size eight and bfloat16 arithmetic. Validation tests four residual coefficients from 0.75 to 1.50 and five thresholds from 0.25 to 0.65. Zero-shot and ordinary adapted thresholds are also selected on the official development split. Three independent initializations are run for every domain. We report the mean and sample standard deviation of micro-precision, recall, and F1 under exact typed-span matching. All 15 adaptation and evaluation runs finish in 562.1 seconds on one NVIDIA RTX 3090, excluding one-time acquisition of public data and pretrained weights.
@@ -169,8 +255,45 @@ Score-residual & $\mathbf{69.19\pm0.44}$ & $\mathbf{74.55\pm0.37}$ & $\mathbf{80
 \label{fig:result}
 \end{figure*}
 
+\subsection{Component ablation interpretation}
+The three configurations form an endpoint ablation of the proposed pipeline. Removing target supervision ($\alpha=0$ with the frozen branch) lowers mean F1 to 62.93\%, showing that the specialist inventory cannot be recovered reliably from the general model alone. Retaining target adaptation but removing residual control ($\alpha=1$) yields 75.44\%, which attributes the large improvement to domain supervision rather than to the fusion arithmetic. Reintroducing the validation-gated residual raises the mean to 75.60\%. Thus the residual layer contributes a small but consistently positive calibration of the adapted scores, while the main accuracy gain comes from learning the target domain. This decomposition is the reason we do not present the final score as a 12.67-point gain attributable solely to the proposed gate.
+
+The endpoint comparison also bounds the interpretation of the method. At $\alpha=1$, the residual formulation exactly reproduces ordinary domain adaptation; at $\alpha=0$, it exactly reproduces the frozen reference. The practical question is therefore whether development-selected intermediate or extrapolated values improve the test decision under a fixed candidate set. The observed gate frequencies and repeated-run plot answer this question at the aggregate level, but they do not establish candidate-level error reductions. A future fixed-coefficient ablation should report the same test protocol for $\alpha=0.5$, $0.75$, $1.0$, and $1.25$ to separate search benefit from a particular coefficient.
+
+To make the small residual effect visible without truncating the F1 axis, Fig.~\ref{fig:paired} connects the matched domain-macro scores for each independent run. Every line moves upward, but the vertical displacement is small relative to the absolute performance level. This is why the paper reports both the 12.51-point adaptation gain and the separate 0.16-point residual increment.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=.99\columnwidth]{figures/paired_run_gains.pdf}
+\caption{Matched domain-macro F1 before and after score-residual fusion for the three independent runs.}
+\label{fig:paired}
+\end{figure}
+
+\begin{table}[t]
+\centering
+\caption{Controlled components and information used for each configuration.}
+\label{tab:protocol}
+\begin{tabular}{p{.25\columnwidth}p{.58\columnwidth}}
+\toprule
+Configuration & Trainable or selected components\\
+\midrule
+Zero-shot & Frozen recognizer; development threshold\\
+Domain-adapted & Target-domain recognizer; development threshold\\
+Equal-score blend & Frozen and adapted scores; fixed $\alpha=0.5$\\
+Score-residual & Frozen and adapted scores; development $\alpha$ and threshold\\
+\bottomrule
+\end{tabular}
+\end{table}
+
 \subsection{Gate behavior and precision--recall analysis}
-Table~\ref{tab:gate} exposes gate behavior rather than treating fusion as a black box. The damped residual $\alpha=0.75$ is selected in 13 of 15 runs; the other two select $\alpha=1$, which exactly recovers the adapted predictor. This pattern indicates that the official development sets usually favor retaining part of the frozen general evidence. Precision exceeds recall in all domains (Fig.~\ref{fig:pr}); music and politics nevertheless exceed 77\% mean recall and 82\% mean precision. AI's lower recall identifies missed specialist mentions, rather than uncontrolled false positives, as its main remaining error source.
+Table~\ref{tab:gate} exposes gate behavior rather than treating fusion as a black box. The damped residual $\alpha=0.75$ is selected in 13 of 15 domain--run combinations; the other two select $\alpha=1$, which exactly recovers the adapted predictor. Fig.~\ref{fig:gatefreq} shows this frequency directly. The development sets therefore usually favor retaining part of the frozen general evidence, although the selection grid is intentionally coarse. Precision exceeds recall in all domains (Fig.~\ref{fig:pr}); music and politics nevertheless exceed 77\% mean recall and 82\% mean precision. AI's lower recall identifies missed specialist mentions, rather than uncontrolled false positives, as its main remaining error source; this interpretation is limited to the aggregate P/R evidence and is not a substitute for candidate-level error counts.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=.99\columnwidth]{figures/gate_selection_frequency.pdf}
+\caption{Frequency of development-selected residual coefficients across three runs.}
+\label{fig:gatefreq}
+\end{figure}
 
 \begin{table*}[t]
 \centering
@@ -195,6 +318,28 @@ Science & 3/3 & $77.21\pm2.09$ & $70.44\pm1.08$ & $73.65\pm0.41$\\
 \caption{Precision and recall of the score-residual model by domain.}
 \label{fig:pr}
 \end{figure}
+
+\subsection{Distribution-sensitive interpretation}
+The official domains differ in both taxonomy size and the number of supervised mentions (Table~\ref{tab:profile}). Figure~\ref{fig:longtail} shows that the training inventories are long-tailed: a small number of types account for many mentions, while the tail contains types with substantially less supervision. The residual layer is therefore evaluated as a decision-control mechanism under heterogeneous support, not as a replacement for domain data. This distinction is consistent with prior observations that span boundary modeling, label semantics, and set-oriented extraction expose different error sources \citep{tang2022boundaryassembling,tang2023boundaryregression,sui2024setprediction,zhang2022positionaware}.
+
+The distribution analysis also explains why a single pooled score can be misleading. Politics and science contain more training mentions than AI and literature, while music has the highest median entity density in the supplied profile. A macro average gives each domain equal weight and prevents the largest split from determining the headline result. We do not infer causality from these correlations; the figures are descriptive checks that make the evaluation population explicit.
+
+\begin{table*}[t]
+\centering
+\caption{Reporting units used in the expanded analysis.}
+\label{tab:analysisunits}
+\begin{tabular}{lll}
+\toprule
+Analysis & Unit & Selection data\\
+\midrule
+Main F1 & Domain-level exact typed spans & Development threshold; test once\\
+Gate frequency & Domain--run pair & Development gate grid\\
+Repeated stability & Five-domain macro per run & No test-driven selection\\
+Distribution profile & Official BIO sentence/entity records & None\\
+Training convergence & Logged optimization step & None\\
+\bottomrule
+\end{tabular}
+\end{table*}
 
 \subsection{Repeated-run stability and uncertainty}
 Table~\ref{tab:repeat} reports the domain-macro F1 from each independent adaptation run. Residual fusion improves the matched adapted model in all three aggregates, with gains between 0.08 and 0.23 points. The mean paired gain is 0.16 points. A paired $t$-test over the three run-level macro scores gives $p=0.067$ and a 95\% confidence interval of $[-0.03,0.35]$ points. The repeated direction supports stability, but the interval includes zero; accordingly, we interpret the residual as a low-cost calibration improvement rather than evidence of a large universal accuracy effect.
@@ -226,6 +371,38 @@ Figure~\ref{fig:loss} plots the mean optimizer trajectory and seed variation fro
 \label{fig:loss}
 \end{figure}
 
+\subsection{Reproducibility and computational cost}
+The complete experiment is deliberately reported as a matrix rather than as a single best run. There are five target domains, three independent adaptations per domain, and three inference configurations evaluated under the same strict matcher. The frozen branch is shared across runs; the adapted branches are initialized from the same public checkpoint and differ only through the prescribed training randomness. This design prevents repeated zero-shot scores from being counted as independent training evidence.
+
+The score-residual operation introduces no trainable fusion parameters. Its additional computation is one extra forward pass of the adapted branch and a candidate-wise arithmetic operation when the frozen scores are not cached. If $T_0$ and $T_1$ denote the measured single-branch forward times and $T_{\mathrm{fuse}}$ the arithmetic and decoding overhead, the online fusion time is
+\begin{equation}
+T_{\mathrm{online}}=T_0+T_1+T_{\mathrm{fuse}},
+\end{equation}
+whereas cached reference scores reduce repeated evaluation to $T_1+T_{\mathrm{fuse}}$. We report this distinction because “no extra parameters” is not equivalent to “no extra inference cost.”
+
+The recorded end-to-end wall-clock time for the 15-model training and evaluation matrix is 562.1 s on one NVIDIA RTX 3090, or 37.5 s per domain--run pair on average. This aggregate includes adaptation and evaluation but excludes one-time public-data and checkpoint acquisition. A future deployment report should additionally include synchronized GPU latency, throughput, peak memory, and the cost of constructing the frozen-score cache; these quantities are not inferred from the aggregate timer.
+
+\begin{table*}[t]
+\centering
+\caption{Reproducibility and cost accounting for the current official CrossNER study.}
+\label{tab:cost}
+\begin{tabular}{lll}
+\toprule
+Item & Current protocol & Evidence or boundary\\
+\midrule
+Domains & 5 official specialist domains & Official BIO files\\
+Adaptation runs & 3 per domain (15 total) & `runs.csv` and `status.json`\\
+Configurations & Frozen, adapted, score-residual & Same candidate matcher\\
+Fusion parameters & No trainable parameters & Arithmetic score layer\\
+Recorded wall time & 562.1 s total; 37.5 s average pair & One RTX 3090\\
+Data/weight acquisition & Excluded from timer & One-time setup\\
+Online latency breakdown & Not separately recorded & Requires synchronized benchmark\\
+\bottomrule
+\end{tabular}
+\end{table*}
+
+All result summaries, plotting scripts, and the manuscript are lightweight archival artifacts. Large optimizer states and model checkpoints remain local and are not required to interpret the reported means. The released summaries preserve the numerical values used in the tables and figures; if a protocol audit changes candidate construction or split handling, the resulting files must receive a new version identifier instead of overwriting this matrix.
+
 \section{Discussion}
 The largest empirical improvement comes from learning target-domain entity semantics: adaptation contributes 12.51 mean F1 points. The score-residual layer addresses a different question---how much of that learned correction should replace general evidence. Its smaller 0.16-point mean gain is accompanied by a useful structural property: the adapted effect remains explicitly measurable as $\Delta_d(c)$, and ordinary fine-tuning remains available at $\alpha=1$. Development-selected damping improves the aggregate result in every repeated run and reduces F1 variability from 0.30 to 0.24 points. The strongest absolute outcomes occur in music and politics, while science obtains the largest mean residual increment.
 
@@ -238,6 +415,30 @@ We presented gated score-residual adaptation for efficient cross-domain NER. By 
 
 \section*{Data availability}
 CrossNER is publicly available; evaluation code and derived results are available from the corresponding author upon reasonable request.
+
+\appendix
+\section{Protocol checklist for reproduction}
+The following checklist records the decision order used by the reported matrix. First, the official BIO files are parsed into sentence tokens and exact typed spans. Second, the frozen recognizer produces reference scores using the domain label inventory. Third, a copy initialized from the same checkpoint is adapted only on the training split. Fourth, thresholds for the frozen and adapted configurations, and the pair $(\alpha_d,\tau_d)$ for fusion, are selected on development examples. Finally, the selected values are applied once to the untouched test file and strict typed-span counts are accumulated. This order is important: selecting a gate after inspecting test scores would invalidate the paired comparison.
+
+For clarity, the search grids used in the current runs are listed in Table~\ref{tab:grid}. The grid is intentionally small because the study evaluates 15 adapted branches under a resource bound. A finer grid may change the selected coefficient, but it must be specified before test evaluation and assessed as a new protocol.
+
+\begin{table}[t]
+\centering
+\caption{Predefined development-search grid.}
+\label{tab:grid}
+\begin{tabular}{ll}
+\toprule
+Quantity & Values\\
+\midrule
+Residual coefficient $\alpha$ & 0.75, 1.00, 1.25, 1.50\\
+Decision threshold $\tau$ & 0.25, 0.35, 0.45, 0.55, 0.65\\
+Runs per domain & 3\\
+Primary metric & Exact typed-span F1\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The appendix does not introduce an additional benchmark result. It documents the boundary between model fitting, development selection, and test reporting so that the principal tables can be reproduced without relying on unstated choices.
 
 \bibliographystyle{cas-model2-names}
 \bibliography{references}

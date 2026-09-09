@@ -1,10 +1,15 @@
-# Gated score-residual cross-domain NER
+# Validation-gated score-residual cross-domain NER
 
-This directory contains the current CAS double-column manuscript, title page,
+This directory contains the current 10-page CAS double-column manuscript, title page,
 experiment scripts, compact result files, and publication figures for a
 non-generative cross-domain NER study.
 
 ## Current experiment
+
+Current title: *Validation-Gated Score-Residual Adaptation for Cross-Domain Named Entity Recognition*.
+
+The manuscript now includes 22 DOI-bearing references, 10 numbered figures, and
+10 tables (including the split-overlap audit and reproduction appendix).
 
 The paper evaluates three controlled configurations on the five CrossNER
 specialist domains:
@@ -33,6 +38,8 @@ Obtain the official BIO files from https://github.com/zliucr/CrossNER and run:
   differences, the paired test, and the confidence interval.
 - figures/plot_high_performance_results.py regenerates the result,
   precision--recall, and true training-loss figures.
+- figures/generate_expanded_analysis.py regenerates the dataset profile,
+  label-frequency, paired-run, and gate-selection figures.
 - figures/make_cross_residual_figure_v2.py and
   figures/make_system_pipeline.py regenerate the method schematics.
 
