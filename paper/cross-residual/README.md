@@ -13,17 +13,24 @@ specialist domains:
 2. the same recognizer after target-domain adaptation;
 3. validation-gated score-residual fusion of the frozen and adapted scores.
 
-The final strict typed-span F1 scores are 67.21% (AI), 72.31% (literature),
-79.21% (music), 78.64% (politics), and 70.93% (science), with a five-domain
-mean of 73.66%. The five adaptation runs take 168.5 seconds and a complete
-residual evaluation takes 72.3 seconds on one RTX 3090.
+The final three-run strict typed-span F1 scores are 69.19% (AI), 74.55%
+(literature), 80.96% (music), 79.66% (politics), and 73.65% (science), with a
+five-domain mean of 75.60%. The complete 15-model training and evaluation
+matrix takes 562.1 seconds on one RTX 3090.
 
 ## Reproduction
 
-- finetune_gliner_crossner.py adapts the five target-domain branches.
-- evaluate_gliner_crossner.py evaluates the frozen general model.
-- evaluate_score_residual.py selects the residual gate on validation data and
-  performs exact typed-span test evaluation.
+Obtain the official BIO files from https://github.com/zliucr/CrossNER and run:
+
+    python run_official_crossner_repeats.py --data-root /path/to/CrossNER/ner_data
+    python analyze_official_results.py
+    python figures/plot_high_performance_results.py
+
+- run_official_crossner_repeats.py parses the official BIO train/development/
+  test files, trains three independent target-domain branches, selects gates
+  on development data, and performs exact typed-span test evaluation.
+- analyze_official_results.py regenerates domain aggregates, repeated-run
+  differences, the paired test, and the confidence interval.
 - figures/plot_high_performance_results.py regenerates the result,
   precision--recall, and true training-loss figures.
 - figures/make_cross_residual_figure_v2.py and

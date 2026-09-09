@@ -2,7 +2,7 @@ import matplotlib.pyplot as plt
 from matplotlib.patches import FancyBboxPatch, FancyArrowPatch
 plt.rcParams.update({'font.family':'serif','font.serif':['Times New Roman','Times','DejaVu Serif'],'font.size':9,'figure.facecolor':'white','axes.facecolor':'white','savefig.dpi':400})
 fig,ax=plt.subplots(figsize=(7.0,1.75)); ax.set_xlim(0,15); ax.set_ylim(0,3); ax.axis('off')
-items=[(.2,'CrossNER\nJSON'),(3.1,'Train / validation\n/ test split'),(6.0,'General + adapted\nspan scores'),(8.9,'Residual grid\nselection'),(11.8,'Exact-span\nevaluation')]
+items=[(.2,'Official\nBIO files'),(3.1,'Train / dev / test\nprotocol'),(6.0,'Parallel\nspan scores'),(8.9,'Dev-only\ngate selection'),(11.8,'Repeated test\nevaluation')]
 cols=['#e6f2f8','#fff2cc','#d9ead3','#fce5cd','#eadcf8']
 for (x,t),c in zip(items,cols):
     ax.add_patch(FancyBboxPatch((x,.9),2.1,1.1,boxstyle='round,pad=.04,rounding_size=.08',facecolor=c,edgecolor='#333333',linewidth=1)); ax.text(x+1.05,1.45,t,ha='center',va='center',fontsize=8)

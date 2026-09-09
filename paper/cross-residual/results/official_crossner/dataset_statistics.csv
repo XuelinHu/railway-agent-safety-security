@@ -1,0 +1,6 @@
+domain,train_sentences,dev_sentences,test_sentences,train_entities,dev_entities,test_entities
+ai,100,350,431,532,1549,1809
+literature,100,400,416,541,2130,2266
+music,100,380,465,648,2679,3336
+politics,200,541,651,1304,3482,4209
+science,200,450,543,1075,2538,3089

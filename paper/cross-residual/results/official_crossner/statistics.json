@@ -1,0 +1,12 @@
+{
+  "paired_unit": "run-level five-domain macro F1",
+  "n": 3,
+  "mean_difference_points": 0.15916933301123018,
+  "t_statistic": 3.654871370047652,
+  "two_sided_p_value": 0.06738248530789598,
+  "confidence_level": 0.95,
+  "confidence_interval_points": [
+    -0.02821082235775113,
+    0.3465494883802115
+  ]
+}

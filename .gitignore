@@ -18,6 +18,7 @@ tools/*.deb
 *.pth
 *.safetensors
 paper/cross-residual/results/gliner_finetuned/*/checkpoint-*/
+paper/cross-residual/results/official_crossner/checkpoints/
 
 # LaTeX intermediates (retain manuscript and title-page PDFs)
 paper/cross-residual/*.abs
