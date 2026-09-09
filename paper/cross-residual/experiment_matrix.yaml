@@ -1,0 +1,15 @@
+project: cross_residual_railway
+datasets:
+  - railway_reviewed
+  - conll04
+models:
+  - encoder_baseline
+  - source_only_lora
+  - graph_concat
+  - cross_residual
+max_wall_time_hours: 3
+max_epochs: 3
+max_sequence_length: 512
+seeds: [0]
+ablations: [no_graph, no_gate, no_evidence, full]
+policy: "Record incomplete jobs; never impute missing scores."
