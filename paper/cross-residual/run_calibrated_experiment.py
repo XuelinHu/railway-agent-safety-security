@@ -15,4 +15,10 @@ for line in src.read_text(encoding='utf-8').splitlines():
     rows.append({'file':rec['file'],'entities':len(ents),'relations':len(rels),'valid_relations':len(valid),'validity':len(valid)/len(rels) if rels else 1.0})
 with out.open('w',newline='',encoding='utf-8') as f:
     w=csv.DictWriter(f,fieldnames=['file','entities','relations','valid_relations','validity']); w.writeheader(); w.writerows(rows)
-print(json.dumps({'documents':len(rows),'entities':sum(r['entities'] for r in rows),'relations':sum(r['relations'] for r in rows),'valid_relations':sum(r['valid_relations'] for r in rows),'mean_validity':sum(r['validity'] for r in rows)/len(rows)},ensure_ascii=False))
+summary=ROOT/'paper/cross-residual/results/method_results.csv'
+total_rel=sum(r['relations'] for r in rows); valid_rel=sum(r['valid_relations'] for r in rows)
+with summary.open('w',newline='',encoding='utf-8') as f:
+    w=csv.DictWriter(f,fieldnames=['method','documents','entities','relations','accepted_relations','acceptance_rate']); w.writeheader()
+    w.writerow({'method':'Ollama-Qwen3 raw','documents':len(rows),'entities':sum(r['entities'] for r in rows),'relations':total_rel,'accepted_relations':total_rel,'acceptance_rate':1.0})
+    w.writerow({'method':'Cross-residual endpoint gate','documents':len(rows),'entities':sum(r['entities'] for r in rows),'relations':total_rel,'accepted_relations':valid_rel,'acceptance_rate':valid_rel/total_rel if total_rel else 0})
+print(json.dumps({'documents':len(rows),'entities':sum(r['entities'] for r in rows),'relations':total_rel,'valid_relations':valid_rel,'mean_validity':sum(r['validity'] for r in rows)/len(rows)},ensure_ascii=False))
