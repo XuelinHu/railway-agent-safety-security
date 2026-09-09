@@ -1,0 +1,58 @@
+\documentclass[a4paper,fleqn,numbers,doubleblind]{cas-dc}
+\usepackage{amsmath,amssymb,booktabs,graphicx,lineno,tabularx,xurl}
+\usepackage[numbers,sort&compress]{natbib}
+\usepackage{hyperref}\hypersetup{hidelinks}
+\begin{document}\let\WriteBookmarks\relax
+\shorttitle{Cross-Residual Fusion for Safety Relation Extraction}
+\shortauthors{Hu et al.}
+\title[mode=title]{Cross-Residual Graph--Text Fusion for Auditable Railway Safety Relation Extraction}
+\author{Xuelin Hu}
+\author{Ai He\corref{cor1}\ead{deipss@gmail.com}}
+\author{Qing Cai\ead{2202879601@qq.com}}
+\author{Jingchao Wang\corref{cor1}}
+\cortext[cor1]{Corresponding author.}
+\begin{abstract}
+Railway safety reports describe hazards, causal factors, events, and mitigations in heterogeneous language and document formats. Existing extraction systems often concatenate retrieved knowledge with text, making it difficult to determine whether a prediction is supported by the report itself. We present a cross-residual graph--text fusion layer that injects graph context through a gated residual path while preserving an independent local-text representation. The gate is learned from span-level compatibility and relation-signature validity, so graph hints can be attenuated when they conflict with the source sentence. A lightweight evidence checker then links each accepted entity and relation to character offsets in the report. We evaluate the method on a newly organized railway safety corpus derived from public investigation reports and Chinese safety documents, and on a public relation-extraction benchmark for generalization. Experiments are designed around compact open-source encoders and short runs that fit a three-hour compute budget; all final scores will be reported with document-level confidence intervals and ablation controls. The resulting contribution is a reproducible, auditable fusion mechanism rather than an unrestricted claim of cross-domain accuracy.
+\end{abstract}
+\begin{keywords} railway safety \sep relation extraction \sep cross-residual fusion \sep provenance \sep knowledge graph \end{keywords}
+\maketitle\linenumbers
+\section{Introduction}
+Safety investigation reports contain actionable relations but are costly to annotate. Generic language models can produce fluent triples while silently importing associations from pretraining or retrieved knowledge. This is unsafe for analyst-facing systems because an accepted relation must be traceable to a source span. The challenge is amplified by long reports, PDF extraction noise, and a small reviewed set.
+
+We organize a railway-focused corpus from publicly available investigation reports and a complementary Chinese safety collection. A public benchmark is retained as a separate, non-railway test to measure whether the proposed mechanism is a modeling contribution rather than a corpus-specific shortcut. Our central hypothesis is that graph context should act as a residual correction to local evidence, not as a replacement for it.
+
+Our contributions are: (1) a cross-residual graph--text fusion layer with a compatibility gate and explicit residual bypass; (2) an evidence-linked decoding and verification protocol that rejects unsupported spans and illegal relation signatures; and (3) a leakage-controlled, low-resource evaluation package combining the railway corpus with a public benchmark, compact open-source baselines, and document-level uncertainty analysis.
+\section{Related work}
+Prior work on information extraction from incident reports uses sequence taggers, span-based classifiers, and generative structured prediction. Knowledge graphs have been used to supply entity and relation priors, but naive concatenation can blur the boundary between stated evidence and background association. Retrieval-augmented generation and constrained decoding address parts of this problem; they do not by themselves guarantee source offsets or endpoint consistency. Parameter-efficient adaptation makes small open models practical in low-resource settings. Our method combines these ideas through a residual fusion path and a deterministic evidence gate, with the railway corpus providing a concrete safety setting.
+\section{Task formulation}
+Given a document $d$ segmented into sentences $s$, the system predicts entity spans $e_i=(a_i,b_i,t_i)$, typed relations $r_k=(e_i,e_j,c_k)$, and evidence offsets $q_k\subset s$. A prediction is accepted only if $q_k$ overlaps the cited source text, both endpoints are valid spans, and $(t_i,c_k,t_j)$ belongs to the ontology signature set $\mathcal{L}$. The objective is a weighted sum of span, relation, and evidence losses:
+\begin{equation}\mathcal{L}=\mathcal{L}_{span}+\lambda_r\mathcal{L}_{rel}+\lambda_e\mathcal{L}_{evi}.\end{equation}
+\section{Method}
+\subsection{Framework overview}
+The architecture (Fig.~\ref{fig:arch}) first encodes the source sentence and retrieves training-only graph context. Local and graph branches are fused by a cross-residual gate; span and relation heads decode a compact schema, after which deterministic verification reconstructs character offsets.
+\begin{figure*}[t]\centering\includegraphics[width=.94\textwidth]{figures/cross_residual_architecture.pdf}\caption{Cross-residual graph--text fusion. The dashed path is a residual shortcut that preserves local evidence when graph context is incompatible.}\label{fig:arch}\end{figure*}
+\subsection{Cross-residual graph--text fusion}
+Let $h_s$ be the local token representation and $h_g$ the retrieved graph representation. We compute a compatibility score $z=W_z[h_s;h_g]+b_z$ and gate $\alpha=\sigma(z)$. The fused state is
+\begin{equation}h_f=h_s+\alpha\odot W_g h_g.\end{equation}
+The identity term is retained for every token, while the graph correction is suppressed when lexical alignment or legal signatures are weak. A relation head uses pairwise states $[h_{f,i};h_{f,j};h_{f,i}\odot h_{f,j}]$.
+\subsection{Evidence-linked decoding}
+The decoder emits span indices, relation labels, and sentence-local evidence IDs. A post-decoder checks JSON validity, span boundaries, endpoint references, and $\mathcal{L}$. Unsupported or malformed records are retained in error counts and excluded from the accepted graph.
+\subsection{Low-resource training}
+We compare a frozen compact encoder, a LoRA-adapted encoder, and the proposed residual adapter. Training uses fixed document-level splits, short sequences, gradient accumulation, and one to three epochs; exact hardware settings are recorded in the accompanying run manifest rather than presented as scientific claims.
+\section{Experiments}
+\subsection{Datasets and split control}
+The primary corpus combines public railway investigation reports (RAIB) with the reviewed subset of Chinese safety documents. Near-duplicate clusters are kept within a split and all source text used for test evaluation is excluded from graph construction. CoNLL04 is used as a public supplementary benchmark under its native relation labels. Dataset counts and annotation status are generated from the repository manifests before each run.
+\subsection{Baselines and metrics}
+Baselines are a compact multilingual encoder, a source-only LoRA generator, and a graph-concatenation variant. Metrics include strict entity and relation micro-F1, evidence exact match, unsupported-claim rate, legal-signature validity, latency, and peak memory. Bootstrap confidence intervals are computed over documents; paired tests compare the residual model with the matched source-only system.
+\subsection{Three-hour execution protocol}
+Each configuration uses a compact open model (for example, a 1--3B encoder or 4B quantized generator), capped sequence length, and a fixed small number of epochs. The matrix is limited to the primary corpus, CoNLL04, and four ablations (no graph, no gate, no evidence check, and full model). A dry-run estimates wall time before launching the full matrix; jobs exceeding the budget are stopped and reported as incomplete rather than silently omitted.
+\subsection{Results and ablations}
+Results tables are populated only from completed runs. The key comparison is whether the residual gate improves relation and evidence validity without increasing unsupported claims. Ablations are interpreted component by component: a drop after removing the gate indicates that compatibility filtering is useful; a drop after removing evidence verification indicates that source alignment contributes independently of representation quality.
+\section{Discussion}
+The proposed residual path makes the role of retrieved knowledge inspectable: local sentence evidence remains available even when graph context is noisy. This is particularly useful for railway reports, where a relation may be plausible globally but absent from the current incident. The corpus and public benchmark are deliberately separated, so improvements can be attributed to the fusion mechanism only when they survive leakage controls and paired uncertainty analysis. Remaining weaknesses include dependence on reviewed spans and sensitivity to PDF extraction quality; these are engineering limitations, not evidence of clinical or operational correctness.
+\section{Conclusion and future work}
+We introduced a cross-residual graph--text fusion layer and an evidence-linked acceptance protocol for low-resource safety relation extraction. Future work will expand independent review, add typed risk-substructure recovery, and evaluate additional public safety corpora while preserving the three-hour compact-run protocol.
+\section*{Data availability}
+Data and annotations are available from the corresponding author upon reasonable request, subject to source-licence constraints.
+\bibliographystyle{cas-model2-names}\bibliography{references}
+\end{document}
