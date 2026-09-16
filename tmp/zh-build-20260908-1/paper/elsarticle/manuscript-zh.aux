@@ -1,0 +1,99 @@
+\relax 
+\providecommand\hyper@newdestlabel[2]{}
+\providecommand*\HyPL@Entry[1]{}
+\citation{li2022ner,eberts2020spert}
+\citation{ji2023hallucination}
+\HyPL@Entry{0<</S/D>>}
+\@writefile{toc}{\contentsline {section}{\numberline {1}引言}{1}{section.1}\protected@file@percent }
+\newlabel{sec:introduction}{{1}{1}{引言}{section.1}{}}
+\citation{hogan2021kg}
+\citation{lewis2020rag}
+\citation{gurulingappa2012ade}
+\citation{roth2004conll}
+\citation{li2022ner}
+\citation{roth2004conll}
+\citation{eberts2020spert}
+\@writefile{toc}{\contentsline {section}{\numberline {2}相关工作}{2}{section.2}\protected@file@percent }
+\newlabel{sec:related}{{2}{2}{相关工作}{section.2}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.1}联合实体关系抽取}{2}{subsection.2.1}\protected@file@percent }
+\citation{zaratiana2024gliner,boylan2025glirel}
+\citation{hogan2021kg,lewis2020rag}
+\citation{josifoski2022genie}
+\citation{chen2024bgem3}
+\citation{dettmers2023qlora,qwen2025qwen3}
+\citation{ji2023hallucination}
+\citation{liu2025llmaccidentkg}
+\citation{gurulingappa2012ade}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.2}图谱上下文与约束生成}{3}{subsection.2.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.3}证据与安全相关知识构建}{3}{subsection.2.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {3}数据集与分布分析}{3}{section.3}\protected@file@percent }
+\newlabel{sec:data}{{3}{3}{数据集与分布分析}{section.3}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.1}基准来源与划分}{3}{subsection.3.1}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {1}{\ignorespaces 实际实验划分的数据清单。依次列出数据集、划分、句数、实体数、关系数与 平均长度；长度为重建原文中的空白分隔词元数。}}{4}{table.1}\protected@file@percent }
+\newlabel{tab:data}{{1}{4}{实际实验划分的数据清单。依次列出数据集、划分、句数、实体数、关系数与 平均长度；长度为重建原文中的空白分隔词元数。}{table.1}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.2}实体与关系标签分布}{4}{subsection.3.2}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {2}{\ignorespaces 导入文件的精确实体与关系计数，分别列出训练、验证和测试划分。}}{4}{table.2}\protected@file@percent }
+\newlabel{tab:labels}{{2}{4}{导入文件的精确实体与关系计数，分别列出训练、验证和测试划分。}{table.2}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.3}句长与覆盖范围}{5}{subsection.3.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.4}划分重合与图谱上下文隔离}{5}{subsection.3.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {4}所提方法}{5}{section.4}\protected@file@percent }
+\newlabel{sec:method}{{4}{5}{所提方法}{section.4}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.1}原文落地表示}{5}{subsection.4.1}\protected@file@percent }
+\newlabel{eq:entity}{{1}{5}{原文落地表示}{equation.1}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.2}架构与比较系统}{5}{subsection.4.2}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces 本文采用的详细方法流程图。图中保留 ADE 与 CoNLL04 输入、数据集专属训练 知识图谱、Transformer 注意力模块、SOE/EAE/HRGE 三个 QLoRA 适配器分支，以及由一致性、 锚点、端点、关系有效性和共同证据组成的确定性证据门控。}}{6}{figure.1}\protected@file@percent }
+\newlabel{fig:architecture}{{1}{6}{本文采用的详细方法流程图。图中保留 ADE 与 CoNLL04 输入、数据集专属训练 知识图谱、Transformer 注意力模块、SOE/EAE/HRGE 三个 QLoRA 适配器分支，以及由一致性、 锚点、端点、关系有效性和共同证据组成的确定性证据门控。}{figure.1}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.3}溯源受控图谱上下文}{6}{subsection.4.3}\protected@file@percent }
+\newlabel{eq:retrieval}{{2}{7}{溯源受控图谱上下文}{equation.2}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.4}紧凑生成与确定性重建}{7}{subsection.4.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.5}关系验证与实体接受}{7}{subsection.4.5}\protected@file@percent }
+\newlabel{eq:verifier}{{3}{7}{关系验证与实体接受}{equation.3}{}}
+\newlabel{eq:accept}{{4}{7}{关系验证与实体接受}{equation.4}{}}
+\newlabel{eq:composition}{{5}{7}{关系验证与实体接受}{equation.5}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {5}实验协议}{8}{section.5}\protected@file@percent }
+\newlabel{sec:experiment}{{5}{8}{实验协议}{section.5}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.1}研究问题与范围}{8}{subsection.5.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.2}基线与评估一致性}{8}{subsection.5.2}\protected@file@percent }
+\newlabel{eq:metrics}{{6}{8}{基线与评估一致性}{equation.6}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.3}统计与规则符合性分析}{8}{subsection.5.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {6}结果}{9}{section.6}\protected@file@percent }
+\newlabel{sec:results}{{6}{9}{结果}{section.6}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.1}已完成测试比较}{9}{subsection.6.1}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {3}{\ignorespaces 已完成测试比较，严格原文字符跨度微平均分数（\%）。Qwen3-ZS为 Qwen3-4B零样本加已记录验证器；GLiNER+GLiREL仅在训练数据内校准。各数据集使用 自身测试划分，所有行采用同一评估器重算。}}{9}{table.3}\protected@file@percent }
+\newlabel{tab:test}{{3}{9}{已完成测试比较，严格原文字符跨度微平均分数（\%）。Qwen3-ZS为 Qwen3-4B零样本加已记录验证器；GLiNER+GLiREL仅在训练数据内校准。各数据集使用 自身测试划分，所有行采用同一评估器重算。}{table.3}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.2}追加运行稳定性检查}{9}{subsection.6.2}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {4}{\ignorespaces 两次追加训练运行的测试稳定性，统一严格跨度评估器下的微平均分数 （\%，均值$\pm $样本标准差，$n=2$）。末列为PGE减SOE的平均关系F1差异。}}{10}{table.4}\protected@file@percent }
+\newlabel{tab:repeated-runs}{{4}{10}{两次追加训练运行的测试稳定性，统一严格跨度评估器下的微平均分数 （\%，均值$\pm $样本标准差，$n=2$）。末列为PGE减SOE的平均关系F1差异。}{table.4}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.3}配对差异与不确定性}{10}{subsection.6.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.4}开发集组件分析}{10}{subsection.6.4}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {5}{\ignorespaces 统一严格跨度评估器下的开发集消融（微平均\%）。这些行用于分析固定 架构，不代表额外测试系统。}}{10}{table.5}\protected@file@percent }
+\newlabel{tab:ablation}{{5}{10}{统一严格跨度评估器下的开发集消融（微平均\%）。这些行用于分析固定 架构，不代表额外测试系统。}{table.5}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.5}规则符合性及其解释}{11}{subsection.6.5}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.6}完全重合敏感性分析}{11}{subsection.6.6}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {7}讨论}{11}{section.7}\protected@file@percent }
+\newlabel{sec:discussion}{{7}{11}{讨论}{section.7}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {7.1}两个基准能够支持什么结论}{11}{subsection.7.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {7.2}可审计性是独立设计目标}{11}{subsection.7.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {7.3}对安全相关应用的启示}{12}{subsection.7.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {8}局限性与负责任使用}{12}{section.8}\protected@file@percent }
+\newlabel{sec:limitations}{{8}{12}{局限性与负责任使用}{section.8}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {9}结论}{12}{section.9}\protected@file@percent }
+\newlabel{sec:conclusion}{{9}{12}{结论}{section.9}{}}
+\bibstyle{elsarticle-num}
+\bibdata{references}
+\bibcite{li2022ner}{{1}{}{{}}{{}}}
+\bibcite{eberts2020spert}{{2}{}{{}}{{}}}
+\bibcite{ji2023hallucination}{{3}{}{{}}{{}}}
+\bibcite{hogan2021kg}{{4}{}{{}}{{}}}
+\bibcite{lewis2020rag}{{5}{}{{}}{{}}}
+\bibcite{gurulingappa2012ade}{{6}{}{{}}{{}}}
+\bibcite{roth2004conll}{{7}{}{{}}{{}}}
+\bibcite{zaratiana2024gliner}{{8}{}{{}}{{}}}
+\bibcite{boylan2025glirel}{{9}{}{{}}{{}}}
+\bibcite{josifoski2022genie}{{10}{}{{}}{{}}}
+\bibcite{chen2024bgem3}{{11}{}{{}}{{}}}
+\bibcite{dettmers2023qlora}{{12}{}{{}}{{}}}
+\bibcite{qwen2025qwen3}{{13}{}{{}}{{}}}
+\bibcite{liu2025llmaccidentkg}{{14}{}{{}}{{}}}
+\providecommand\NAT@force@numbers{}\NAT@force@numbers
+\gdef \@abspage@last{15}

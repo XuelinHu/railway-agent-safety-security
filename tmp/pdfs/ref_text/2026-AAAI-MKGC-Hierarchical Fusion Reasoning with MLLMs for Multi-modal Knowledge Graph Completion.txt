@@ -1,0 +1,619 @@
+                                     The Fortieth AAAI Conference on Artificial Intelligence (AAAI-26)
+
+
+
+
+    HFR-MKGC: Hierarchical Fusion Reasoning with MLLMs for Multi-modal
+                     Knowledge Graph Completion
+ Di Wang1,2 , Junping Du1,2 * , Zhe Xue1,2 , Meiyu Liang1,2 , Guanhua Ye1,2 , Yingxia Shao1,2 , Haisheng
+                                                   Li3
+        1
+            School of Computer Science (National Pilot School of Software Engineering), Beijing University of Posts and
+                                                        Telecommunications
+                        2
+                          Beijing Key Laboratory of Intelligent Telecommunication Software and Multimedia
+                   3
+                     School of Computer and Artificial Intelligence, Beijing Technology and Business University
+              {wdd123, xuezhe, meiyu1210, g.ye, shaoyx}@bupt.edu.cn,{junpingdu}@126.com, lihsh@btbu.edu.cn
+
+                            Abstract                                        Representative approaches include early fusion strategies,
+                                                                            which directly concatenate or average modality embed-
+  Multi-modal knowledge graph completion (MMKGC) aims                       dings (Mousselly-Sergieh et al. 2018), and advanced fusion
+  to infer missing entities of triples by leveraging heteroge-
+  neous information in knowledge graph (KG). However, ex-
+                                                                            methods, which learn joint representations through attention
+  isting approaches often struggle with inconsistent modality               mechanisms (Chen et al. 2022), gating modules (Wang et al.
+  alignment, limited reasoning depth, and insufficient nega-                2021), or multi-level integration (Wang et al. 2019). Fur-
+  tive sample quality. In this work, we propose HFR-MKGC,                   thermore, some methods construct multi-modal hard nega-
+  a novel framework that integrates hierarchical modal fusion               tives for adversarial training by injecting noise or perturba-
+  and Multimodal Large Language Model (MLLM) reason-                        tions (Zhang, Chen, and Zhang 2023; Zhang et al. 2024c;
+  ing for robust and expressive MMKGC. Specifically, we in-                 Chen et al. 2025a). Recently, the rapid progress of Large
+  troduce a relation-guided hierarchical modal fusion module,               Language Models (LLMs) has inspired new approaches for
+  which conducts fine-grained intra-visual fusion and relation-             KGC. By converting structural and textual information from
+  guided cross-modal integration to yield rich entity representa-           KGs into natural-language prompts (Fang et al. 2024; Bar-
+  tions. HFR-MKGC employs a fine-tuned MLLM to perform
+  instruction-based triple reasoning, producing candidate enti-
+                                                                            ile, d’Amato, and Fanizzi 2025; Pan et al. 2025; Zhang et al.
+  ties for completion. Then, it constructs hard negative sam-               2024b; Yao et al. 2025), LLMs can perform reasoning to in-
+  ples through textual perturbation by MLLM and visual fea-                 fer plausible missing triples.
+  ture augmentation with rotation and noise. HFR-MKGC op-                      Despite the progress of study for MMKGC, existing ap-
+  timizes the model via adversarial training. Extensive exper-              proaches still face two key challenges: (1) Lack of relation-
+  iments on three MMKGC benchmarks demonstrate that our                     guided multi-modal fusion. Most fusion strategies treat
+  method outperforms state-of-the-art methods, validating its               all modalities equally, ignoring that the importance of each
+  effectiveness in MMKGC.                                                   modality can vary across different relations. This relation-
+                                                                            agnostic design makes the model vulnerable to noisy or
+                        Introduction                                        irrelevant modalities, especially in scenarios where visual
+                                                                            or textual information is weakly related to the relation. (2)
+Knowledge graphs (KGs) store real-world facts as triples                    Limited adaptability of LLM-based reasoning. Current
+(h, r, t), where h, t, and r denote the head entity, tail en-               LLM-assisted KGC methods primarily focus on textual and
+tity, and their relation. While widely used in question an-                 structural modalities, often relying on static fusion strate-
+swering (Panda et al. 2024; Wang et al. 2025), recommender                  gies. Such designs fail to fully exploit visual semantics and
+systems (Cui et al. 2025; Xiao et al. 2022), and semantic                   cannot dynamically adapt to the varying relevance of modal-
+search (Liang et al. 2024a,b), KGs often suffer from incom-                 ities across different triples.
+pleteness. Traditional knowledge graph completion (KGC)
+                                                                               To address these aforementioned challenges, we propose a
+methods (Bordes et al. 2013; Sun et al. 2019; Yang et al.
+                                                                            method called Hierarchical Fusion Reasoning with MLLMs
+2015; Trouillon et al. 2016) rely mainly on structural in-
+                                                                            for Multi-modal Knowledge Graph Completion (HFR-
+formation, overlooking complementary semantic cues from
+                                                                            MKGC). To clearly illustrate the gap between conventional
+other modalities.
+                                                                            methods and our proposed approach, we compare three
+   To address this, MMKGC leverages additional modalities                   paradigms in Figure 1: conventional MMKGC framework,
+such as text and images to predict incomplete triples. Typical              LLM-based KGC framework and our HFR-MKGC frame-
+MMKGC methods embed entities and relations from differ-                     work. HFR-MKGC utilizes a MLLM for auxiliary reason-
+ent modalities into a shared vector space (Gao et al. 2025)                 ing, and proposes the following two strategies: (1) Relation-
+and employ a scoring function to rank candidate triples.                    Guided Hierarchical Modal Fusion. We employ a MLLM
+    * Corresponding author.(junpingdu@126.com)                              to generate fine-grained textual descriptions for each en-
+Copyright © 2026, Association for the Advancement of Artificial             tity image and fuse them with visual embeddings, captur-
+Intelligence (www.aaai.org). All rights reserved.                           ing complementary visual–semantic cues. Then, a relation-
+
+
+                                                                    15815
+                                                                          Multi-modal Knowledge Graph Completion
+                                                                          MMKGC approaches integrate complementary modalities
+                                                                          such as text (Xie et al. 2016) and images (Xie et al.
+                                                                          2017) to enrich entity and relation representations. Common
+                                                                          strategies include simple vector concatenation (Mousselly-
+                                                                          Sergieh et al. 2018), heterogeneous graph modeling (Zhao
+                                                                          et al. 2025; Wang et al. 2025), and joint embedding learn-
+                                                                          ing (Li, Yu, and He 2024; Li et al. 2023). TransAE (Wang
+                                                                          et al. 2019) jointly encodes textual and visual features
+                                                                          via a multi-modal autoencoder. MKGformer (Chen et al.
+                                                                          2022) introduces hierarchical fusion to filter out irrelevant
+                                                                          visual noise, while RSME (Wang et al. 2021) employs
+                                                                          gating mechanisms to suppress uninformative modalities.
+                                                                          MCKGC (Gao et al. 2025) embed modalities into diverse
+                                                                          geometric spaces and use hierarchical gating for integration.
+                                                                          MACO (Zhang, Chen, and Zhang 2023) tackles missing
+                                                                          modality scenarios by adding noise to visual and structural
+   Figure 1: Comparison of three MMKGC paradigms.                         views to simulate negative examples. AdaMF-MAT (Zhang
+                                                                          et al. 2024c) learns adaptive fusion weights across modali-
+                                                                          ties via adversarial optimization, and NativeE (Zhang et al.
+guided cross-modal fusion mechanism adaptively weights                    2024a) expands this idea to numeric, audio, and video
+textual, visual, and structural modalities based on the current           modalities under a unified training framework. Noise-based
+relation, enabling robust fusion while suppressing irrelevant             (Chen et al. 2025a; Jian et al. 2025) and diffusion-based
+or noisy signals. (2) MLLMs-Enhanced Knowledge Rea-                       models (Chen et al. 2025b) to generative negative samples
+soning and Scoring. We leverage a fine-tuned MLLM to                      further improve generalization.
+perform triple-specific reasoning, generating candidate tail                 Most prior works adopt relation-agnostic fusion and are
+entities based on structural, textual, and visual cues. These             susceptible to noisy. In contrast, we introduce a relation-
+reasoning outputs are integrated into the final scoring func-             guided hierarchical fusion mechanism that enables fine-
+tion via a gating mechanism, enabling the model to adapt its              grained alignment and adaptively emphasizes the most rele-
+reasoning strategy to diverse inference scenarios. Finally, we            vant semantic cues for relations.
+construct hard negative samples via multi-modal perturba-
+tion and augmentation, and optimize the entire model under
+                                                                          Large Language Models for Knowledge Reasoning
+an adversarial training framework to further enhance robust-              In recent years, LLMs have shown remarkable potential
+ness and generalization. The primary contributions of our                 in knowledge reasoning to integrate diverse information
+work are summarized as follows:                                           sources (Zhang et al. 2024d). GAugLLM (Fang et al.
+                                                                          2024) improves self-supervised learning on text-attributed
+ • We propose HFR-MKGC, a novel framework for                             graphs by prompt-based augmentation. Some studies trans-
+   MMKGC which enables fine-grained intra-visual fu-                      late KG structures into text formats understandable by
+   sion and relation-guided cross-modal feature weighting,                LLMs for entity alignment(Jiang et al. 2024; Zhang et al.
+   effectively suppressing irrelevant or noisy modalities.                2023) and KGC(Zhang et al. 2024b; Yao et al. 2025). LP-
+   HFR-MKGC further enhances its robustness through ad-                   DIXIT (Barile, d’Amato, and Fanizzi 2025) evaluates the
+   versarial training with multi-modal negative samples.                  explainability of link prediction results using LLMs. Fur-
+                                                                          thermore, LoLLM (Pan et al. 2025) integrates LLM with
+ • We design a novel MLLMs-Enhanced Knowledge Rea-
+                                                                          the structure embedding for reasoning over sparse KGs.
+   soning and Scoring strategy, where a fine-tuned MLLM
+                                                                          HOLMES (Panda et al. 2024) integrates a distilled and
+   performs triple-specific reasoning and the reasoning out-
+                                                                          context-aware KG into LLMs to support question answer-
+   puts are integrated into the scoring process, allowing
+                                                                          ing. Recently, researchers have combined MMKGs with
+   adaptive reasoning across diverse inference scenarios.
+                                                                          LLMs. UniMEL (Liu et al. 2024) proposes a unified LLM-
+ • We conduct comprehensive experiments and in-depth                      based multi-modal framework that effectively fuses tex-
+   analysis on three public MMKGC datasets, demon-                        tual and visual information for entity linking. In addition,
+   strating that HFR-MKGC achieves SOTA performance                       MuKDC (Li et al. 2024) enhances few-shot KGC through
+   against 14 baselines.                                                  multi-level knowledge generation, while CATS (Li et al.
+                                                                          2025) improves inductive KGC via LLMs.
+                                                                             Existing LLM-based KG reasoning mainly focuses on
+                      Related Work                                        textual and structural modalities with static fusion, limiting
+                                                                          adaptability. We extend this to MLLMs for unified knowl-
+To provide a comprehensive context, we offer a brief intro-               edge reasoning over structural, textual, and visual modal-
+duction to MMKGC and the emerging use of LLMs, espe-                      ities, with a gating mechanism for dynamic fusion with
+cially MLLMs, for knowledge reasoning tasks on KGs                        triple-specific to boost MMKGC performance.
+
+
+                                                                  15816
+Figure 2: Overall framework of HFR-MKGC. (1) Stage 1: Intra-Visual Modality Fusion and Stage 2: Relation-Guided
+Cross-Modal Fusion form the Relation-Guided Hierarchical Modal Fusion module, which performs fine-grained intra-modal
+fusion followed by relation-guided weighting for cross-modal integration. (2) MLLMs-Enhanced Knowledge Reasoning
+and Scoring: A fine-tuned MLLM generates candidate entities for incomplete triples, whose reasoning outputs are fused with
+multi-modal embeddings for final scoring. (3) Multi-modal Negative Sample Optimization: Hard negatives are constructed
+via MLLM-based textual perturbation and visual feature augmentation with rotation and noise, and the model is trained using
+adversarial learning to enhance robustness and discriminative ability.
+
+
+                     Task Definition                                       Modality Encoding Given an entity e with different
+A MMKG is defined as G = (E, R, T ), where E is the set                    modalities, we encode the visual features of images through
+of entities, R is the set of relations, and T = {(h, r, t) |               CLIP (Radford et al. 2021) and encode text features through
+h, t ∈ E, r ∈ R} denotes the set of triples. Each en-                      BERT (Devlin et al. 2019). Moreover, for each entity e ∈ E
+tity e ∈ E can be associated with multi-modal information                  and modality m ∈ Me , we denote its modality-specific em-
+Me = {T, I, S}, representing textual descriptions, images,                 bedding as em = Pm (fm ) ∈ Rde , where fm represents
+and structural context. An incomplete triple can also be re-               the initial feature extracted by the pre-trained encoder, and
+ferred to as a query triple. The task of MMKGC aims to                     Pm denotes a learnable projection layer for modality m. A
+predict the missing entity in a query triple (e.g., (h, r, ?)              noteworthy point is that the generated image caption is also
+or (?, r, t)) by leveraging these multi-modal sources of in-               regarded as a type of textual modality.
+formation. This is achieved by learning a scoring function                 Stage 1: Intra-Visual Modality Fusion To mitigate intra-
+f (h, r, t) to rank candidate entities and select the most plau-           modal inconsistency, we utilize a MLLM, LLaVA (Liu et al.
+sible one for completion.                                                  2023), to generate a descriptive captions as sematic informa-
+                                                                           tion for images. We encode these captions using BERT and
+                      Methodology                                          project them into the unified feature space by PT , denoted
+In this section, we present the details of HFR-MKGC. As                    as eIc ∈ Rd . Similarly, the visual representation of the raw
+shown in Figure 2, HFR-MKGC consists of three key mod-                     image, denoted as eIv ∈ Rd . Then, we employ a similarity-
+ules: (1) Relation-Guided Hierarchical Modal Fusion. (2)                   based gating mechanism to perform the fine-grained fusion
+MLLM-Enhanced Reasoning and Scoring. (3) Multi-Modal                       between eIc and eIv , which is computed as:
+Negative Sample Optimization.
+                                                                             eI = σ ⟨eIv , eIc ⟩ · eIc + 1 − σ ⟨eIv , eIc ⟩ · eIv (1)
+                                                                                                                           
+
+Relation-Guided Hierarchical Modal Fusion
+                                                                           where σ(·) denotes the Sigmoid activation function, and
+Relation-Guided Hierarchical Modal Fusion aims to achieve                  ⟨·, ·⟩ represents the dot-product similarity between eIv and
+deep integration of multi-modal features through a two-stage               eIc . The resulting fused vector eI ∈ Rd integrating both
+fusion strategy. The first stage is intra-modal fusion level,              low-level visual cues and high-level semantic context.
+which employs MLLM to guide fine-grained fusion between
+visual and semantic representation of images. The second                   Stage 2: Relation-Guided Cross-Modal Fusion In this
+stage is inter-modal fusion level, which dynamically allo-                 stage, we integrate the three projected vectors of each en-
+cates cross-modal fusion weights based on relational infor-                tity: eS (structural), eI (visual), and eT (textual) based on
+mation and generates a robust joint feature representation.                relation-guided interactions. Let r ∈ Rd be the relation
+
+
+                                                                   15817
+embedding corresponding to the current query triple. The                 reasoning and generate the missing entity. Formally, the pre-
+head entity h of the triple (h, r, t) can be first denote as             dicted tail entity is denoted as:
+He = {eS , eI , eT } ∈ R3×d . To capture intrinsic correla-
+tions between different modalities, we compute a modality                       t̂MLLM = MLLM(P romf ix ⊕ P romvar (h, r))              (5)
+similarity matrix Ai,j = ⟨ei , ej ⟩ based on inner product,
+                                                                         where ⊕ is fusion operation. If the missing entity is head
+where i, j ∈ Me = {S, I, T } denote different modalities.
+                                                                         entity instead, the prompt P romvar (t, r) can be constructed
+To estimate the importance of each modality, we compute
+                                                                         analogously by using the multi-modal information of t.
+a relation-guided interaction score αm for each modality
+m ∈ Me by:                                                               Gated Fusion To effectively integrate the reasoning re-
+                                1     X                                  sults generated by the fine-tuned MLLM into the triple de-
+            αm = ⟨em , r⟩ +               Am,j           (2)             coding process, we design a gated fusion mechanism in
+                              |Me |
+                                     j∈Me                                the complex embedding space. The joint embeddings of the
+Furthermore, the weight assigned to modality m ∈ M is                    known head entity and a candidate tail entity are denoted
+computed as:                                                             as Hjoint and Tjoint respectively. The MLLM-predicted tail
+                                                                       entity representation is TMLLM = BERT(t̂MLLM ). We first
+                 exp αm − |M1 e | k∈Me αk                                decompose Hjoint into real and imaginary parts: Re(Hjoint )
+                                  P
+      wm = P                                     (3)                   and Im(Hjoint ). Tjoint and TMLLM undergo a similar opera-
+                                  1
+                                                                         tion. The relation embedding r ∈ Rd is scaled into a phase
+                            j
+                                     P         k
+                j∈Me exp α − |Me |     k∈Me α
+                                                                         angle and construct the complex-valued relation as:
+where the fusion weight wm reflects the relative importance                                                           
+of modality m in the context of the current relation. The                                           r                 r
+                                                                                     rC = cos            + i · sin              (6)
+final joint embedding of the head entity h is computed as a                                        γ/π               γ/π
+weighted aggregation of all modality-specific embeddings:
+                            X                                            where rC ∈ Cd denotes the complex representation of r.
+                 Hjoint =        w m · em               (4)              The scalar γ controls the embedding range. To learn a soft
+                           m∈Me                                          weighting vector g ∈ [0, 1]2d for fusing the joint representa-
+                                                                         tion and the MLLM-inferred embedding, we design a gating
+   This fusion adaptively adjusts the contribution of each
+                                                                         module parameterized as a two-layer neural network:
+modality based on its semantic consistency and relational
+relevance, resulting in a context-aware entity representation.                  g = σ (W2 · tanh (W1 · TMLLM + b1 ) + b2 )              (7)
+MLLMs-Enhanced Knowledge Reasoning and                                   where W1 ∈ Rd×2d and W2 ∈ R2d×d are weight ma-
+Scoring                                                                  trices, b1 ∈ Rd and b2 ∈ R2d are bias terms. The final
+MMKGC relies solely on structural or multi-modal embed-                  gate vector g = [gre ; gim ] is split to control real and imag-
+dings, which is often insufficient for modeling complex se-              inary parts independently. The fused tail entity embedding
+mantic relationships. In this subsection, we introduce a fine-           T̃joint = [Re(T̃joint ); Im(T̃joint )] is computed by interpolating
+tuned MLLM to generate candidate reasoning results, which                between the joint representation Tjoint and TMLLM :
+are then fused with multi-modal entity representations via a
+gating mechanism before scoring the triples.                              Re(T̃joint ) = (1 − gre ) ◦ Re(Tjoint ) + gre ◦ Re(TMLLM ) (8)
+Instruction Fine-Tuning For each incomplete triple (tak-
+                                                                          Im(T̃joint ) = (1 − gim ) ◦ Im(Tjoint ) + gim ◦ Im(TMLLM ) (9)
+ing the missing tail entity as an example), we decompose
+the instruction into two components: fixed instruction and               where ◦ denotes element-wise multiplication.
+variable instruction. The fixed instruction P romf ix remains
+consistent across all training samples and specifies the task            RotatE-Based Scoring We employ the RotatE scoring
+type for the MLLM as well as the required output format.                 function to in the complex vector space:
+The variable instruction encodes triple-specific information
+derived from each triple (h, r, t), including textual descrip-                      score(h, r, t) = − H̃joint ◦ rC − T̃joint          (10)
+tion, a set of neighboring entities, the image of h, and the
+relation r. In fine-tuning process, the target entity t was              where ◦ denotes element-wise complex multiplication.
+employed as the supervisory information. Specifically, we
+adopt Low-Rank Adaptation (LoRA) to efficiently fine-tune                Multi-Modal Negative Sample Optimization
+the LLaVa while preserving its general capabilities.
+                                                                         We design a negative sample optimization strategy that
+Fine-tuned MLLM Reasoning Given an incomplete                            generates hard negatives across modalities. Specifically,
+triple (h, r, ?), our goal is to predict the missing entity by           MLLM-based textual perturbation generates new entity de-
+leveraging the reasoning capabilities of a fine-tuned MLLM.              scriptions at the semantic level, visual feature augmentation
+We construct a structured prompt P romvar (h, r) based on                with rotation and noise introduces controlled perturbations
+the available head entity information. The fixed prompt and              in the visual space, and adversarial training leverages hard
+P romvar is then fed into the fine-tuned MLLM to perform                 negatives to improve model discrimination.
+
+
+                                                                 15818
+MLLM-Based Textual Perturbation Given the original                              that confuse discriminator. The gradient penalty is incorpo-
+textual description xtorig of an entity, we input it into the                   rated to stabilize adversarial training and the training objec-
+MLLM to generate a semantically     equivalent
+                                                but syntac-
+                                                                              tives are defined as:
+                          t
+tically varied version: ẽpert = Pt Etext MLLM(xtorig ) ,
+                                                                                                                                 2 
+                                                                                   
+                                                                                     L = Lkgc + µ1 Efˆ∼P ˆ                ˆ
+                                                                                                                    ∇fˆD(f ) − 1
+                                                                                    D
+                                                                                   
+where xtorig is the original entity description, Etext (·) is tex-
+                                                                                   
+                                                                                                             f                2
+                                                                                   
+tual encoder, and Pt is a projection layer for textual features.                                  M                                        (14)
+                                                                                             1  X
+                                                                                    Lg = M          E(h,r,t)∼T [max(0, c − sk )]
+                                                                                   
+                                                                                   
+Visual Feature Augmentation with Rotation and Noise                                
+                                                                                                k=1
+We design a lightweight augmentation module that performs
+dynamic rotation and noise injection on raw visual features.                    where D is the discriminator function score(·), µ1 is the
+Given the visual embedding xvorig , its perturbed feature is:                   weighting coefficient for the gradient penalty term, fˆ de-
+              ẽvpert = ((1 − λ)I + λR) xvorig + ϵ,             (11)            notes the interpolated embedding between real and fake rep-
+                                                                                resentations, ∇fˆD(fˆ) denotes gradient of the interpolation
+where I is the d-dimensional identity matrix, R is a ro-
+tation matrix obtained via QR decomposition from ran-                           samples, and P ˆ denotes the sampling distribution of fˆ.
+                                                                                               f
+domly sampled low-rank matrices, λ ∈ [0, 1] is a rotation
+strength factor linearly increased with training epoch, and                                           Experiments
+ϵ ∼ N (0, σ 2 I) is Gaussian noise.                                             Experiment Settings
+   Then, we can obtain multi-modal negative samples
+                                                                                Datasets We conduct experiments on three widely-used
+(h∗ , r, t), (h, r, t∗ ), and (h∗ , r, t∗ ), and compute their plau-
+                                                                                MMKGC benchmarks: DB15K(Liu et al. 2019), MKG-
+sibility scores by score(·).
+                                                                                W(Xu et al. 2022), and MKG-Y(Xu et al. 2022). These
+Adversarial Training To encourage the model to discrim-                         datasets provide textual descriptions and entity images of
+inate between plausible and implausible triples, we adopt an                    entities. Detailed information about the datasets is presented
+adversarially weighted sigmoid loss that emphasizes harder                      in Table 2. We follow the standard train,validation and test
+negatives. For the i-th positive triple (hi , ri , ti ), a set of               splits as defined in previous work.
+structural negative triples is generated by replacing hi or
+ti with a random entity e′ ∈ E. Let s+       i denote the model-                Evaluation Metrics We evaluate our model on the stan-
+assigned plausibility score for the i-th positive triple, and                   dard link prediction task, and report rank-based evaluation
+s−i,j the score for its j-th negative triple. Here, each negative               metrics including mean reciprocal rank (MRR) and Hits@K
+triple is sampled from either multi-modal negative samples                      (K=1, 3, 10).
+or structural negative triples. Each s− i,j is assigned a softmax-              Baselines To conduct a comprehensive comparison, we
+                           exp(τ ·s−
+                                   i,j )
+based weight wij = PK            exp(τ ·s− )
+                                             , with τ controlling the           adopt 14 state-of-the-art models as baselines. These base-
+                           k=1          i,k                                     lines fall into three major categories: (1) Uni-modal KGC
+sharpness of the distribution. During training, the negative                    models that rely solely on structural information,including
+sampling-based loss function is defined as:                                     TransE (Bordes et al. 2013), RotatE (Sun et al. 2019), Dist-
+                                                                                Mult (Yang et al. 2015) and ComplEx (Trouillon et al. 2016);
+                 N               K
+                                                            !
+              1 X               X
+  Lkgc = −          log σ(s+
+                           i )+     wij log σ(−s−
+                                                i,j )           (12)            (2) MMKGC models that incorporate additional textual or
+             2N i=1             j=1                                             visual modalities,including IKRL (Xie et al. 2017), RSME
+where N is the number of positive samples, K is the number                      (Wang et al. 2021), MYGO (Zhang et al. 2025), NativeE
+of negative samples for per positive, s+                                        (Zhang et al. 2024a), AdaMF-MAT (Zhang et al. 2024c),
+                                          i = score(hi , ri , ti )
+                                                                                SNAG (Chen et al. 2025a), DHNS (Chen et al. 2025b) and
+and s−i,j is the score of the j-th negative triple.
+                                                                                APKGC(Jian et al. 2025); (3) MLLM-based Inference Mod-
+   To train the generator to produce more challenging multi-
+                                                                                els, including LLaMA2 (Touvron et al. 2023) and LLaVA
+modal negative samples during adversarial learning, we
+                                                                                (Liu et al. 2023). Specifically, we evaluate LLaMA-2-7B,
+minimize the following loss:
+                                                                                which is prompted using textual description and structural
+                      M                                                         neighbors, and LLaVA-1.5-7B, which further incorporates
+                 1 X
+          Lg =       E(h,r,t)∼T [max(0, c − sk )]               (13)            visual inputs alongside text and KG structure. For each in-
+                 M                                                              complete triple, MLLMs are used to generate a ranked list
+                     k=1
+                                                                                of 10 candidate entities based on their predicted plausibility.
+where Lg is the generator loss, M = 3 denotes the number
+of generated multi-modal negative sample types, sk is the                       Implementation Details We implement our model us-
+plausibility score assigned by the scoring model for the k-th                   ing the PyTorch framework and conduct all experiments
+type of generated negative triples, c is a fixed margin that                    on a server with Ubuntu operating system equipped with 2
+encourages the generator to produce harder-to-distinguish                       NVIDIA RTX A6000 GPUs (48GB). We train the model
+samples. The overall training objective combines the KGC                        for 250 epochs. The embedding dimension d is selected
+loss Lkgc with adversarial learning to enhance multi-modal                      from {128, 256, 512}. The number of negative samples per
+negative sampling. The generator is optimized by minimiz-                       triple is chosen from {32, 64, 128}. The learning rate is se-
+ing Lg to produce challenging multi-modal negative triples                      lected from {1e−5 , 1e−4 , 1e−3 }. The batch size is selected
+
+
+                                                                        15819
+                                  MKG-W                                        MKG-Y                                 DB15K
+     Model
+                     MRR      Hit@10 Hit@3             Hit@1    MRR       Hit@10 Hit@3         Hit@1    MRR     Hit@10 Hit@3        Hit@1
+    RotatE           32.92     44.23  35.91            26.68    36.67      41.11   35.91       33.92    32.07    51.40   38.57      21.23
+    TransE           17.01     37.27  27.92            03.35    26.27      32.98   27.92       21.32    21.95    48.09   33.81      05.56
+   DistMult          18.32     29.50  20.85            12.51    32.37      37.27   20.85       29.60    23.38    41.16   27.97      14.16
+   ComplEx           16.45     22.48  18.37            13.03    27.57      29.14   18.37       26.53    26.53    36.39   28.41      17.70
+     IKRL            23.53     33.99  25.35            17.75    26.35      38.11   25.35       20.18    16.22    33.44   19.66      07.21
+    RSME             33.41     44.31  35.80            27.59    38.03      44.02   35.80       34.28    33.72    50.39   39.23      24.45
+    MYGO             33.40     44.36  35.38            27.52    30.29      42.17   35.38       23.75    32.25    48.23   35.49      24.19
+  AdaMF-MAT          32.09     45.78  35.54            24.48    37.78      46.11   35.54       32.65    32.08    52.42   40.41      19.81
+     SNAG            28.08     41.58  31.59            20.37    17.08      28.14   31.59       11.35    26.59    39.81   29.57      19.52
+    DHNS             23.67     33.51  25.91            18.33    36.96      42.95   25.91       33.64    26.41    41.78   29.91      18.42
+    APKGC            32.67     46.20  35.83            25.24    31.48      40.68   35.83       26.17    32.91    48.91   37.15      24.39
+    NativeE          36.79     50.28  40.47            29.36    38.34      46.24   40.47       33.49    33.59    53.77   40.67      22.11
+    LLama             —        10.20  08.73            05.62     —         02.29   02.03       01.35     —       14.14   11.87      07.15
+    LLaVa             —        26.42  22.29            15.02     —         03.58   02.80       01.64     —       15.89   13.15      08.32
+  HFR-MKGC           38.62     51.66  42.12            31.37    39.00      47.31   42.12       34.41    35.20    56.41   43.25      23.04
+
+Table 1: Comparison with baseline models on three MMKGC datasets (MRR and Hits@K, in %). Best results are highlighted
+in bold, while the second-best results are underlined.“—” means the metric is not computable.
+
+
+ Dataset   #Entity   #Rel    #Train   #Valid   #Test   #Image   #Text           sible but incorrect entity candidates.
+ MKG-W     15000     169     34196     4276    4274    14463    14123
+                                                                                   Notably, we also include inference-only results from
+ MKG-Y     15000      28     21310     2665    2663    14244    12305
+ DB15K     12842     279     79222     9902    9904    12818    9078
+                                                                                LLMs (LLaMA and LLaVA), which perform poorly with-
+                                                                                out structured scoring and fusion mechanisms, confirming
+           Table 2: Statistics of MMKG datasets.                                the necessity of tightly integrating multi-modal structure in
+                                                                                MMKGC. In particular, LLaMA does not utilize any visual
+                                                                                information, whereas LLaVA incorporates the image modal-
+from {128, 256, 1024}. The model is optimized using Adam                        ity, leading to consistently better performance for LLaVA
+(Kingma and Ba 2015). Since some existing works do not                          compared to LLaMA.
+release complete data or code, we reproduce representative
+baseline models under our unified multi-modal setting to en-                    Ablation Study
+sure a fair comparison. All models are evaluated using the                      To verify the contribution of each component, we conduct
+same visual and textual encodings described in paragraph                        ablation experiments on MKG-W by removing key modules:
+Modality Encoding, allowing us to isolate the reasoning per-                      • w/o RHF: Replace the relation-guided hierarchical
+formance of each method.                                                            modal fusion with average fusion.
+                                                                                  • w/o MER: Remove MLLMs-enhanced knowledge rea-
+Main Results
+                                                                                    soning.
+We present the overall KGC performance of our pro-                                • w/o PTI: Replace the perturbation for text and image in
+posed HFR-MKGC framework in Table 1 compared with                                   multi-modal negative sampling with random noise.
+14 strong baselines across three MMKGC datasets. Our
+proposed method HFR-MKGC achieves the state-of-the-art                            • w/o MNO: Disable the adversarial training in multi-
+performance across all three datasets and evaluation met-                           modal negative sample optimization.
+rics (MRR, Hits@1/3/10). Specifically, on dataset MKG-                          The results are shown in Table 3. We observe that removing
+W, HFR-MKGC achieves a MRR of 38.62%, outperform-                               any single module leads to noticeable performance degra-
+ing the best baseline NativeE (36.79%) by +1.83%. It                            dation. Specifically, the RHF module enables more pre-
+also achieves +2.01%, +1.65%, and +1.38% improvements                           cise multi-modal representation through relation-guided at-
+in Hits@1/3/10, respectively. These consistent improve-                         tention, while MER introduces strong semantic priors via
+ments highlight the effectiveness of our hierarchical fu-                       MLLM-based inference. Additionally, PTI and MNO im-
+sion and MLLM-enhanced reasoning strategy. Our fine-                            proves robustness by generating harder negative samples,
+tuned MLLMs not only enriches the semantic space be-                            enhancing the model’s discrimination capacity. We also
+yond conventional embedding-based models, but also guides                       evaluate modality importance and remove structural (w/o S),
+the model towards more accurate predictions. In contrast,                       textual (w/o T), visual (w/o V) and MLLM-generated vi-
+previous methods often suffer from shallow fusion mecha-                        sual semantics (w/o VT) respectively. Removing the struc-
+nisms or limited inference capacity due to reliance on simple                   tural modality causes the largest performance drop, high-
+scoring functions and insufficient semantic supervision. By                     lighting its central role in MMKGC. Removing textual or
+introducing relation-guided hierarchical modal fusion and                       visual features yields degradation, and eliminating image-
+MLLMs-enhanced knowledge reasoning, HFR-MKGC can                                derived semantic descriptions further confirms the comple-
+better capture multi-modal semantics and discriminate plau-                     mentary value of MLLM-generated visual semantics.
+
+
+                                                                        15820
+     Setting        MRR      Hit@10    Hit@3     Hit@1
+     w/o S          25.67     39.42    28.81     18.02
+     w/o T          29.67     45.61    34.92     21.25
+     w/o V          31.16     47.39    36.10     22.09
+     w/o VT         31.78     47.33    36.41     23.22
+     w/o RHF        31.98     50.25    39.14     20.80
+     w/o MER        33.52     50.61    39.70     23.42
+     w/o PTI        34.59     50.95    40.03     25.12
+     w/o MNO        34.01     50.98    40.26     24.13
+     HFR-MKGC       38.62     51.66    42.12     31.37
+
+Table 3: Ablation results on dataset MKG-W. Each compo-
+nent in HFR-MKGC contributes significantly.
+
+                                                                        Figure 4: A case example of HFR-MKGC. The bar charts
+                                                                        indicate modality weights, and the gray blocks show candi-
+                                                                        date rankings.
+
+
+                                                                        of both hyper-parameters is essential in multi-modal models.
+
+                                                                        Case Study
+                                                                        To further investigate how our proposed Relation-Guided
+                                                                        Hierarchical Fusion (RHF) enhances multi-modal reason-
+                                                                        ing, we conduct a qualitative case study on dataset MKG-
+                                                                        W. As shown in Figure 4, we select a triple with a missing
+                                                                        tail entity: (Gwen Stefani, voice type, ?). We compare the
+                                                                        inference results under two settings: (1) HFR-MKGC w/o
+                                                                        RHF, where modality fusion is implemented via randomly
+                                                                        initialized weights without relation guidance; and (2) our
+                                                                        full HFR-MKGC framework that incorporates RHF to adap-
+                                                                        tively weigh modalities based on relation semantics.
+                                                                           The results show that without RHF, the model fails to
+                                                                        prioritize the correct modality cues and ranks the target en-
+                                                                        tity “Mezzo-soprano” only second. In contrast, HFR-MKGC
+                                                                        correctly places it at the top. This is because the image of
+                                                                        Gwen Stefani contains only appearance information with no
+        HFR-MKGC                          RotatE                        visual cues about voice type, while the accompanying text
+                                                                        hints at her identity as a singer. RHF therefore assigns higher
+Figure 3: Comparison of HFR-MKGC and RotatE on MKG-                     weight to text and lower weight to image via Eq. 2–3, en-
+W under different embedding dimensions and numbers of                   abling the accurate “Mezzo-soprano” prediction and validat-
+negative samples. Darker color indicates better performance.            ing the effectiveness of our design.
+
+Hyper-parameters Sensitivity Analysis                                                          Conclusion
+We analyze how embedding dimension and the number
+of negative samples affect model performance on dataset                 In this paper, we propose HFR-MKGC, a novel framework
+MKG-W. Figure 3 shows results under different combina-                  for MMKGC. Our method introduces a relation-guided hi-
+tions for both HFR-MKGC and RotatE. Three key observa-                  erarchical modal fusion module and leverages fine-tuned
+tions emerge: (1) Higher dimensions (e.g., 512) benefit more            MLLMs for instruction-based triple inference. Furthermore,
+from larger negative sets (e.g., 128), while medium dimen-              we construct challenging negative samples via textual dis-
+sions (256) perform best with moderate negatives (64). For              turbance and visual perturbation, and jointly optimize the
+low dimensions (128), changes in negative samples have lit-             model using adversarial training. Extensive experiments on
+tle effect. (2) High dimensions need enough negatives. With-            multiple benchmarks validate the effectiveness and superior-
+out enough negatives, 256D may outperform 512D due to                   ity of our approach in capturing multi-modal semantics and
+better optimization. (3) Metric sensitivity differs. MRR and            improving reasoning performance. In future work, we aim
+Hit@1 vary more with hyper-parameters, while Hit@10 re-                 to explore how to more precisely utilize MLLMs for multi-
+mains relatively stable. These results suggest careful tuning           modal knowledge representation and reasoning.
+
+
+                                                                15821
+                  Acknowledgments                                        Proceedings of the AAAI Conference on Artificial Intelli-
+This work was supported by National Key Research and                     gence, volume 39, 15005–15013.
+Development Program of China (2023YFF0725103), Na-                       Jiang, X.; Shen, Y.; Shi, Z.; Xu, C.; Li, W.; Li, Z.; Guo, J.;
+tional Natural Science Foundation of China (62192784,                    Shen, H.; and Wang, Y. 2024. Unlocking the Power of Large
+U22B2038, 62422202, 62272054), Beijing Nova Program                      Language Models for Entity Alignment. In Proceedings of
+(No. 20230484319).                                                       the 62nd Annual Meeting of the Association for Computa-
+                                                                         tional Linguistics (Volume 1: Long Papers), 7566–7583.
+                                                                         Kingma, D. P.; and Ba, J. 2015. Adam: A method for
+                       References                                        stochastic optimization. In Proceedings of the 3rd Interna-
+                                                                         tional Conference for Learning Representations.
+Barile, R.; d’Amato, C.; and Fanizzi, N. 2025. LP-DIXIT:
+Evaluating Explanations for Link Predictions on Knowledge                Li, A.; Li, Y.; Shao, Y.; and Liu, B. 2023. Multi-view scholar
+Graphs using Large Language Models. In Proceedings of the                clustering with dynamic interest tracking. IEEE Transac-
+ACM on Web Conference 2025, 4034–4042.                                   tions on Knowledge and Data Engineering, 35(9): 9671–
+                                                                         9684.
+Bordes, A.; Usunier, N.; Garcia-Duran, A.; Weston, J.; and
+                                                                         Li, M.; Yang, C.; Xu, C.; Song, Z.; Jiang, X.; Guo, J.; Leung,
+Yakhnenko, O. 2013. Translating embeddings for modeling
+                                                                         H.-f.; and King, I. 2025. Context-aware inductive knowl-
+multi-relational data. Advances in neural information pro-
+                                                                         edge graph completion with latent type constraints and sub-
+cessing systems, 26.
+                                                                         graph reasoning. In Proceedings of the AAAI Conference on
+Chen, X.; Zhang, N.; Li, L.; Deng, S.; Tan, C.; Xu, C.;                  Artificial Intelligence, volume 39, 12102–12111.
+Huang, F.; Si, L.; and Chen, H. 2022. Hybrid transformer                 Li, Q.; Chen, Z.; Ji, C.; Jiang, S.; and Li, J. 2024. LLM-
+with multi-level fusion for multimodal knowledge graph                   based multi-level knowledge generation for few-shot knowl-
+completion. In Proceedings of the 45th international ACM                 edge graph completion. In Proceedings of the 33rd Interna-
+SIGIR conference on research and development in informa-                 tional Joint Conference on Artificial Intelligence, volume 3,
+tion retrieval, 904–915.                                                 2135–2143.
+Chen, Z.; Fang, Y.; Zhang, Y.; Guo, L.; Chen, J.; Pan, J. Z.;            Li, Y.; Yu, Z.; and He, D. 2024. Text-Rich Graph Neural Net-
+Chen, H.; and Zhang, W. 2025a. Noise-powered Multi-                      works With Subjective-Objective Semantic Modeling. IEEE
+modal Knowledge Graph Representation Framework. In                       Transactions on Knowledge and Data Engineering, 36(9):
+Proceedings of the 31st International Conference on Com-                 4956–4967.
+putational Linguistics, 141–155.
+                                                                         Liang, M.; Du, J.; Liang, Z.; Xing, Y.; Huang, W.; and Xue,
+Chen, Z.; Fang, Y.; Zhang, Y.; Guo, L.; Chen, J.; Pan,                   Z. 2024a. Self-supervised multi-modal knowledge graph
+J. Z.; Chen, H.; and Zhang, W. 2025b. Noise-powered                      contrastive hashing for cross-modal search. In Proceedings
+Multi-modal Knowledge Graph Representation Framework.                    of the AAAI conference on artificial intelligence, volume 38,
+In Proceedings of the 30th International Conference on                   13744–13753.
+Database Systems for Advanced Applications.                              Liang, M.; Li, Y.; Yu, Y.; Cao, X.; Xue, Z.; Li, A.; and Lu,
+Cui, Z.; Weng, Y.; Tang, X.; Lyu, F.; Liu, D.; He, X.; and Ma,           K. 2024b. Structures aware fine-grained contrastive adver-
+C. 2025. Comprehending knowledge graphs with large lan-                  sarial hashing for cross-media retrieval. IEEE Transactions
+guage models for recommender systems. In Proceedings of                  on Knowledge and Data Engineering, 36(7): 3514–3528.
+the 48th International ACM SIGIR Conference on Research                  Liu, H.; Li, C.; Wu, Q.; and Lee, Y. J. 2023. Visual in-
+and Development in Information Retrieval, 1229–1239.                     struction tuning. Advances in neural information processing
+Devlin, J.; Chang, M.-W.; Lee, K.; and Toutanova, K. 2019.               systems, 36: 34892–34916.
+Bert: Pre-training of deep bidirectional transformers for lan-           Liu, Q.; He, Y.; Xu, T.; Lian, D.; Liu, C.; Zheng, Z.; and
+guage understanding. In Proceedings of the 2019 conference               Chen, E. 2024. Unimel: A unified framework for multi-
+of the North American chapter of the association for compu-              modal entity linking with large language models. In Pro-
+tational linguistics: human language technologies, volume 1              ceedings of the 33rd ACM International Conference on In-
+(long and short papers), 4171–4186.                                      formation and Knowledge Management, 1909–1919.
+Fang, Y.; Fan, D.; Zha, D.; and Tan, Q. 2024. Gaugllm: Im-               Liu, Y.; Li, H.; Garcia-Duran, A.; Niepert, M.; Onoro-Rubio,
+proving graph contrastive learning for text-attributed graphs            D.; and Rosenblum, D. S. 2019. MMKG: multi-modal
+with large language models. In Proceedings of the 30th                   knowledge graphs. In European Semantic Web Conference,
+ACM SIGKDD Conference on Knowledge Discovery and                         459–474. Springer.
+Data Mining, 747–758.                                                    Mousselly-Sergieh, H.; Botschen, T.; Gurevych, I.; and
+Gao, Y.; Zhang, F.; Zhang, Z.; Min, X.; and Zhuang, F. 2025.             Roth, S. 2018. A multimodal translation-based approach for
+Mixed-Curvature Multi-Modal Knowledge Graph Comple-                      knowledge graph representation learning. In Proceedings of
+tion. In Proceedings of the AAAI Conference on Artificial                the seventh joint conference on lexical and computational
+Intelligence, volume 39, 11699–11707.                                    semantics, 225–234.
+Jian, Y.; Luo, X.; Li, Z.; Zhang, M.; Zhang, Y.; Xiao, K.;               Pan, Y.; Hong, J.; Zhao, T.; Song, L.; Liu, J.; and Shang, X.
+and Hou, X. 2025. APKGC: Noise-enhanced Multi-Modal                      2025. Logic-Aware Knowledge Graph Reasoning for Struc-
+Knowledge Graph Completion with Attention Penalty. In                    tural Sparsity under Large Language Model Supervision. In
+
+
+                                                                 15822
+Proceedings of the ACM on Web Conference 2025, 4531–                     Yang, B.; Yih, S. W.-t.; He, X.; Gao, J.; and Deng, L. 2015.
+4542.                                                                    Embedding Entities and Relations for Learning and Infer-
+Panda, P.; Agarwal, A.; Devaguptapu, C.; Kaul, M.; and Ap,               ence in Knowledge Bases. In Proceedings of the Inter-
+P. 2024. HOLMES: Hyper-Relational Knowledge Graphs                       national Conference on Learning Representations (ICLR)
+for Multi-hop Question Answering using LLMs. In Pro-                     2015.
+ceedings of the 62nd Annual Meeting of the Association                   Yao, L.; Peng, J.; Mao, C.; and Luo, Y. 2025. Explor-
+for Computational Linguistics (Volume 1: Long Papers),                   ing large language models for knowledge graph comple-
+13263–13282.                                                             tion. In ICASSP 2025-2025 IEEE International Conference
+Radford, A.; Kim, J. W.; Hallacy, C.; Ramesh, A.; Goh, G.;               on Acoustics, Speech and Signal Processing (ICASSP), 1–5.
+Agarwal, S.; Sastry, G.; Askell, A.; Mishkin, P.; Clark, J.;             IEEE.
+et al. 2021. Learning transferable visual models from nat-               Zhang, R.; Su, Y.; Trisedya, B. D.; Zhao, X.; Yang, M.;
+ural language supervision. In International conference on                Cheng, H.; and Qi, J. 2023. Autoalign: Fully automatic and
+machine learning, 8748–8763. PmLR.                                       effective knowledge graph alignment enabled by large lan-
+Sun, Z.; Deng, Z.-H.; Nie, J.-Y.; and Tang, J. 2019. Ro-                 guage models. IEEE Transactions on Knowledge and Data
+tatE: Knowledge Graph Embedding by Relational Rotation                   Engineering, 36(6): 2357–2371.
+in Complex Space. In International Conference on Learning                Zhang, Y.; Chen, Z.; Guo, L.; Xu, Y.; Hu, B.; Liu, Z.; Zhang,
+Representations.                                                         W.; and Chen, H. 2024a. Native: Multi-modal knowledge
+Touvron, H.; Martin, L.; Stone, K.; Albert, P.; Almahairi, A.;           graph completion in the wild. In Proceedings of the 47th
+Babaei, Y.; Bashlykov, N.; Batra, S.; Bhargava, P.; Bhosale,             international ACM SIGIR conference on research and de-
+S.; et al. 2023. Llama 2: Open foundation and fine-tuned                 velopment in information retrieval, 91–101.
+chat models. arXiv preprint arXiv:2307.09288.                            Zhang, Y.; Chen, Z.; Guo, L.; Xu, Y.; Hu, B.; Liu, Z.; Zhang,
+                                                                         W.; and Chen, H. 2025. Tokenization, fusion, and augmen-
+Trouillon, T.; Welbl, J.; Riedel, S.; Gaussier, É.; and
+                                                                         tation: Towards fine-grained multi-modal entity representa-
+Bouchard, G. 2016. Complex embeddings for simple link
+                                                                         tion. In Proceedings of the AAAI Conference on Artificial
+prediction. In International conference on machine learn-
+                                                                         Intelligence, volume 39, 13322–13330.
+ing, 2071–2080. PMLR.
+                                                                         Zhang, Y.; Chen, Z.; Guo, L.; Xu, Y.; Zhang, W.; and Chen,
+Wang, J.; Li, Y.; Shao, Y.; Xue, Z.; Guan, Z.; Li, A.; and Ye,
+                                                                         H. 2024b. Making large language models perform better in
+G. 2025. Reinforcement Active Client Selection for Fed-
+                                                                         knowledge graph completion. In Proceedings of the 32nd
+erated Heterogeneous Graph Learning. In Proceedings of
+                                                                         ACM international conference on multimedia, 233–242.
+the AAAI Conference on Artificial Intelligence, volume 39,
+21117–21125.                                                             Zhang, Y.; Chen, Z.; Liang, L.; Chen, H.; and Zhang, W.
+                                                                         2024c. Unleashing the Power of Imbalanced Modality Infor-
+Wang, M.; Wang, S.; Yang, H.; Zhang, Z.; Chen, X.; and                   mation for Multi-modal Knowledge Graph Completion. In
+Qi, G. 2021. Is visual context really helpful for knowledge              Proceedings of the 2024 Joint International Conference on
+graph? A representation learning perspective. In Proceed-                Computational Linguistics, Language Resources and Eval-
+ings of the 29th ACM international conference on multime-                uation (LREC-COLING 2024), 17120–17130.
+dia, 2735–2743.
+                                                                         Zhang, Y.; Chen, Z.; and Zhang, W. 2023. MACO: A modal-
+Wang, Z.; Li, L.; Li, Q.; and Zeng, D. 2019. Multimodal data             ity adversarial and contrastive framework for modality-
+enhanced representation learning for knowledge graphs. In                missing multi-modal knowledge graph completion. In CCF
+2019 International Joint Conference on Neural Networks                   International Conference on Natural Language Processing
+(IJCNN), 1–8. IEEE.                                                      and Chinese Computing, 123–134. Springer.
+Xiao, S.; Shao, Y.; Li, Y.; Yin, H.; Shen, Y.; and Cui, B.               Zhang, Z.; Wang, X.; Zhang, Z.; Li, H.; Qin, Y.; and Zhu, W.
+2022. LECF: recommendation via learnable edge collabo-                   2024d. LLM4DyG: can large language models solve spatial-
+rative filtering. Science China Information Sciences, 65(1):             temporal problems on dynamic graphs? In Proceedings of
+112101.                                                                  the 30th ACM SIGKDD Conference on Knowledge Discov-
+Xie, R.; Liu, Z.; Jia, J.; Luan, H.; and Sun, M. 2016. Repre-            ery and Data Mining, 4350–4361.
+sentation learning of knowledge graphs with entity descrip-              Zhao, Y.; Yu, J.; Cheng, Y.; Yu, C.; Liu, Y.; Li, X.; and
+tions. In Proceedings of the AAAI conference on artificial               Wang, S. 2025. Variational Graph Autoencoder for Het-
+intelligence, volume 30.                                                 erogeneous Information Networks with Missing and Inac-
+Xie, R.; Liu, Z.; Luan, H.; and Sun, M. 2017. Image-                     curate Attributes. In Proceedings of the 31st ACM SIGKDD
+embodied Knowledge Representation Learning. In Proceed-                  Conference on Knowledge Discovery and Data Mining V. 1,
+ings of the Twenty-Sixth International Joint Conference on               2067–2078.
+Artificial Intelligence, 3140–3146. International Joint Con-
+ferences on Artificial Intelligence Organization.
+Xu, D.; Xu, T.; Wu, S.; Zhou, J.; and Chen, E.
+2022. Relation-enhanced negative sampling for multimodal
+knowledge graph completion. In Proceedings of the 30th
+ACM international conference on multimedia, 3857–3866.
+
+
+                                                                 15823
+

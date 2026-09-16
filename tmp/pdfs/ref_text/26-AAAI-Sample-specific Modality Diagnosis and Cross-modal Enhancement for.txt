@@ -1,0 +1,625 @@
+                                    The Fortieth AAAI Conference on Artificial Intelligence (AAAI-26)
+
+
+
+
+         Sample-specific Modality Diagnosis and Cross-modal Enhancement for
+                        Incomplete Multimodal Representations
+      Junsong Chen1 , Jiyuan Liu1 * , Suyuan Liu1 , Wei Zhang1 , Ao Li2 * , En Zhu1 * , Xinwang Liu1
+                                                1
+                                        National University of Defense Technology
+                                            2
+                                       Harbin University of Science and Technology
+        {chenjunsong257, liujiyuan13, suyuanliu, zhangwei23, enzhu, xinwangliu}@nudt.edu.cn, ao.li@hrbust.edu.cn
+
+
+                           Abstract                                           First, most existing approaches detect missing modali-
+  In multimodal sentiment analysis, modality missingness and               ties at the batch level rather than on a sample-by-sample
+  quality degradation are common. Existing methods often rely              basis. They often rely on predefined missing patterns (Li
+  on batch-level modality generation, generation but neglect               et al. 2024b; Wang, Li, and Cui 2023) or prior missing la-
+  sample-level missingness, hence their flexibility is limited             bels (Ke et al. 2025; Ma et al. 2021a), limiting their flexibil-
+  severely in real-world scenarios. To address this, Sample-               ity in handling sample-specific modality uncertainty. In ad-
+  specific Modality Diagnosis and Cross-modal Enhancement                  dition, some GNN-based methods (Lian et al. 2023; Wang
+  for Incomplete Multimodal Representations (SMCIR) is pro-                et al. 2024) assume a uniform missing pattern across all
+  posed. Specifically, The Dynamic Multi-feature Fusion De-                samples in a batch—for example, if the text modality is
+  tector (DMFD) is presented, which detects missingness and                available, the visual and audio modalities are regarded as
+  severity at the sample-level using indicators such as infor-
+                                                                           missing for all. Such assumptions overlook heterogeneous
+  mation entropy, modality similarity, and mutual informa-
+  tion. Unlike batch-based methods, the DMFD provides fine-                missingness, reducing both fusion quality and downstream
+  grained detection and adaptive responses, improving sensitiv-            performance. Second, recent non-recovery strategies—such
+  ity to modality disturbances. Meanwhile, the Context-aware               as graph-based models (Lian et al. 2023), Bayesian infer-
+  Modality Completion Generator (CMCG) is developed to re-                 ence (Ma et al. 2021b), and prompt learning frameworks
+  store missing modalities through context-guided reconstruc-              (Guo, Jin, and Zhao 2024)—enhance robustness to incom-
+  tion using multiscale feature fusion and cross-modal atten-              plete modalities. However, they generally rely on static mod-
+  tion. In this way, the proposed CMCG method can avoid re-                eling and lack dynamic awareness of modality state changes,
+  dundancy and inconsistency, enhancing the consistency and                limiting their ability to capture complementary relationships
+  discriminativity of the fused representation. In CMCG, the               and collaborative dynamics among modalities under real-
+  text modality serves as a stable guide to improve context con-
+                                                                           world degradation or missingness.
+  sistency. Experiments on the CMU-MOSI and CMU-MOSEI
+  datasets show that SMCIR outperforms existing full-modal                    To address these issues, we propose the explicit Dy-
+  and non-recovery-based methods, well validating its efficacy             namic Multi-Feature Fusion Detector (DMFD), which di-
+  and superiority in multimodal learning.                                  rectly identifies the missing modality type and severity for
+                                                                           each sample without prior labels or rules. Compared to
+Code — https://github.com/js257/SMCIR
+                                                                           methods using masks or global inference, the DMFD offers
+                                                                           several advantages: (i) it detects the modality missingness
+                       Introduction                                        state for each sample, improving accuracy; (ii) it performs
+With the rapid development of multimodal learning, re-                     personalized processing based on the modality missingness
+search is shifting from single-modality modeling (Yang et al.              state, enhancing flexibility in complex environments; (iii)
+2024b,c) to efficient multimodal fusion (Yang et al. 2024a;                it incorporates statistical metrics, such as entropy, modal-
+Huang et al. 2025). Multimodal learning leverages data from                ity mutual information, and similarity, improving robust-
+multiple modalities, such as text, vision, and audio, to im-               ness and interpretability. This provides a more flexible and
+prove model performance and robustness across tasks. Cur-                  generalizable solution for handling modality missingness in
+rent research (Zhu et al. 2024; Zhuang et al. 2024; Huang                  multimodal tasks. Additionally, the Context-aware Modal-
+et al. 2024) focuses on modeling modality dependencies and                 ity Completion Generator (CMCG) is presented, utilizing
+designing cross-modal fusion mechanisms for more accurate                  multi-scale feature fusion and refined attention to enhance
+task inference. To address modality missingness in multi-                  traditional recovery methods. Local and global contextual
+modal data, various modality completion and feature recov-                 relationships between modality features are refined to en-
+ery methods have been proposed. However, they face two                     sure accurate and consistent recovery. Unlike traditional
+main limitations:                                                          global recovery strategies (Le et al. 2025), context learning
+    * Corresponding authors.                                               is employed for adaptive modality generation, with recov-
+Copyright © 2026, Association for the Advancement of Artificial            ery treated as semantic reconstruction. This allows for more
+Intelligence (www.aaai.org). All rights reserved.                          accurate recovery of ambiguous or partially missing modal-
+
+
+                                                                   20154
+ities, avoiding redundancy and significantly enhancing gen-              features. To preserve semantic consistency, knowledge dis-
+eralization and robustness in multimodal tasks. The contri-              tillation transfers knowledge from complete data to scenar-
+butions can be summarized as follows:                                    ios with missing modalities, aiding cross-modal represen-
+                                                                         tation learning (Li et al. 2024c; Wang et al. 2023c). How-
+ • We design the DMFD to automatically identify the miss-
+                                                                         ever, they heavily rely on supervision signals from complete
+   ing modality type for each sample, without prior guid-
+                                                                         modalities and paired samples, limiting adaptability in com-
+   ance or assumptions about missing patterns, effectively
+                                                                         plex or incomplete scenarios. Cross-modal generative meth-
+   filling the gap in sample-level modality detection.
+                                                                         ods have gained attention, using related available modalities
+ • To address partially missing or ambiguous modalities, we              to complete missing ones (Li et al. 2024d; Kang et al. 2024).
+   propose the CMCG, which combines multi-scale feature                  However, these methods struggle with ambiguous, partially
+   modeling and refined attention. This approach refines lo-             lost, or misaligned missing modalities in real-world scenar-
+   cal and global context for adaptive recovery, avoiding re-            ios. Relying solely on generative methods may reduce accu-
+   dundancy and inconsistency in traditional methods, thus               racy and consistency, making it crucial to fully utilize avail-
+   improving accuracy and consistency in modality recon-                 able modality information to ensure quality and accuracy.
+   struction.
+ • Ablation experiments and visualizations on two bench-                                        Methodology
+   mark datasets evaluate the performance of the SMCIR
+   against various state-of-the-art methods in scenarios with            Preliminaries. The goal of the multimodal sentiment analy-
+   full modalities, partial missingness, and others.                     sis task is to predict sentiment polarity (such as positive, neg-
+                                                                         ative, or neutral) or sentiment intensity (such as valence and
+                     Related Work                                        arousal along a continuous dimension) based on given mul-
+                                                                         timodal inputs. Three modalities are considered: language
+Incomplete Modality Recognition                                          (L), vision (V), and audio (A). These modalities are repre-
+Modality missingness is a key challenge in multimodal                    sented as two-dimensional tensors Xm ∈ RNm ×dm , where
+learning, weakening model performance and introducing in-                Nm is the sequence length, dm is the embedding dimension,
+consistencies that impact task outcomes (Wu et al. 2024).                and m ∈ {L, V, A} represents the different modalities.
+Existing research typically simulates random missingness,                   Model Overview. The proposed SMCIR, as shown in
+where modality data is lost due to noise, sensor failures, or            Figure 1, aims to address the issue of modality miss-
+environmental changes. Some studies (Wang et al. 2023b;                  ingness in multimodal learning. First, the three modali-
+Liu et al. 2024; Sun et al. 2024b) adopted varying miss-                 ties are projected to the same feature dimension Pm ∈
+ing rates, patterns, and dropout strategies to assess model              RB×Nm ×dhidden , where B is the batch size. Then, by calcu-
+robustness, but predefined rules limit real-world generaliza-            lating the entropy Hm , mutual information M I(Pm , PL ),
+tion. Missingness detection, which identifies missing modal-             and modality similarity SPm PL , the weighted score Wm
+                                                                                                                                        (i)
+ities and their severity, better aligns with real-world needs.           is obtained to measure the degree of modality missingness.
+However, research in multimodal emotion analysis remains                 Based on this information, a discriminative method is em-
+limited. Detection methods include mask-based, similarity-               ployed to determine if a modality is missing. If a modal-
+based, traditional machine learning, and deep generative                 ity is missing, conditional information C i is generated us-
+models. For instance, Zhang (Zhang et al. 2022) proposed                 ing a cross-modal mechanism, and the MSSE is used to fur-
+a task-guided modality-adaptive similarity metric for infer-             ther enhance the feature expression. Through temporal and
+ring missing modalities based on relationships between non-              global context modeling, the generated conditional informa-
+missing modalities. Zhang (Zhang et al. 2025) constructed                tion is fused with the original missing modality features to
+modality missingness masks to identify missing locations.                obtain the enhanced modality feature G i . Otherwise, the cur-
+Traditional machine learning methods, including BP neu-                  rent modality is output. Finally, the generated samples from
+ral networks and K-means, are also applied (Yan et al.                   the entire batch are concatenated with the original samples,
+2021). Recently, deep generative models such as autoen-
+                                                                         resulting in the final multimodal representation Ô, which is
+coders (Tran et al. 2017) and GANs (Wu et al. 2024) have
+                                                                         used for emotion prediction.
+gained popularity due to their strong modeling capabilities.
+
+Incomplete Modality Recovery                                             Dynamic Multi-feature Fusion Detector (DMFD)
+Existing research mainly focuses on reconstruction-based,                Existing missingness detection methods face three key lim-
+distillation enhancement, and adversarial generative meth-               itations: predefined rules (Wang et al. 2023b; Sun et al.
+ods. Reconstruction-based methods use autoencoders to                    2024b), coarse granularity (Zhang et al. 2022), and heavy
+model the relationship between available and missing                     supervision (Rojas et al. 2025). To address these, we pro-
+modalities, reconstructing missing features. For example, Li             pose DMFD, an unsupervised, sample-level method that de-
+(Li et al. 2024a) adopted stacked residual autoencoders to               tects missingness by jointly analyzing intra-modal distribu-
+approximate complete modality information, and Tao (Tao                  tion properties and inter-modal correlations.
+et al. 2025) adopted encoder-decoder structures for latent                  Multi-Metric Fusion Score Calculation. A weighted
+representations of missing modalities. However, these meth-              score calculation method based on multi-metric fusion is
+ods may lose individual variation by fully replacing missing             proposed to assess modality missingness. By combining
+
+
+                                                                 20155
+Figure 1: The SMCIR structure. It covers the entire process from multi-metric fusion score calculation (entropy, mutual informa-
+tion, and modality similarity), missing modality diagnosis, and cross-modal generation for missing modalities to sample-level
+modality fusion. An example of audio modality missing is shown.
+
+
+multiple information metrics, the missingness and sever-                 Mutual Information Calculation (M I): In multimodal
+ity of each modality can be evaluated. Specifically, the                 learning, mutual information measures the correlation and
+text, visual, and audio features are first mapped to the                 information sharing between modalities. To quantify this,
+same dimension, resulting in projected features Pm ∈                     we adopt a histogram discretization-based approximation
+RB×Nm ×dhidden , m ∈ {L, V, A}, where dhidden is the                     method. Given a modality Pm , we first discretize the fea-
+mapped dimension. The weighted score is then calculated                  tures into fixed bins to obtain the joint and marginal prob-
+by evaluating modality relationships through three key met-              ability distributions. Mutual information is then computed
+rics.                                                                    from these distributions. The formula is as follows:
+   Entropy Calculation (H): Entropy serves as an effective                                     XK X K
+                                                                                                                           p̂(k1 , k2 )
+measure for modality missingness. Higher entropy suggests                   M I(Pm , PL ) =             p̂(k1 , k2 ) log                (3)
+more information, while lower entropy indicates potential                                                                p̂(k1 )p̂(k2 )
+                                                                                               k1 =1 k2 =1
+missingness or sparsity. By calculating the entropy of each              Where K represents the number of bins, p̂(k1 , k2 ) is the
+modality, we can identify missing modalities for compensa-               empirical distribution of the joint features between modal-
+tion. For visual or audio modalities, we use a softmax-based             ity Pm and text modality PL , and p̂(k1 ) and p̂(k2 ) are the
+entropy method. First, we compute the ℓ2 -norm of each fea-              marginal distributions, respectively.
+ture vector to get the feature ”size,” then smooth this with a               Modality Similarity Calculation (S): Given two input
+temperature parameter τ . The probability distribution pk for            modalities, Pm and PL , we first align their temporal dimen-
+each modality feature is computed as follows:                            sions to the target length NL using adaptive average pooling.
+                         exp (∥Pm,i,k ∥2 /τ )                                                                             (i)
+                                                                         Then, for the i-th sample’s pooled features P̃m and P̃L ,
+                                                                                                                                    (i)
+                pk = N                          ,          (1)
+                        m                                                               NL ×dhidden
+                       P
+                           exp (∥Pm,i,j ∥2 /τ )                          with shape R               , we compute the cosine similarity
+                     j=1                                                 at each time step. For each time step n, the cosine similarity
+                                                                           (i)
+Where ∥Pm,i,k ∥2 denotes the ℓ2 -norm of the k-th modality               sn is computed using the following formula:
+feature of the i-th sample, and τ is the temperature coeffi-                                               (i)    (i)
+                                                                                                         P̃m,n · P̃L,n
+cient. Then, the entropy Hi is calculated as the negative log                        s(i)
+                                                                                      n =                                            (4)
+                                                                                                          (i)           (i)
+expectation of the probability distribution.                                                 max ∥P̃m,n ∥2 · ∥P̃L,n ∥2 , ϵ
+                            Nm                                                     (i)         (i)
+                                                                         Where P̃m,n and P̃L,n are the feature vectors of modality
+                            X
+                    Hi = −      pk log pk .               (2)
+                            k=1
+                                                                         Pm and text modality PL at time step n after pooling, and
+
+
+                                                                 20156
+   (i)            (i)
+∥P̃m,n ∥2 and ∥P̃L,n ∥2 are their L2 -norms. To ensure nu-                  RNm ×dm and XLi ∈ RNL ×dL . When only the text modal-
+merical stability and avoid division by zero errors, we set                 ity is available, and both the audio and visual modalities are
+ϵ = 10−8 .                                                                  missing, the text features XLi do not require any transforma-
+   Finally, the modality similarity score is computed by av-                tion or fusion and are directly outputted. When both the text
+eraging the cosine similarity across all time steps. For the                modality and other modalities (such as audio or visual) are
+                                                    (i)
+i-th sample, the final modality correlation score SPm PL is                 available, the feature alignment function projects the input
+computed as follows:                                                        features to the same dimension through a linear transforma-
+                                                                            tion, followed by feature fusion.
+                                  NL                                               i
+                                                                                     = Wo · TansE WL XLi ∥ I(Wm Xm        i
+                                                                                                                                  
+                    (i)         1 X                                             Em                                          , NL )     (9)
+                   S Pm PL =         s(i)                    (5)
+                               NL n=1 n                                     Where TansE represents the Transformer Encoder (Vaswani
+                                                                            et al. 2017) with l layers, Wm and WL are linear transforma-
+To comprehensively consider the three metrics, including
+                                                                            tion matrices that map input features to the same dimension,
+entropy, modality similarity, and mutual information, we                                   i
+                                                                            and I(Wm Xm      , NL ) aligns the features of modality m with
+adopt a weighted sum to compute the final missingness de-
+                                                                            the sequence length NL of modality L. ∥ denotes concatena-
+tection score for each sample. The weight coefficients α, β,
+                                                                            tion along the channel dimension, and Wo is the learned ma-
+and γ, which are fixed parameters, control the influence of
+                                                                            trix used to output the aligned features. After transposition,
+each metric on the final score. The final missingness detec-
+              (i)                                                           Em i
+                                                                                 serves as the conditional information C i ∈ R1×dL ×NL ,
+tion score Wm is calculated as follows:                                     which is provided to the Multi-Scale Attention Enhance-
+   (i)        (i)                                 (i)                       ment Module (MSSE) to enhance the features of the miss-
+  Wm   = α · Hm   + β · M I(Pm , PL )(i) + γ · SPm PL (6)                   ing modality. The structure of MSSE is inspired by multi-
+         (i)                                                                scale approaches (Chen et al. 2018) and attention mecha-
+Where Hm is the entropy value of sample i in modality Pm ,                  nisms (Hu, Shen, and Sun 2018).
+M I(Pm , PL )(i) is the mutual information between modal-                       Different sizes of convolution kernels (k) are employed
+                                       (i)
+ity Pm and text modality PL , and SPm PL is the modality                    to model local and global contextual information from the
+correlation score between modality Pm and text modality                     input features. The outputs of the three convolution kernels
+PL .                                                                        with different sizes are concatenated and processed through
+    Missing Modality Diagnosis. For modality m ∈ {V, A},                    a fully connected layer to produce Zconvi
+                                                                                                                         ∈ R1×dL ×NL . The
+                                 (i)
+the modality missingness state ℏm of the sample i is deter-                 corresponding output is defined as:
+mined by the following decision rule:                                                 Ψk (C i ) = Convk×k (C i ), k ∈ {1, 3, 5}       (10)
+        (         (i)                (i)
+          1, if SPm PL ≤ 0 and Wm < µm − λ · σm(i)                                  i                 i          i           i
+                                                                                                                              
+   (i)                                                                            Zconv = FC Ψ1 (C ) ∥ Ψ3 (C ) ∥ Ψ5 (C )              (11)
+ ℏm =                                               1+Wm
+          0, otherwise                                                      where Ψk represents the convolution operation and FC de-
+                                                         (7)                notes the fully connected layer.
+Where ’0’ and ’1’ represent the presence and absence of a                      After multi-scale convolution, statistical features are ex-
+modality, respectively. In this method, we focus on the sce-                tracted using max-pooling and average-pooling along the
+                                            (i)
+nario where the modality is missing. If SPm PL ≤ 0 and                      time dimension, and then concatenated along the channel
+  (i)                                                     σm
+                                                                            dimension to extract global statistical information along the
+Wm is below a certain threshold, defined by µm −λ·          (i) ,           channel dimension, producing Qi ∈ R1×2dL ×1 . To dynam-
+                                                        1+Wm
+                                            (i)                             ically highlight key channel features, attention weights Ai
+we classify the modality as missing (ℏm = 1). In all
+                                                     (i)                    are calculated using an MLP, defined as follows:
+other cases, the modality is considered to exist (ℏm = 0).
+                                                                                 Qi = maxpoolN (Zconv i                     i
+                                                                                                                                 
+   (i)
+Wm is the feature quality     score of modality m. µm =                                                  ) ∥ avgpoolN (Zconv    )     (12)
+                         r                       2
+                                                                                       Ai = σ W2 · δ LN W1 · vec(Qi )
+                                                                                                                           
+1
+   P   B
+           W
+             (i)
+                 , σ   =   1
+                             P B
+                                     W
+                                       (j)
+                                           − µ      . λ is the                                                                        (13)
+B      i=1   m       m     B   j=1     m       m
+
+hyperparameter that regulates the sensitivity of the thresh-                where vec(·) denotes the flattening operation, δ represents
+old.                                                                        the ReLU function, σ is the Sigmoid function, W1 and W2
+  If both the visual and audio modalities are detected as                   are learnable parameters, and LN represents layer normal-
+                 (i)        (i)
+missing (i.e., ℏV = 1 ∧ ℏA = 1), the state is updated to                    ization. By combining the multi-scale convolution structure,
+indicate a joint missing condition:                                         dual pooling, and attention mechanism, the output of MSSE
+                                                                            is given as:
+                        (i)       (i)
+                   ℏV ← 2,      ℏA ← 2                       (8)                            MS i = Zconv
+                                                                                                    i            i
+                                                                                                         ⊗ Ai ⊕ Zconv                (14)
+Context-aware Multi-modal Completion                                        Where ⊕ denotes residual summation and ⊗ represents
+Generator (CMCG)                                                            channel-wise multiplication. The final enhanced modality G i
+                                                                            is obtained through the following generation process. It is
+Next, we perform the completion or enhancement of the de-                   defined as follows:
+tected missing modalities. First, we identify the available
+                                                                                             G i = η · Γ MS i ⊕ Xmissi
+                                                      i
+                                                                                                              
+modalities, with modality features represented as Xm     ∈                                                                         (15)
+
+
+                                                                    20157
+where η is the fusion weight and Γ denotes the core cross-                    Loss Function
+modal modeling module. This generator fuses multiscale en-
+                                                                              The L1 loss is adopted as the task-specific loss function:
+hanced features with missing modality information for fea-
+ture completion.                                                                                              q
+                                                                                                          1X
+   The Core Transformation Γ integrates temporal model-                                         Ltask =         |yi − ŷi |             (27)
+ing and global context-aware capabilities. First, the features                                            q i=1
+MS i ∈ R1×NL ×dL generated by MSSE are normalized and
+input into BiLSTM with n layers to capture temporal depen-                        where q is the number of samples, yi is the true label, and
+                                       i
+dencies, producing output features Klstm  . These features are                ŷi is the predicted value.
+then passed to TansE, where global feature correlations are                       For missing modality generation, we adopt an improved
+                                             i                                mean squared error to constrain generated features to resem-
+modeled using self-attention, resulting in Ktrans  . The features
+  i           i                                                               ble real modality features:
+Klstm and Ktrans are fused using concatenation or residual
+                                               i
+addition, creating the joint representation Kfused   . This is lin-                                        Pq                2
+early transformed to obtain intermediate features P i , which                                             ( i=1 (ri − r̂i ))
+                                                                                                Lsimse =                                 (28)
+are input into the Multi-Head Attention Mechanism (MHA)                                                          q2
+for parallel subspace attention optimization, yielding the fi-
+                                                                              where ri is the true modality feature, and r̂i is the generated
+nal representation P̂ i .
+                                                                              feature.
+                i
+                    = BiLSTM LN MS i )
+                                                 
+              Klstm                                           (16)               The final loss is a weighted sum of task loss and genera-
+                        i                    i                                tion loss that:
+                    Ktrans     = TansE(Klstm      )          (17)
+                      i            i           i                                                  L = Ltask + ξLsimse                    (29)
+                   Kfused = Klstm ⊕ Ktrans                   (18)
+                     i                        i
+                  P = W2 · δ(W1 · Kfused )                   (19)             where ξ is a trade-off hyperparameter.
+              P̂ i = I(LN MHA(P i ) ⊕ P i )
+                                                       
+                                                             (20)
+The feature completion process handles both missing and                                              Experiment
+non-missing modalities. Missing modalities are completed
+using the generator, while non-missing ones are preserved.                    Datasets and Evaluation Metrics
+The final output consists of the enhanced visual or audio                     We evaluated the SMCIR model on two public benchmark
+modality, with the text modality unchanged. This process                      multimodal sentiment analysis datasets:
+can be summarized as the following generation function:
+          (                                                                      MOSI: The MOSI dataset (Zadeh et al. 2016) consists
+                                        (i)       (i)
+    (i)     FM L(i) , E (i) ⊕ Xm if ℏm ∈ {1, 2}                               of 2199 YouTube video segments with text, visual (facial
+  Fout =      (i)                                            (21)             expressions), and audio (speech) features, along with senti-
+            Xm                                 otherwise
+                               (i)                                           ment intensity labels in the range of [-3, 3].
+                               A        if M = V                                 MOSEI: The MOSEI dataset (Zadeh et al. 2018) contains
+                  E (i) =                                    (22)
+                               V (i) if M = A                                 over 23,000 YouTube video segments covering text, audio,
+Here, FM is the modality generation mapping function,                         and visual modalities. It provides sentiment intensity labels
+  (i)
+Xm represents the original modality features, which are di-                   in the range of [-3, 3] and six emotion categories, making it
+rectly preserved if the modality is not missing. Otherwise,                   suitable for both sentiment prediction and emotion classifi-
+                                                                              cation tasks.
+the modality is completed by the generator. L(i) , V (i) , A(i)
+represent the modality features for the i-th sample, and                         By following previous methods (Yang, Dong, and Qiang
+M ∈ {V, A} is the identifier for the missing modality.                        2024) (Tao et al. 2025), the performance of the model on
+   The features of the same modality in the batch are fused                   both datasets is evaluated using classification accuracy (Acc-
+using a concatenation operation:                                              2), weighted F1 score (F1), mean absolute error (MAE), and
+                                                                            pearson correlation coefficient (Corr).
+                          (1)        (2)              (B)
+  V̂out = concat {Fout [V ], Fout [V ], . . . , Fout [V ]}   (23)
+                   
+                           (1)       (2)               (B)
+                                                                             Feature Extraction
+  Âout = concat {Fout [A], Fout [A], . . . , Fout [A]}      (24)
+                                                                              Language modality: We employ the pre-trained BERT
+              L̂out = concat ({L1 , L2 , . . . , LB })         (25)           model (Wolf et al. 2020) to encode raw text from the MOSI
+Finally, the three modalities are mapped to the same feature                  and MOSEI datasets, adding part-of-speech and word-
+dimension using weight matrices Wm , m ∈ {L, V, A} and                        level sentiment polarity embeddings for each sentence. Vi-
+aligned to the text modality’s time steps NL using interpo-                   sual Features: The OpenFace (Baltrušaitis, Robinson, and
+lation operation I. After processing through the fusion layer                 Morency 2016) is employed to extract facial features from
+Wf , the final fused output Ô is obtained:                                   visual frames. Frames with open eyes are selected, and those
+                                                           ⊤                with closed eyes are discarded to avoid facial expression
+                                              L̂out WL                        analysis errors. Acoustic Features: The COVAREP (Degot-
+  Ô = Fusion(L̂out , V̂out , Âout ) =  I(V̂out WV , NL )  Wf              tex et al. 2014) is adopted to extract acoustic features, in-
+                                          I(Âout WA , NL )                   cluding Mel-frequency cepstral coefficients (MFCCs), pitch,
+                                                               (26)           and voicing features related to speech emotion and pitch.
+
+
+                                                                      20158
+                                                           CMU-MOSI                                    CMU-MOSEI
+ Methods
+                                           MAE Corr             ACC-2            F1       MAE Corr          ACC-2               F1
+ FDMER (Yang et al. 2022)                  0.845   0.732     -/84.20          -/83.90     0.568   0.736     -/83.90       -/83.80
+ TETFN (Wang et al. 2023a)                 0.717   0.800   84.05/86.10      83.83/86.07   0.551   0.748   84.25/85.18   84.18/85.27
+ EMT (Sun et al. 2024a)                    0.705   0.798   83.30/85.00      83.20/85.00   0.527   0.774   83.40/86.00   83.70/86.00
+ MTMD (Lin and Hu 2024)                    0.705   0.799   84.00/86.00      83.90/86.00   0.531   0.767   84.80/86.10   84.90/85.90
+ CLGSI (Yang, Dong, and Qiang 2024)        0.703   0.790   83.97/86.43      83.63/86.25   0.532   0.763   84.01/86.32   84.21/86.18
+ MFMB-Net (Tao et al. 2025)                0.709   0.798   82.70/85.70      83.20/86.00   0.532   0.758   84.70/85.10   85.00/85.10
+ DLF (Wang et al. 2025)                    0.731   0.781     -/85.06          -/85.04     0.536   0.764     -/85.42       -/85.27
+ RGM-LoRA (Liu, Fu, and Wang 2025)         0.698   0.801   83.10/85.70      83.40/86.10   0.532   0.769   82.90/85.30   83.70/85.80
+ SMCIR                                     0.696 0.804 83.15/84.82 83.12/84.80 0.523 0.777 83.34/86.35 83.76/86.35
+
+Table 1: Comparison with the full-modal methods based on the BERT language model on the CMU-MOSI and CMU-MOSEI
+datasets. F1 and Acc-2 are reported as negative/non-negative (left) and negative/positive (right). The best results are marked in
+bold, while the second best with underline.
+
+
+                                 Testing Conditions                      Datasets         DMFD     MSSE     CMCG        MAE          Corr
+Datasets       Methods
+                         {L} {L, V} {L, A} Avg {L,V,A}                                      ✓                  ✓        0.704    0.802
+                                                                                            ✓        ✓                  0.705    0.800
+               SMIL  78.26      79.15   79.82   79.08   82.85            CMU-MOSI
+                                                                                                     ✓         ✓        0.723    0.795
+               GCNet 80.42      82.78   83.23   82.14   83.78
+CMU-MOSI                                                                                    ✓        ✓         ✓        0.696    0.804
+               MPLMM 79.52      80.12   80.48   80.03   82.96
+               SMCIR 83.18      84.12   83.40   83.57   84.36                               ✓                  ✓        0.537    0.771
+                                                                                            ✓        ✓                  0.530    0.771
+          SMIL  77.46           78.36   77.89   77.90   81.56            CMU-MOSEI
+                                                                                                     ✓         ✓        0.534    0.767
+          GCNet 81.35           83.43   82.96   82.58   83.42
+CMU-MOSEI                                                                                   ✓        ✓         ✓        0.523    0.777
+          MPLMM 78.69           79.67   79.45   79.27   82.67
+          SMCIR 84.39           85.35   84.88   84.87   85.78
+                                                                        Table 3: Ablation study of the proposed DMFD, MSSE, and
+Table 2: Comparison of modality generation ability. For ex-             CMCG.
+ample, “L” indicates that only the text modality is available
+when visual and audio modalities are missing. “Avg” repre-
+sents the average performance across the three possible con-
+ditions. The evaluation metric is the F1 score.                         tion mechanism, enabling dynamic identification and selec-
+                                                                        tive enhancement, improving adaptability and robustness in
+                                                                        real-world scenarios. While methods such as EMT-DLFR
+Implementation Details                                                  and RGM-LoRA explore modality collaboration, they rely
+On the MOSI and MOSEI datasets, SMCIR is optimized us-                  on static models, making sample-level modality percep-
+ing the Adam optimizer with a batch size of 64. The learning            tion challenging. SMCIR’s “state perception + selective en-
+rates are set to 2 × 10−5 and 1 × 10−5 , and the Adam ep-               hancement” strategy avoids redundant modeling, improving
+silon values are 3 × 10−8 and 1 × 10−8 , respectively. The              fusion quality and emotion recognition.
+coefficients α, β, γ, and ξ are set to 0.5, 0.3, 10, and 0.2,              To evaluate SMCIR’s generative ability with missing
+while η is set to 0.6 and 0.4 for the two datasets. Both the            modalities, we compared it with three non-reconstructive
+l layers of TransE and the n layers of BiLSTM are set to 2              methods (SMIL (Ma et al. 2021b), GCNet (Lian et al.
+and 4, respectively. Non-reconstructive methods are trained             2023), and MPLMM (Guo, Jin, and Zhao 2024)) on the
+using the same setup with publicly available code, and all              two datasets in Table 2. On CMU-MOSI, SMCIR outper-
+experiments are conducted on an RTX 3090 GPU.                           forms all methods with an average score of 83.57%, ex-
+                                                                        celling in missing modality detection and enhancement. On
+Comparison to State-of-the-art Methods                                  CMU-MOSEI, it leads with an average accuracy of 84.87%,
+As shown in Table 1, under ideal conditions with complete               surpassing other methods. Even with complete input, it
+modality input, the SMCIR outperforms full-modal meth-                  achieves 85.78%, confirming its stability and generalizabil-
+ods, particularly on CMU-MOSI, setting new records across               ity. The regression results in three missing modality scenar-
+multiple metrics, demonstrating strong expressive and                   ios show SMCIR’s superior performance in Figure 2, espe-
+modeling capabilities. Existing methods such as TETFN,                  cially under the LV condition, where its predictions closely
+MTMD, and FDMER assume complete modality informa-                       match the ideal, demonstrating better emotion recognition
+tion and cannot handle missing or degraded modalities. In               and generation. These results highlight SMCIR’s advantage
+contrast, the SMCIR introduces a modality state percep-                 in handling missing modalities and emotional intensity.
+
+
+                                                                20159
+                                                                                                       CMU-MOSEI
+                                                                          Methods
+                                                                                      MAE      Corr       ACC-2           F1
+                                                                          H           0.529    0.773    83.51/86.19   83.95/86.16
+                                                                          M           0.533    0.770    83.14/85.39   83.48/85.36
+                                                                          S           0.532    0.769    83.27/85.69   83.55/85.64
+                                                                          HM          0.527    0.772    83.19/85.39   83.42/85.28
+                                                                          MS          0.528    0.771    83.01/85.20   83.36/85.07
+                                                                          HMS         0.523    0.777    83.34/86.35   83.76/86.35
+
+                                                                         Table 4: A study on the effectiveness of different combina-
+                                                                         tions of indicators in the proposed DMFD.
+
+                                                                         Datasets       Available MAE Corr        ACC-2        F1
+                                                                                        {V*, A*} 0.696 0.804 83.15/84.82 83.12/84.80
+                                                                         CMU-MOSI        {V, A*} 0.709 0.792 83.24/84.43 83.23/84.54
+Figure 2: Visualization of regression performance of differ-                             {V*, A} 0.726 0.788 83.09/84.46 83.04/84.48
+ent methods under three missing conditions on the MOSI                            {V*, A*} 0.523 0.777 83.34/86.35 83.76/86.35
+dataset. The varying depth of color represents the magni-                CMU-MOSEI {V, A*} 0.529 0.771 82.93/85.69 83.37/85.64
+tude of emotional intensity (from -3 to 3).                                        {V*, A} 0.539 0.763 81.36/84.84 81.92/84.80
+
+                                                                         Table 5: Ablation experiment of DMFD.The text modality is
+                                                                         always available. * indicates the modality where DMFD is
+                                                                         applied.
+
+
+                                                                         combinations, HM improves regression but slightly reduces
+                                                                         classification performance, while MS offers no significant
+                                                                         gain. The three-indicator combination (HMS) provides the
+                                                                         best performance, highlighting the complementary benefits
+Figure 3: Modality missing rate detection: Figures a and b               of combining diverse indicators.
+display the modality missing rate detection results for the                 Ablation results of DMFD. The ablation results in Table
+MOSI and MOSEI datasets, respectively. For example, “A”                  5 confirm the effectiveness of DMFD. Applying it to both
+in the legend indicates the missing rate of the audio modality           visual and audio modalities yields the best performance on
+in the total samples of both the visual and audio modalities.            both datasets, demonstrating that the dual-modality collab-
+                                                                         orative enhancement effectively handles fuzzy features. In-
+                                                                         dividually, the detection module benefits the audio modal-
+Ablation Study                                                           ity more, especially on CMU-MOSEI, likely due to richer
+                                                                         discriminative features. In contrast, the visual modality of-
+Structural contribution of SMCIR. To validate the contri-                ten identifies more ambiguous samples (Figure 3), leading
+butions of DMFD, MSSE, and CMCG, we conduct an ab-                       to outputs that rely on cross-modal generation and perform
+lation study on both datasets (Table 3). The results show:               worse than real samples.
+(i) Using DMFD alone performs well in missing modal-
+ity scenarios but is inferior to using all modules, indicat-
+ing that combining DMFD with others enhances robustness                                         Conclusion
+and performance. (ii) Using MSSE alone slightly reduces                  This paper proposes SMCIR, a sample-level modality di-
+performance, especially MAE on CMU-MOSI, suggesting                      agnosis and cross-modal enhancement framework, which
+that MSSE improves feature expression but redundancy and                 addresses modality missing and information imbalance in
+inconsistency remain without other modules. (iii) Remov-                 multimodal data through the DMFD and CMCG. Experi-
+ing CMCG causes a significant drop, particularly on CMU-                 mental results show that SMCIR significantly improves per-
+MOSI, showing that CMCG is essential for modality com-                   formance on the CMU-MOSI and CMU-MOSEI datasets.
+pletion and context-guided feature reconstruction. (iv) Using            The framework dynamically enhances each sample, improv-
+all modules together confirms that the combined approach                 ing the recognition and handling of ambiguous modalities.
+substantially improves robustness and accuracy across vari-              It demonstrates good scalability, offering a novel solution
+ous missing modality scenarios.                                          for multimodal tasks. Future work could optimize module
+   Structural contribution of DMFD. Table 4 shows the                    interaction and sample-level processing efficiency, which
+results of different indicator combinations in the DMFD                  remains a key challenge. More efficient modality genera-
+model. The single indicator H outperforms both M and S                   tion schemes are needed to further enhance performance on
+in classification and regression tasks. Among two-indicator              large-scale datasets.
+
+
+                                                                 20160
+                  Acknowledgments                                       Li, J.; Cai, S.; Li, L.; Sun, R.; Yuan, G.; and Zhu, R.
+This work was supported in part by the National Science                 2024a. MIT-FRNet: Modality-invariant temporal repre-
+and Technology Innovation 2030 Major Project under (No.                 sentation learning-based feature reconstruction network for
+2022ZD0209103); in part by the National Natural Science                 missing modalities. Expert Systems with Applications, 249:
+Foundation of China(No. 62476281, 62306324, 62376279,                   123655.
+U24A20333); in part by the National Natural Science Foun-               Li, M.; Yang, D.; Liu, Y.; Wang, S.; Chen, J.; Wang, S.; Wei,
+dation of China Joint Found (No. U24A20323); in part by                 J.; Jiang, Y.; Xu, Q.; Hou, X.; Sun, M.; Qian, Z.; Kou, D.;
+the Science and Technology Innovation Program of Hu-                    and Zhang, L. 2024b. Toward Robust Incomplete Multi-
+nan Province (No. 2024RC3128); and in part by the Na-                   modal Sentiment Analysis via Hierarchical Representation
+tional University of Defense Technology Research Founda-                Learning. arXiv:2411.02793.
+tion (No. ZK24-30).                                                     Li, M.; Yang, D.; Zhao, X.; Wang, S.; Wang, Y.; Yang,
+                                                                        K.; Sun, M.; Kou, D.; Qian, Z.; and Zhang, L. 2024c.
+                       References                                       Correlation-Decoupled Knowledge Distillation for Multi-
+Baltrušaitis, T.; Robinson, P.; and Morency, L.-P. 2016.               modal Sentiment Analysis with Incomplete Modalities. In
+OpenFace: An open source facial behavior analysis toolkit.              Proceedings of the IEEE/CVF Conference on Computer Vi-
+In 2016 IEEE Winter Conference on Applications of Com-                  sion and Pattern Recognition (CVPR), 12458–12468.
+puter Vision (WACV), 1–10.                                              Li, Y.; Zheng, C.; Zuo, R.; and Lu, W. 2024d. Semantic
+Chen, L.-C.; Papandreou, G.; Kokkinos, I.; Murphy, K.; and              Reconstruction Guided Missing Cross-modal Hashing. In
+Yuille, A. L. 2018. DeepLab: Semantic Image Segmenta-                   2024 International Joint Conference on Neural Networks
+tion with Deep Convolutional Nets, Atrous Convolution, and              (IJCNN), 1–8.
+Fully Connected CRFs. IEEE Transactions on Pattern Anal-                Lian, Z.; Chen, L.; Sun, L.; Liu, B.; and Tao, J. 2023.
+ysis and Machine Intelligence, 40(4): 834–848.                          GCNet: Graph Completion Network for Incomplete Multi-
+Degottex, G.; Kane, J.; Drugman, T.; Raitio, T.; and Scherer,           modal Learning in Conversation. IEEE Transactions on Pat-
+S. 2014. COVAREP — A collaborative voice analysis                       tern Analysis and Machine Intelligence, 45(7): 8419–8432.
+repository for speech technologies. In 2014 IEEE Interna-               Lin, R.; and Hu, H. 2024. Multi-Task Momentum Distilla-
+tional Conference on Acoustics, Speech and Signal Process-              tion for Multimodal Sentiment Analysis. IEEE Transactions
+ing (ICASSP), 960–964.                                                  on Affective Computing, 15(2): 549–565.
+Guo, Z.; Jin, T.; and Zhao, Z. 2024. Multimodal Prompt                  Liu, F.; Fu, Z.; and Wang, Y. 2025. Reward-Based Gradi-
+Learning with Missing Modalities for Sentiment Analysis                 ent Modulation for Multimodal Emotion Recognition With
+and Emotion Recognition. arXiv:2407.05374.                              LoRA. IEEE Transactions on Computational Social Sys-
+Hu, J.; Shen, L.; and Sun, G. 2018. Squeeze-and-Excitation              tems, 1–11.
+Networks. In Proceedings of the IEEE Conference on Com-                 Liu, R.; Zuo, H.; Lian, Z.; Schuller, B. W.; and Li, H. 2024.
+puter Vision and Pattern Recognition (CVPR).                            Contrastive Learning Based Modality-Invariant Feature Ac-
+Huang, C.; Chen, J.; Huang, Q.; Wang, S.; Tu, Y.; and                   quisition for Robust Multimodal Emotion Recognition With
+Huang, X. 2025. AtCAF: Attention-based causality-aware                  Missing Modalities. IEEE Transactions on Affective Com-
+fusion network for multimodal sentiment analysis. Informa-              puting, 15(4): 1856–1873.
+tion Fusion, 114: 102725.                                               Ma, M.; Ren, J.; Zhao, L.; Tulyakov, S.; Wu, C.; and Peng,
+Huang, J.; Zhou, J.; Tang, Z.; Lin, J.; and Chen, C. Y.-C.              X. 2021a. SMIL: Multimodal Learning with Severely Miss-
+2024. TMBL: Transformer-based multimodal binding learn-                 ing Modality. Proceedings of the AAAI Conference on Arti-
+ing model for multimodal sentiment analysis. Knowledge-                 ficial Intelligence, 35(3): 2302–2310.
+Based Systems, 285: 111346.                                             Ma, M.; Ren, J.; Zhao, L.; Tulyakov, S.; Wu, C.; and Peng,
+Kang, M.; Zhu, R.; Chen, D.; Liu, X.; and Yu, W. 2024.                  X. 2021b. SMIL: Multimodal Learning with Severely Miss-
+CM-GAN: A Cross-Modal Generative Adversarial Network                    ing Modality. Proceedings of the AAAI Conference on Arti-
+for Imputing Completely Missing Data in Digital Industry.               ficial Intelligence, 35(3): 2302–2310.
+IEEE Transactions on Neural Networks and Learning Sys-                  Rojas, K.; Zhu, Y.; Zhu, S.; Ye, F. X. F.; and Tao, M. 2025.
+tems, 35(3): 2917–2926.                                                 Diffuse Everything: Multimodal Diffusion Models on Arbi-
+Ke, G.; He, S.; Wang, X.; Wang, B.; Chao, G.; Zhang, Y.;                trary State Spaces. arXiv:2506.07903.
+Xie, Y.; and Su, H. 2025. Knowledge Bridger: Towards                    Sun, L.; Lian, Z.; Liu, B.; and Tao, J. 2024a. Efficient Multi-
+Training-Free Missing Modality Completion. In Proceed-                  modal Transformer With Dual-Level Feature Restoration for
+ings of the Computer Vision and Pattern Recognition Con-                Robust Multimodal Sentiment Analysis. IEEE Transactions
+ference (CVPR), 25864–25873.                                            on Affective Computing, 15(1): 309–325.
+Le, H. Q.; Thwal, C. M.; Qiao, Y.; Tun, Y. L.; Nguyen,                  Sun, Y.; Liu, Z.; Sheng, Q. Z.; Chu, D.; Yu, J.; and Sun,
+M. N.; Huh, E.-N.; and Hong, C. S. 2025. Cross-modal pro-               H. 2024b. Similar modality completion-based multimodal
+totype based multimodal federated learning under severely               sentiment analysis under uncertain missing modalities. In-
+missing modality. Information Fusion, 122: 103219.                      formation Fusion, 110: 102454.
+
+
+                                                                20161
+Tao, C.; Li, J.; Zang, T.; and Gao, P. 2025. A Multi-Focus-                Yang, D.; Huang, S.; Kuang, H.; Du, Y.; and Zhang, L.
+Driven Multi-Branch Network for Robust Multimodal Sen-                     2022. Disentangled Representation Learning for Multi-
+timent Analysis. Proceedings of the AAAI Conference on                     modal Emotion Recognition. In Proceedings of the 30th
+Artificial Intelligence, 39(2): 1547–1555.                                 ACM International Conference on Multimedia, MM ’22,
+Tran, L.; Liu, X.; Zhou, J.; and Jin, R. 2017. Missing Modal-              1642–1651. ISBN 9781450392037.
+ities Imputation via Cascaded Residual Autoencoder. In                     Yang, D.; Kuang, H.; Yang, K.; Li, M.; and Zhang, L. 2024a.
+Proceedings of the IEEE Conference on Computer Vision                      Towards Asynchronous Multimodal Signal Interaction and
+and Pattern Recognition (CVPR).                                            Fusion via Tailored Transformers. IEEE Signal Processing
+Vaswani, A.; Shazeer, N.; Parmar, N.; Uszkoreit, J.; Jones,                Letters, 31: 1550–1554.
+L.; Gomez, A. N.; Kaiser, L. u.; and Polosukhin, I. 2017. At-              Yang, D.; Yang, K.; Kuang, H.; Chen, Z.; Wang, Y.; and
+tention is All you Need. In Advances in Neural Information                 Zhang, L. 2024b. Towards Context-Aware Emotion Recog-
+Processing Systems, volume 30. Curran Associates, Inc.                     nition Debiasing From a Causal Demystification Perspective
+Wang, D.; Guo, X.; Tian, Y.; Liu, J.; He, L.; and Luo, X.                  via De-Confounded Training. IEEE Transactions on Pattern
+2023a. TETFN: A text enhanced transformer fusion net-                      Analysis and Machine Intelligence, 46(12): 10663–10680.
+work for multimodal sentiment analysis. Pattern Recogni-                   Yang, D.; Yang, K.; Li, M.; Wang, S.; Wang, S.; and Zhang,
+tion, 136: 109259.                                                         L. 2024c. Robust Emotion Recognition in Context De-
+Wang, H.; Chen, Y.; Ma, C.; Avery, J.; Hull, L.; and                       biasing. In Proceedings of the IEEE/CVF Conference on
+Carneiro, G. 2023b. Multi-Modal Learning With Missing                      Computer Vision and Pattern Recognition (CVPR), 12447–
+Modality via Shared-Specific Feature Modelling. In Pro-                    12457.
+ceedings of the IEEE/CVF Conference on Computer Vision                     Yang, Y.; Dong, X.; and Qiang, Y. 2024. CLGSI: A Multi-
+and Pattern Recognition (CVPR), 15878–15887.                               modal Sentiment Analysis Framework based on Contrastive
+Wang, H.; Ma, C.; Zhang, J.; Zhang, Y.; Avery, J.; Hull, L.;               Learning Guided by Sentiment Intensity. In Findings of the
+and Carneiro, G. 2023c. Learnable Cross-modal Knowledge                    Association for Computational Linguistics: NAACL 2024,
+Distillation for Multi-modal Learning with Missing Modal-                  2099–2110.
+ity. volume 14223 LNCS, 216 – 226.                                         Zadeh, A.; Zellers, R.; Pincus, E.; and Morency, L.-P. 2016.
+Wang, P.; Zhou, Q.; Wu, Y.; Chen, T.; and Hu, J. 2025.                     Multimodal sentiment intensity analysis in videos: Facial
+DLF: Disentangled-Language-Focused Multimodal Senti-                       gestures and verbal messages. IEEE Intelligent Systems,
+ment Analysis. Proceedings of the AAAI Conference on Ar-                   31(6): 82–88.
+tificial Intelligence, 39(20): 21180–21188.                                Zadeh, A. B.; Liang, P. P.; Poria, S.; Cambria, E.; and
+Wang, Y.; Li, Y.; and Cui, Z. 2023.                Incomplete              Morency, L.-P. 2018. Multimodal language analysis in the
+Multimodality-Diffused Emotion Recognition. In Advances                    wild: Cmu-mosei dataset and interpretable dynamic fusion
+in Neural Information Processing Systems, volume 36,                       graph. In Proceedings of the 56th Annual Meeting of the
+17117–17128. Curran Associates, Inc.                                       Association for Computational Linguistics (Volume 1: Long
+Wang, Y.; Yao, X.; Zhu, P.; Li, W.; Cao, M.; and Hu, Q.                    Papers), 2236–2246.
+2024. Integrated Heterogeneous Graph Attention Network                     Zhang, C.; Chu, X.; Ma, L.; Zhu, Y.; Wang, Y.; Wang, J.; and
+for Incomplete Multi-modal Clustering. INTERNATIONAL                       Zhao, J. 2022. M3Care: Learning with Missing Modalities
+JOURNAL OF COMPUTER VISION, 1–20.                                          in Multimodal Healthcare Data. In Proceedings of the 28th
+Wolf, T.; Debut, L.; Sanh, V.; Chaumond, J.; Delangue, C.;                 ACM SIGKDD Conference on Knowledge Discovery and
+Moi, A.; Cistac, P.; Rault, T.; Louf, R.; Funtowicz, M.; Davi-             Data Mining, KDD ’22, 2418–2428. ISBN 9781450393850.
+son, J.; Shleifer, S.; von Platen, P.; Ma, C.; Jernite, Y.; Plu,           Zhang, Y.; Zhang, Y.; Gao, M.; Wang, X.; Dai, B.; and Shen,
+J.; Xu, C.; Le Scao, T.; Gugger, S.; Drame, M.; Lhoest, Q.;                W. 2025. Multimodal behavior recognition for dairy cow
+and Rush, A. 2020. Transformers: State-of-the-Art Natural                  digital twin construction under incomplete modalities: A
+Language Processing. In Proceedings of the 2020 Confer-                    modality mapping completion network approach. Artificial
+ence on Empirical Methods in Natural Language Process-                     Intelligence in Agriculture, 15(3): 459–469.
+ing: System Demonstrations, 38–45.                                         Zhu, A.; Hu, M.; Wang, X.; Yang, J.; Tang, Y.; and Ren,
+Wu, Q.; Lu, T.; Ding, Z.; Shi, L.; Xu, Y.; and Xu, X. 2024.                F. 2024. KEBR: Knowledge Enhanced Self-Supervised
+Automatic Completion Method of Power Missing Data in                       Balanced Representation for Multimodal Sentiment Anal-
+Distribution Network Based on GCN-VAE Model. In 2024                       ysis. In Proceedings of the 32nd ACM International
+China International Conference on Electricity Distribution                 Conference on Multimedia, MM ’24, 5732–5741. ISBN
+(CICED), 1117–1121.                                                        9798400706868.
+Wu, R.; Wang, H.; Chen, H.-T.; and Carneiro, G. 2024.                      Zhuang, Y.; Zhang, Y.; Hu, Z.; Zhang, X.; Deng, J.; and
+Deep Multimodal Learning with Missing Modality: A Sur-                     Ren, F. 2024. GLoMo: Global-Local Modal Fusion for Mul-
+vey. arXiv e-prints, arXiv:2409.07825.                                     timodal Sentiment Analysis. In Proceedings of the 32nd
+Yan, A.; Wang, W.; Ren, Y.; and Geng, H. 2021. A Clus-                     ACM International Conference on Multimedia, MM ’24,
+tering Algorithm for Multi-Modal Heterogeneous Big Data                    1800–1809. ISBN 9798400706868.
+With Abnormal Data. Frontiers in Neurorobotics, Volume
+15 - 2021.
+
+
+                                                                   20162
+

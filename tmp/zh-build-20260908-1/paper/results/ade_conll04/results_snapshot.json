@@ -1,0 +1,1224 @@
+{
+  "ade": {
+    "validation": {
+      "soe": {
+        "metric": "strict-source-character-span",
+        "selection_split": "validation",
+        "formal_test_read": false,
+        "jobs_gold": 384,
+        "jobs_predicted": 384,
+        "jobs_evaluated": 384,
+        "jobs_missing_predictions": 0,
+        "generation_success_rate": 1.0,
+        "entity_strict": {
+          "precision": 0.8925,
+          "recall": 0.8253,
+          "f1": 0.8576,
+          "gold": 996,
+          "predicted": 921,
+          "correct": 822
+        },
+        "relation_strict": {
+          "precision": 0.7882,
+          "recall": 0.6826,
+          "f1": 0.7316,
+          "gold": 627,
+          "predicted": 543,
+          "correct": 428
+        },
+        "relation_with_claim_status": {
+          "precision": 0.7882,
+          "recall": 0.6826,
+          "f1": 0.7316,
+          "gold": 627,
+          "predicted": 543,
+          "correct": 428
+        },
+        "macro_by_job": {
+          "entity_strict": {
+            "precision": 0.8993,
+            "recall": 0.8561,
+            "f1": 0.8699
+          },
+          "relation_strict": {
+            "precision": 0.8013,
+            "recall": 0.7559,
+            "f1": 0.7657
+          },
+          "relation_with_claim_status": {
+            "precision": 0.8013,
+            "recall": 0.7559,
+            "f1": 0.7657
+          }
+        },
+        "resolution": {
+          "unresolved_gold_entities": 0,
+          "unresolved_predicted_entities": 0
+        }
+      },
+      "eae": {
+        "metric": "strict-source-character-span",
+        "selection_split": "validation",
+        "formal_test_read": false,
+        "jobs_gold": 384,
+        "jobs_predicted": 384,
+        "jobs_evaluated": 384,
+        "jobs_missing_predictions": 0,
+        "generation_success_rate": 1.0,
+        "entity_strict": {
+          "precision": 0.9049,
+          "recall": 0.8122,
+          "f1": 0.8561,
+          "gold": 996,
+          "predicted": 894,
+          "correct": 809
+        },
+        "relation_strict": {
+          "precision": 0.8084,
+          "recall": 0.673,
+          "f1": 0.7346,
+          "gold": 627,
+          "predicted": 522,
+          "correct": 422
+        },
+        "relation_with_claim_status": {
+          "precision": 0.8084,
+          "recall": 0.673,
+          "f1": 0.7346,
+          "gold": 627,
+          "predicted": 522,
+          "correct": 422
+        },
+        "macro_by_job": {
+          "entity_strict": {
+            "precision": 0.9087,
+            "recall": 0.8461,
+            "f1": 0.8667
+          },
+          "relation_strict": {
+            "precision": 0.8196,
+            "recall": 0.7526,
+            "f1": 0.7674
+          },
+          "relation_with_claim_status": {
+            "precision": 0.8196,
+            "recall": 0.7526,
+            "f1": 0.7674
+          }
+        },
+        "resolution": {
+          "unresolved_gold_entities": 0,
+          "unresolved_predicted_entities": 0
+        }
+      },
+      "hrge": {
+        "metric": "strict-source-character-span",
+        "selection_split": "validation",
+        "formal_test_read": false,
+        "jobs_gold": 384,
+        "jobs_predicted": 384,
+        "jobs_evaluated": 384,
+        "jobs_missing_predictions": 0,
+        "generation_success_rate": 1.0,
+        "entity_strict": {
+          "precision": 0.9035,
+          "recall": 0.8554,
+          "f1": 0.8788,
+          "gold": 996,
+          "predicted": 943,
+          "correct": 852
+        },
+        "relation_strict": {
+          "precision": 0.8004,
+          "recall": 0.7289,
+          "f1": 0.7629,
+          "gold": 627,
+          "predicted": 571,
+          "correct": 457
+        },
+        "relation_with_claim_status": {
+          "precision": 0.8004,
+          "recall": 0.7289,
+          "f1": 0.7629,
+          "gold": 627,
+          "predicted": 571,
+          "correct": 457
+        },
+        "macro_by_job": {
+          "entity_strict": {
+            "precision": 0.9201,
+            "recall": 0.8795,
+            "f1": 0.8911
+          },
+          "relation_strict": {
+            "precision": 0.8382,
+            "recall": 0.7872,
+            "f1": 0.7971
+          },
+          "relation_with_claim_status": {
+            "precision": 0.8382,
+            "recall": 0.7872,
+            "f1": 0.7971
+          }
+        },
+        "resolution": {
+          "unresolved_gold_entities": 0,
+          "unresolved_predicted_entities": 0
+        }
+      },
+      "evge": {
+        "metric": "strict-source-character-span",
+        "selection_split": "validation",
+        "formal_test_read": false,
+        "jobs_gold": 384,
+        "jobs_predicted": 384,
+        "jobs_evaluated": 384,
+        "jobs_missing_predictions": 0,
+        "generation_success_rate": 1.0,
+        "entity_strict": {
+          "precision": 0.9035,
+          "recall": 0.8554,
+          "f1": 0.8788,
+          "gold": 996,
+          "predicted": 943,
+          "correct": 852
+        },
+        "relation_strict": {
+          "precision": 0.8004,
+          "recall": 0.7289,
+          "f1": 0.7629,
+          "gold": 627,
+          "predicted": 571,
+          "correct": 457
+        },
+        "relation_with_claim_status": {
+          "precision": 0.8004,
+          "recall": 0.7289,
+          "f1": 0.7629,
+          "gold": 627,
+          "predicted": 571,
+          "correct": 457
+        },
+        "macro_by_job": {
+          "entity_strict": {
+            "precision": 0.9201,
+            "recall": 0.8795,
+            "f1": 0.8911
+          },
+          "relation_strict": {
+            "precision": 0.8382,
+            "recall": 0.7872,
+            "f1": 0.7971
+          },
+          "relation_with_claim_status": {
+            "precision": 0.8382,
+            "recall": 0.7872,
+            "f1": 0.7971
+          }
+        },
+        "resolution": {
+          "unresolved_gold_entities": 0,
+          "unresolved_predicted_entities": 0
+        }
+      },
+      "cfe": {
+        "metric": "strict-source-character-span",
+        "selection_split": "validation",
+        "formal_test_read": false,
+        "jobs_gold": 384,
+        "jobs_predicted": 384,
+        "jobs_evaluated": 384,
+        "jobs_missing_predictions": 0,
+        "generation_success_rate": 1.0,
+        "entity_strict": {
+          "precision": 0.9048,
+          "recall": 0.8394,
+          "f1": 0.8708,
+          "gold": 996,
+          "predicted": 924,
+          "correct": 836
+        },
+        "relation_strict": {
+          "precision": 0.8139,
+          "recall": 0.7113,
+          "f1": 0.7591,
+          "gold": 627,
+          "predicted": 548,
+          "correct": 446
+        },
+        "relation_with_claim_status": {
+          "precision": 0.8139,
+          "recall": 0.7113,
+          "f1": 0.7591,
+          "gold": 627,
+          "predicted": 548,
+          "correct": 446
+        },
+        "macro_by_job": {
+          "entity_strict": {
+            "precision": 0.9182,
+            "recall": 0.8673,
+            "f1": 0.8837
+          },
+          "relation_strict": {
+            "precision": 0.835,
+            "recall": 0.7753,
+            "f1": 0.7894
+          },
+          "relation_with_claim_status": {
+            "precision": 0.835,
+            "recall": 0.7753,
+            "f1": 0.7894
+          }
+        },
+        "resolution": {
+          "unresolved_gold_entities": 0,
+          "unresolved_predicted_entities": 0
+        }
+      },
+      "pge": {
+        "metric": "strict-source-character-span",
+        "selection_split": "validation",
+        "formal_test_read": false,
+        "jobs_gold": 384,
+        "jobs_predicted": 384,
+        "jobs_evaluated": 384,
+        "jobs_missing_predictions": 0,
+        "generation_success_rate": 1.0,
+        "entity_strict": {
+          "precision": 0.9048,
+          "recall": 0.8394,
+          "f1": 0.8708,
+          "gold": 996,
+          "predicted": 924,
+          "correct": 836
+        },
+        "relation_strict": {
+          "precision": 0.8139,
+          "recall": 0.7113,
+          "f1": 0.7591,
+          "gold": 627,
+          "predicted": 548,
+          "correct": 446
+        },
+        "relation_with_claim_status": {
+          "precision": 0.8139,
+          "recall": 0.7113,
+          "f1": 0.7591,
+          "gold": 627,
+          "predicted": 548,
+          "correct": 446
+        },
+        "macro_by_job": {
+          "entity_strict": {
+            "precision": 0.9182,
+            "recall": 0.8673,
+            "f1": 0.8837
+          },
+          "relation_strict": {
+            "precision": 0.835,
+            "recall": 0.7753,
+            "f1": 0.7894
+          },
+          "relation_with_claim_status": {
+            "precision": 0.835,
+            "recall": 0.7753,
+            "f1": 0.7894
+          }
+        },
+        "resolution": {
+          "unresolved_gold_entities": 0,
+          "unresolved_predicted_entities": 0
+        }
+      }
+    },
+    "test": {
+      "soe": {
+        "metric": "strict-source-character-span",
+        "selection_split": "test",
+        "formal_test_read": true,
+        "jobs_gold": 427,
+        "jobs_predicted": 427,
+        "jobs_evaluated": 427,
+        "jobs_missing_predictions": 0,
+        "generation_success_rate": 1.0,
+        "entity_strict": {
+          "precision": 0.9221,
+          "recall": 0.841,
+          "f1": 0.8797,
+          "gold": 1126,
+          "predicted": 1027,
+          "correct": 947
+        },
+        "relation_strict": {
+          "precision": 0.8062,
+          "recall": 0.6782,
+          "f1": 0.7367,
+          "gold": 724,
+          "predicted": 609,
+          "correct": 491
+        },
+        "relation_with_claim_status": {
+          "precision": 0.8062,
+          "recall": 0.6782,
+          "f1": 0.7367,
+          "gold": 724,
+          "predicted": 609,
+          "correct": 491
+        },
+        "macro_by_job": {
+          "entity_strict": {
+            "precision": 0.9208,
+            "recall": 0.867,
+            "f1": 0.8853
+          },
+          "relation_strict": {
+            "precision": 0.8224,
+            "recall": 0.7569,
+            "f1": 0.7741
+          },
+          "relation_with_claim_status": {
+            "precision": 0.8224,
+            "recall": 0.7569,
+            "f1": 0.7741
+          }
+        },
+        "resolution": {
+          "unresolved_gold_entities": 0,
+          "unresolved_predicted_entities": 0
+        }
+      },
+      "pge": {
+        "metric": "strict-source-character-span",
+        "selection_split": "test",
+        "formal_test_read": true,
+        "jobs_gold": 427,
+        "jobs_predicted": 427,
+        "jobs_evaluated": 427,
+        "jobs_missing_predictions": 0,
+        "generation_success_rate": 1.0,
+        "entity_strict": {
+          "precision": 0.9289,
+          "recall": 0.8348,
+          "f1": 0.8793,
+          "gold": 1126,
+          "predicted": 1012,
+          "correct": 940
+        },
+        "relation_strict": {
+          "precision": 0.87,
+          "recall": 0.721,
+          "f1": 0.7885,
+          "gold": 724,
+          "predicted": 600,
+          "correct": 522
+        },
+        "relation_with_claim_status": {
+          "precision": 0.87,
+          "recall": 0.721,
+          "f1": 0.7885,
+          "gold": 724,
+          "predicted": 600,
+          "correct": 522
+        },
+        "macro_by_job": {
+          "entity_strict": {
+            "precision": 0.9247,
+            "recall": 0.866,
+            "f1": 0.8863
+          },
+          "relation_strict": {
+            "precision": 0.8537,
+            "recall": 0.7748,
+            "f1": 0.7968
+          },
+          "relation_with_claim_status": {
+            "precision": 0.8537,
+            "recall": 0.7748,
+            "f1": 0.7968
+          }
+        },
+        "resolution": {
+          "unresolved_gold_entities": 0,
+          "unresolved_predicted_entities": 0
+        }
+      },
+      "spert": {
+        "metric": "strict-source-character-span",
+        "selection_split": "test",
+        "formal_test_read": true,
+        "jobs_gold": 427,
+        "jobs_predicted": 427,
+        "jobs_evaluated": 427,
+        "jobs_missing_predictions": 0,
+        "generation_success_rate": 1.0,
+        "entity_strict": {
+          "precision": 0.9065,
+          "recall": 0.921,
+          "f1": 0.9137,
+          "gold": 1126,
+          "predicted": 1144,
+          "correct": 1037
+        },
+        "relation_strict": {
+          "precision": 0.8219,
+          "recall": 0.8605,
+          "f1": 0.8408,
+          "gold": 724,
+          "predicted": 758,
+          "correct": 623
+        },
+        "relation_with_claim_status": {
+          "precision": 0.8219,
+          "recall": 0.8605,
+          "f1": 0.8408,
+          "gold": 724,
+          "predicted": 758,
+          "correct": 623
+        },
+        "macro_by_job": {
+          "entity_strict": {
+            "precision": 0.9172,
+            "recall": 0.9258,
+            "f1": 0.9154
+          },
+          "relation_strict": {
+            "precision": 0.8414,
+            "recall": 0.8649,
+            "f1": 0.841
+          },
+          "relation_with_claim_status": {
+            "precision": 0.8414,
+            "recall": 0.8649,
+            "f1": 0.841
+          }
+        },
+        "resolution": {
+          "unresolved_gold_entities": 0,
+          "unresolved_predicted_entities": 0
+        }
+      },
+      "qwen_zero": {
+        "metric": "strict-source-character-span",
+        "selection_split": "test",
+        "formal_test_read": true,
+        "jobs_gold": 427,
+        "jobs_predicted": 427,
+        "jobs_evaluated": 427,
+        "jobs_missing_predictions": 0,
+        "generation_success_rate": 1.0,
+        "entity_strict": {
+          "precision": 0.6383,
+          "recall": 0.6332,
+          "f1": 0.6358,
+          "gold": 1126,
+          "predicted": 1117,
+          "correct": 713
+        },
+        "relation_strict": {
+          "precision": 0.3936,
+          "recall": 0.2224,
+          "f1": 0.2842,
+          "gold": 724,
+          "predicted": 409,
+          "correct": 161
+        },
+        "relation_with_claim_status": {
+          "precision": 0.3936,
+          "recall": 0.2224,
+          "f1": 0.2842,
+          "gold": 724,
+          "predicted": 409,
+          "correct": 161
+        },
+        "macro_by_job": {
+          "entity_strict": {
+            "precision": 0.6432,
+            "recall": 0.6462,
+            "f1": 0.6309
+          },
+          "relation_strict": {
+            "precision": 0.2576,
+            "recall": 0.2612,
+            "f1": 0.2521
+          },
+          "relation_with_claim_status": {
+            "precision": 0.2576,
+            "recall": 0.2612,
+            "f1": 0.2521
+          }
+        },
+        "resolution": {
+          "unresolved_gold_entities": 0,
+          "unresolved_predicted_entities": 0
+        }
+      },
+      "gliner_glirel": {
+        "metric": "strict-source-character-span",
+        "selection_split": "test",
+        "formal_test_read": true,
+        "jobs_gold": 427,
+        "jobs_predicted": 427,
+        "jobs_evaluated": 427,
+        "jobs_missing_predictions": 0,
+        "generation_success_rate": 1.0,
+        "entity_strict": {
+          "precision": 0.793,
+          "recall": 0.6465,
+          "f1": 0.7123,
+          "gold": 1126,
+          "predicted": 918,
+          "correct": 728
+        },
+        "relation_strict": {
+          "precision": 0.6031,
+          "recall": 0.4323,
+          "f1": 0.5036,
+          "gold": 724,
+          "predicted": 519,
+          "correct": 313
+        },
+        "relation_with_claim_status": {
+          "precision": 0.6031,
+          "recall": 0.4323,
+          "f1": 0.5036,
+          "gold": 724,
+          "predicted": 519,
+          "correct": 313
+        },
+        "macro_by_job": {
+          "entity_strict": {
+            "precision": 0.7852,
+            "recall": 0.654,
+            "f1": 0.6879
+          },
+          "relation_strict": {
+            "precision": 0.4151,
+            "recall": 0.4184,
+            "f1": 0.4043
+          },
+          "relation_with_claim_status": {
+            "precision": 0.4151,
+            "recall": 0.4184,
+            "f1": 0.4043
+          }
+        },
+        "resolution": {
+          "unresolved_gold_entities": 0,
+          "unresolved_predicted_entities": 0
+        }
+      }
+    }
+  },
+  "conll04": {
+    "validation": {
+      "soe": {
+        "metric": "strict-source-character-span",
+        "selection_split": "validation",
+        "formal_test_read": false,
+        "jobs_gold": 231,
+        "jobs_predicted": 231,
+        "jobs_evaluated": 231,
+        "jobs_missing_predictions": 0,
+        "generation_success_rate": 1.0,
+        "entity_strict": {
+          "precision": 0.8494,
+          "recall": 0.8208,
+          "f1": 0.8349,
+          "gold": 893,
+          "predicted": 863,
+          "correct": 733
+        },
+        "relation_strict": {
+          "precision": 0.6133,
+          "recall": 0.5918,
+          "f1": 0.6024,
+          "gold": 343,
+          "predicted": 331,
+          "correct": 203
+        },
+        "relation_with_claim_status": {
+          "precision": 0.6133,
+          "recall": 0.5918,
+          "f1": 0.6024,
+          "gold": 343,
+          "predicted": 331,
+          "correct": 203
+        },
+        "macro_by_job": {
+          "entity_strict": {
+            "precision": 0.8722,
+            "recall": 0.8521,
+            "f1": 0.856
+          },
+          "relation_strict": {
+            "precision": 0.7191,
+            "recall": 0.6885,
+            "f1": 0.6828
+          },
+          "relation_with_claim_status": {
+            "precision": 0.7191,
+            "recall": 0.6885,
+            "f1": 0.6828
+          }
+        },
+        "resolution": {
+          "unresolved_gold_entities": 0,
+          "unresolved_predicted_entities": 0
+        }
+      },
+      "eae": {
+        "metric": "strict-source-character-span",
+        "selection_split": "validation",
+        "formal_test_read": false,
+        "jobs_gold": 231,
+        "jobs_predicted": 231,
+        "jobs_evaluated": 231,
+        "jobs_missing_predictions": 0,
+        "generation_success_rate": 1.0,
+        "entity_strict": {
+          "precision": 0.8371,
+          "recall": 0.8287,
+          "f1": 0.8329,
+          "gold": 893,
+          "predicted": 884,
+          "correct": 740
+        },
+        "relation_strict": {
+          "precision": 0.581,
+          "recall": 0.6064,
+          "f1": 0.5934,
+          "gold": 343,
+          "predicted": 358,
+          "correct": 208
+        },
+        "relation_with_claim_status": {
+          "precision": 0.581,
+          "recall": 0.6064,
+          "f1": 0.5934,
+          "gold": 343,
+          "predicted": 358,
+          "correct": 208
+        },
+        "macro_by_job": {
+          "entity_strict": {
+            "precision": 0.8661,
+            "recall": 0.8579,
+            "f1": 0.8561
+          },
+          "relation_strict": {
+            "precision": 0.7065,
+            "recall": 0.7096,
+            "f1": 0.6824
+          },
+          "relation_with_claim_status": {
+            "precision": 0.7065,
+            "recall": 0.7096,
+            "f1": 0.6824
+          }
+        },
+        "resolution": {
+          "unresolved_gold_entities": 0,
+          "unresolved_predicted_entities": 0
+        }
+      },
+      "hrge": {
+        "metric": "strict-source-character-span",
+        "selection_split": "validation",
+        "formal_test_read": false,
+        "jobs_gold": 231,
+        "jobs_predicted": 231,
+        "jobs_evaluated": 231,
+        "jobs_missing_predictions": 0,
+        "generation_success_rate": 1.0,
+        "entity_strict": {
+          "precision": 0.8235,
+          "recall": 0.8152,
+          "f1": 0.8194,
+          "gold": 893,
+          "predicted": 884,
+          "correct": 728
+        },
+        "relation_strict": {
+          "precision": 0.6006,
+          "recall": 0.5656,
+          "f1": 0.5826,
+          "gold": 343,
+          "predicted": 323,
+          "correct": 194
+        },
+        "relation_with_claim_status": {
+          "precision": 0.6006,
+          "recall": 0.5656,
+          "f1": 0.5826,
+          "gold": 343,
+          "predicted": 323,
+          "correct": 194
+        },
+        "macro_by_job": {
+          "entity_strict": {
+            "precision": 0.8528,
+            "recall": 0.8475,
+            "f1": 0.8432
+          },
+          "relation_strict": {
+            "precision": 0.6968,
+            "recall": 0.6722,
+            "f1": 0.6632
+          },
+          "relation_with_claim_status": {
+            "precision": 0.6968,
+            "recall": 0.6722,
+            "f1": 0.6632
+          }
+        },
+        "resolution": {
+          "unresolved_gold_entities": 0,
+          "unresolved_predicted_entities": 0
+        }
+      },
+      "evge": {
+        "metric": "strict-source-character-span",
+        "selection_split": "validation",
+        "formal_test_read": false,
+        "jobs_gold": 231,
+        "jobs_predicted": 231,
+        "jobs_evaluated": 231,
+        "jobs_missing_predictions": 0,
+        "generation_success_rate": 1.0,
+        "entity_strict": {
+          "precision": 0.8235,
+          "recall": 0.8152,
+          "f1": 0.8194,
+          "gold": 893,
+          "predicted": 884,
+          "correct": 728
+        },
+        "relation_strict": {
+          "precision": 0.6299,
+          "recall": 0.5656,
+          "f1": 0.596,
+          "gold": 343,
+          "predicted": 308,
+          "correct": 194
+        },
+        "relation_with_claim_status": {
+          "precision": 0.6299,
+          "recall": 0.5656,
+          "f1": 0.596,
+          "gold": 343,
+          "predicted": 308,
+          "correct": 194
+        },
+        "macro_by_job": {
+          "entity_strict": {
+            "precision": 0.8528,
+            "recall": 0.8475,
+            "f1": 0.8432
+          },
+          "relation_strict": {
+            "precision": 0.6979,
+            "recall": 0.6722,
+            "f1": 0.6641
+          },
+          "relation_with_claim_status": {
+            "precision": 0.6979,
+            "recall": 0.6722,
+            "f1": 0.6641
+          }
+        },
+        "resolution": {
+          "unresolved_gold_entities": 0,
+          "unresolved_predicted_entities": 0
+        }
+      },
+      "cfe": {
+        "metric": "strict-source-character-span",
+        "selection_split": "validation",
+        "formal_test_read": false,
+        "jobs_gold": 231,
+        "jobs_predicted": 231,
+        "jobs_evaluated": 231,
+        "jobs_missing_predictions": 0,
+        "generation_success_rate": 1.0,
+        "entity_strict": {
+          "precision": 0.8497,
+          "recall": 0.785,
+          "f1": 0.8161,
+          "gold": 893,
+          "predicted": 825,
+          "correct": 701
+        },
+        "relation_strict": {
+          "precision": 0.6337,
+          "recall": 0.5598,
+          "f1": 0.5944,
+          "gold": 343,
+          "predicted": 303,
+          "correct": 192
+        },
+        "relation_with_claim_status": {
+          "precision": 0.6337,
+          "recall": 0.5598,
+          "f1": 0.5944,
+          "gold": 343,
+          "predicted": 303,
+          "correct": 192
+        },
+        "macro_by_job": {
+          "entity_strict": {
+            "precision": 0.8737,
+            "recall": 0.8215,
+            "f1": 0.8377
+          },
+          "relation_strict": {
+            "precision": 0.6966,
+            "recall": 0.6664,
+            "f1": 0.6603
+          },
+          "relation_with_claim_status": {
+            "precision": 0.6966,
+            "recall": 0.6664,
+            "f1": 0.6603
+          }
+        },
+        "resolution": {
+          "unresolved_gold_entities": 0,
+          "unresolved_predicted_entities": 0
+        }
+      },
+      "pge": {
+        "metric": "strict-source-character-span",
+        "selection_split": "validation",
+        "formal_test_read": false,
+        "jobs_gold": 231,
+        "jobs_predicted": 231,
+        "jobs_evaluated": 231,
+        "jobs_missing_predictions": 0,
+        "generation_success_rate": 1.0,
+        "entity_strict": {
+          "precision": 0.8497,
+          "recall": 0.785,
+          "f1": 0.8161,
+          "gold": 893,
+          "predicted": 825,
+          "correct": 701
+        },
+        "relation_strict": {
+          "precision": 0.6508,
+          "recall": 0.5598,
+          "f1": 0.6019,
+          "gold": 343,
+          "predicted": 295,
+          "correct": 192
+        },
+        "relation_with_claim_status": {
+          "precision": 0.6508,
+          "recall": 0.5598,
+          "f1": 0.6019,
+          "gold": 343,
+          "predicted": 295,
+          "correct": 192
+        },
+        "macro_by_job": {
+          "entity_strict": {
+            "precision": 0.8737,
+            "recall": 0.8215,
+            "f1": 0.8377
+          },
+          "relation_strict": {
+            "precision": 0.6988,
+            "recall": 0.6664,
+            "f1": 0.6612
+          },
+          "relation_with_claim_status": {
+            "precision": 0.6988,
+            "recall": 0.6664,
+            "f1": 0.6612
+          }
+        },
+        "resolution": {
+          "unresolved_gold_entities": 0,
+          "unresolved_predicted_entities": 0
+        }
+      }
+    },
+    "test": {
+      "soe": {
+        "metric": "strict-source-character-span",
+        "selection_split": "test",
+        "formal_test_read": true,
+        "jobs_gold": 288,
+        "jobs_predicted": 288,
+        "jobs_evaluated": 288,
+        "jobs_missing_predictions": 0,
+        "generation_success_rate": 1.0,
+        "entity_strict": {
+          "precision": 0.8583,
+          "recall": 0.8193,
+          "f1": 0.8383,
+          "gold": 1079,
+          "predicted": 1030,
+          "correct": 884
+        },
+        "relation_strict": {
+          "precision": 0.5461,
+          "recall": 0.5616,
+          "f1": 0.5537,
+          "gold": 422,
+          "predicted": 434,
+          "correct": 237
+        },
+        "relation_with_claim_status": {
+          "precision": 0.5461,
+          "recall": 0.5616,
+          "f1": 0.5537,
+          "gold": 422,
+          "predicted": 434,
+          "correct": 237
+        },
+        "macro_by_job": {
+          "entity_strict": {
+            "precision": 0.8776,
+            "recall": 0.8523,
+            "f1": 0.8585
+          },
+          "relation_strict": {
+            "precision": 0.6683,
+            "recall": 0.6596,
+            "f1": 0.649
+          },
+          "relation_with_claim_status": {
+            "precision": 0.6683,
+            "recall": 0.6596,
+            "f1": 0.649
+          }
+        },
+        "resolution": {
+          "unresolved_gold_entities": 0,
+          "unresolved_predicted_entities": 0
+        }
+      },
+      "pge": {
+        "metric": "strict-source-character-span",
+        "selection_split": "test",
+        "formal_test_read": true,
+        "jobs_gold": 288,
+        "jobs_predicted": 288,
+        "jobs_evaluated": 288,
+        "jobs_missing_predictions": 0,
+        "generation_success_rate": 1.0,
+        "entity_strict": {
+          "precision": 0.8604,
+          "recall": 0.8054,
+          "f1": 0.832,
+          "gold": 1079,
+          "predicted": 1010,
+          "correct": 869
+        },
+        "relation_strict": {
+          "precision": 0.624,
+          "recall": 0.5782,
+          "f1": 0.6002,
+          "gold": 422,
+          "predicted": 391,
+          "correct": 244
+        },
+        "relation_with_claim_status": {
+          "precision": 0.624,
+          "recall": 0.5782,
+          "f1": 0.6002,
+          "gold": 422,
+          "predicted": 391,
+          "correct": 244
+        },
+        "macro_by_job": {
+          "entity_strict": {
+            "precision": 0.8842,
+            "recall": 0.8369,
+            "f1": 0.8508
+          },
+          "relation_strict": {
+            "precision": 0.6907,
+            "recall": 0.6652,
+            "f1": 0.6644
+          },
+          "relation_with_claim_status": {
+            "precision": 0.6907,
+            "recall": 0.6652,
+            "f1": 0.6644
+          }
+        },
+        "resolution": {
+          "unresolved_gold_entities": 0,
+          "unresolved_predicted_entities": 0
+        }
+      },
+      "spert": {
+        "metric": "strict-source-character-span",
+        "selection_split": "test",
+        "formal_test_read": true,
+        "jobs_gold": 288,
+        "jobs_predicted": 288,
+        "jobs_evaluated": 288,
+        "jobs_missing_predictions": 0,
+        "generation_success_rate": 1.0,
+        "entity_strict": {
+          "precision": 0.8861,
+          "recall": 0.8943,
+          "f1": 0.8902,
+          "gold": 1079,
+          "predicted": 1089,
+          "correct": 965
+        },
+        "relation_strict": {
+          "precision": 0.7101,
+          "recall": 0.6848,
+          "f1": 0.6972,
+          "gold": 422,
+          "predicted": 407,
+          "correct": 289
+        },
+        "relation_with_claim_status": {
+          "precision": 0.7101,
+          "recall": 0.6848,
+          "f1": 0.6972,
+          "gold": 422,
+          "predicted": 407,
+          "correct": 289
+        },
+        "macro_by_job": {
+          "entity_strict": {
+            "precision": 0.9174,
+            "recall": 0.9089,
+            "f1": 0.9068
+          },
+          "relation_strict": {
+            "precision": 0.7117,
+            "recall": 0.7635,
+            "f1": 0.7177
+          },
+          "relation_with_claim_status": {
+            "precision": 0.7117,
+            "recall": 0.7635,
+            "f1": 0.7177
+          }
+        },
+        "resolution": {
+          "unresolved_gold_entities": 0,
+          "unresolved_predicted_entities": 0
+        }
+      },
+      "qwen_zero": {
+        "metric": "strict-source-character-span",
+        "selection_split": "test",
+        "formal_test_read": true,
+        "jobs_gold": 288,
+        "jobs_predicted": 288,
+        "jobs_evaluated": 288,
+        "jobs_missing_predictions": 0,
+        "generation_success_rate": 1.0,
+        "entity_strict": {
+          "precision": 0.4878,
+          "recall": 0.5394,
+          "f1": 0.5123,
+          "gold": 1079,
+          "predicted": 1193,
+          "correct": 582
+        },
+        "relation_strict": {
+          "precision": 0.3092,
+          "recall": 0.1919,
+          "f1": 0.2368,
+          "gold": 422,
+          "predicted": 262,
+          "correct": 81
+        },
+        "relation_with_claim_status": {
+          "precision": 0.3092,
+          "recall": 0.1919,
+          "f1": 0.2368,
+          "gold": 422,
+          "predicted": 262,
+          "correct": 81
+        },
+        "macro_by_job": {
+          "entity_strict": {
+            "precision": 0.5323,
+            "recall": 0.5574,
+            "f1": 0.529
+          },
+          "relation_strict": {
+            "precision": 0.2126,
+            "recall": 0.2306,
+            "f1": 0.2105
+          },
+          "relation_with_claim_status": {
+            "precision": 0.2126,
+            "recall": 0.2306,
+            "f1": 0.2105
+          }
+        },
+        "resolution": {
+          "unresolved_gold_entities": 0,
+          "unresolved_predicted_entities": 0
+        }
+      },
+      "gliner_glirel": {
+        "metric": "strict-source-character-span",
+        "selection_split": "test",
+        "formal_test_read": true,
+        "jobs_gold": 288,
+        "jobs_predicted": 288,
+        "jobs_evaluated": 288,
+        "jobs_missing_predictions": 0,
+        "generation_success_rate": 1.0,
+        "entity_strict": {
+          "precision": 0.6078,
+          "recall": 0.1437,
+          "f1": 0.2324,
+          "gold": 1079,
+          "predicted": 255,
+          "correct": 155
+        },
+        "relation_strict": {
+          "precision": 0.1379,
+          "recall": 0.0379,
+          "f1": 0.0595,
+          "gold": 422,
+          "predicted": 116,
+          "correct": 16
+        },
+        "relation_with_claim_status": {
+          "precision": 0.1379,
+          "recall": 0.0379,
+          "f1": 0.0595,
+          "gold": 422,
+          "predicted": 116,
+          "correct": 16
+        },
+        "macro_by_job": {
+          "entity_strict": {
+            "precision": 0.3243,
+            "recall": 0.1462,
+            "f1": 0.1899
+          },
+          "relation_strict": {
+            "precision": 0.0218,
+            "recall": 0.0388,
+            "f1": 0.0253
+          },
+          "relation_with_claim_status": {
+            "precision": 0.0218,
+            "recall": 0.0388,
+            "f1": 0.0253
+          }
+        },
+        "resolution": {
+          "unresolved_gold_entities": 0,
+          "unresolved_predicted_entities": 0
+        }
+      }
+    }
+  }
+}

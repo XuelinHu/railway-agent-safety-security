@@ -1,0 +1,7 @@
+dataset,split,sentences,entities,relations,entity_types,relation_types,mean_tokens,median_tokens,p95_tokens,max_tokens,zero_relation_sentences
+ade,train,3461,8717,5470,2,1,21.17,20.0,39.0,84,0
+ade,validation,384,996,627,2,1,21.82,20.0,40.0,97,0
+ade,test,427,1126,724,2,1,21.24,19.0,40.0,72,0
+conll04,train,922,3377,1283,4,5,28.77,28.0,57.0,114,0
+conll04,validation,231,893,343,4,5,30.27,29.0,54.0,111,0
+conll04,test,288,1079,422,4,5,28.94,27.0,55.0,118,0

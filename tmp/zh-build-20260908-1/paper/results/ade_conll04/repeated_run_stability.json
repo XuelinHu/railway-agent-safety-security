@@ -1,0 +1,48 @@
+{
+  "metric": "strict-global-character-span-one-to-one",
+  "split": "test",
+  "seeds": [2026, 3407],
+  "summary_statistic": "arithmetic mean and sample standard deviation (n=2)",
+  "datasets": {
+    "ade": {
+      "soe": {
+        "2026": {"entity_f1": 0.8774, "relation_f1": 0.7831},
+        "3407": {"entity_f1": 0.8826, "relation_f1": 0.7806},
+        "mean_entity_f1": 0.8800,
+        "sample_sd_entity_f1": 0.0037,
+        "mean_relation_f1": 0.7818,
+        "sample_sd_relation_f1": 0.0018
+      },
+      "pge": {
+        "2026": {"entity_f1": 0.8938, "relation_f1": 0.8120},
+        "3407": {"entity_f1": 0.8932, "relation_f1": 0.8062},
+        "mean_entity_f1": 0.8935,
+        "sample_sd_entity_f1": 0.0004,
+        "mean_relation_f1": 0.8091,
+        "sample_sd_relation_f1": 0.0041,
+        "mean_relation_f1_difference_vs_soe": 0.0273
+      }
+    },
+    "conll04": {
+      "soe": {
+        "2026": {"entity_f1": 0.8091, "relation_f1": 0.5691},
+        "3407": {"entity_f1": 0.8361, "relation_f1": 0.6092},
+        "mean_entity_f1": 0.8226,
+        "sample_sd_entity_f1": 0.0191,
+        "mean_relation_f1": 0.5892,
+        "sample_sd_relation_f1": 0.0284
+      },
+      "pge": {
+        "2026": {"entity_f1": 0.8032, "relation_f1": 0.5850},
+        "3407": {"entity_f1": 0.8318, "relation_f1": 0.6145},
+        "mean_entity_f1": 0.8175,
+        "sample_sd_entity_f1": 0.0202,
+        "mean_relation_f1": 0.5998,
+        "sample_sd_relation_f1": 0.0209,
+        "mean_relation_f1_difference_vs_soe": 0.0106
+      }
+    }
+  },
+  "interpretation": "Both seeds retain positive PGE-minus-SOE relation-F1 differences on both datasets; CoNLL04 entity F1 decreases on average.",
+  "training_loss_curve_available": false
+}

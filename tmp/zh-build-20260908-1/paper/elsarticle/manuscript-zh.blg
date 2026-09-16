@@ -1,0 +1,48 @@
+This is BibTeX, Version 0.99d (TeX Live 2025)
+Capacity: max_strings=200000, hash_size=200000, hash_prime=170003
+The top-level auxiliary file: manuscript-zh.aux
+The style file: elsarticle-num.bst
+Database file #1: references.bib
+Warning--empty pages in eberts2020spert
+You've used 14 entries,
+            2952 wiz_defined-function locations,
+            767 strings with 9170 characters,
+and the built_in function-call counts, 5990 in all, are:
+= -- 552
+> -- 251
+< -- 8
++ -- 93
+- -- 79
+* -- 465
+:= -- 807
+add.period$ -- 25
+call.type$ -- 14
+change.case$ -- 14
+chr.to.int$ -- 0
+cite$ -- 15
+duplicate$ -- 207
+empty$ -- 632
+format.name$ -- 92
+if$ -- 1528
+int.to.chr$ -- 0
+int.to.str$ -- 14
+missing$ -- 14
+newline$ -- 66
+num.names$ -- 14
+pop$ -- 113
+preamble$ -- 1
+purify$ -- 0
+quote$ -- 0
+skip$ -- 379
+stack$ -- 0
+substring$ -- 292
+swap$ -- 96
+text.length$ -- 8
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 0
+warning$ -- 1
+while$ -- 40
+width$ -- 16
+write$ -- 154
+(There was 1 warning)

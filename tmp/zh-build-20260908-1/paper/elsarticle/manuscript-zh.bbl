@@ -1,0 +1,113 @@
+\begin{thebibliography}{10}
+\expandafter\ifx\csname url\endcsname\relax
+  \def\url#1{\texttt{#1}}\fi
+\expandafter\ifx\csname urlprefix\endcsname\relax\def\urlprefix{URL }\fi
+\expandafter\ifx\csname href\endcsname\relax
+  \def\href#1#2{#2} \def\path#1{#1}\fi
+
+\bibitem{li2022ner}
+J.~Li, A.~Sun, J.~Han, C.~Li, A survey on deep learning for named entity
+  recognition, IEEE Transactions on Knowledge and Data Engineering 34~(1)
+  (2022) 50--70.
+\newblock \href {https://doi.org/10.1109/TKDE.2020.2981314}
+  {\path{doi:10.1109/TKDE.2020.2981314}}.
+
+\bibitem{eberts2020spert}
+M.~Eberts, A.~Ulges, Span-based joint entity and relation extraction with
+  transformer pre-training, in: ECAI 2020, IOS Press, 2020.
+\newblock \href {https://doi.org/10.3233/FAIA200321}
+  {\path{doi:10.3233/FAIA200321}}.
+
+\bibitem{ji2023hallucination}
+Z.~Ji, N.~Lee, R.~Frieske, T.~Yu, D.~Su, Y.~Xu, E.~Ishii, Y.~J. Bang,
+  A.~Madotto, P.~Fung, Survey of hallucination in natural language generation,
+  ACM Computing Surveys 55~(12) (2023) 1--38.
+\newblock \href {https://doi.org/10.1145/3571730} {\path{doi:10.1145/3571730}}.
+
+\bibitem{hogan2021kg}
+A.~Hogan, E.~Blomqvist, M.~Cochez, C.~D'Amato, G.~de~Melo, C.~Gutierrez,
+  S.~Kirrane, J.~E.~L. Gayo, R.~Navigli, S.~Neumaier, A.-C.~N. Ngomo,
+  A.~Polleres, S.~M. Rashid, A.~Rula, L.~Schmelzeisen, J.~Sequeda, S.~Staab,
+  A.~Zimmermann, Knowledge graphs, ACM Computing Surveys 54~(4) (2021) 1--37.
+\newblock \href {https://doi.org/10.1145/3447772} {\path{doi:10.1145/3447772}}.
+
+\bibitem{lewis2020rag}
+P.~Lewis, E.~Perez, A.~Piktus, F.~Petroni, V.~Karpukhin, N.~Goyal,
+  H.~K\"{u}ttler, M.~Lewis, W.~tau Yih, T.~Rockt\"{a}schel, S.~Riedel,
+  D.~Kiela,
+  \href{https://proceedings.neurips.cc/paper/2020/hash/6b493230205f780e1bc26945df7481e5-Abstract.html}{Retrieval-augmented
+  generation for knowledge-intensive {NLP} tasks}, in: Advances in Neural
+  Information Processing Systems, Vol.~33, 2020, pp. 9459--9474.
+\newline\urlprefix\url{https://proceedings.neurips.cc/paper/2020/hash/6b493230205f780e1bc26945df7481e5-Abstract.html}
+
+\bibitem{gurulingappa2012ade}
+H.~Gurulingappa, A.~M. Rajput, A.~Roberts, J.~Fluck, M.~Hofmann-Apitius,
+  L.~Toldo, Development of a benchmark corpus to support the automatic
+  extraction of drug-related adverse effects from medical case reports, Journal
+  of Biomedical Informatics 45~(5) (2012) 885--892.
+\newblock \href {https://doi.org/10.1016/j.jbi.2012.04.008}
+  {\path{doi:10.1016/j.jbi.2012.04.008}}.
+
+\bibitem{roth2004conll}
+D.~Roth, W.~tau Yih, \href{https://aclanthology.org/W04-2401/}{A linear
+  programming formulation for global inference in natural language tasks}, in:
+  Proceedings of the Eighth Conference on Computational Natural Language
+  Learning, Association for Computational Linguistics, 2004, pp. 1--8.
+\newline\urlprefix\url{https://aclanthology.org/W04-2401/}
+
+\bibitem{zaratiana2024gliner}
+U.~Zaratiana, N.~Tomeh, P.~Holat, T.~Charnois, {GLiNER}: Generalist model for
+  named entity recognition using bidirectional transformer, in: Proceedings of
+  the 2024 Conference of the North American Chapter of the Association for
+  Computational Linguistics: Human Language Technologies, Association for
+  Computational Linguistics, 2024, pp. 5364--5376.
+\newblock \href {https://doi.org/10.18653/v1/2024.naacl-long.300}
+  {\path{doi:10.18653/v1/2024.naacl-long.300}}.
+
+\bibitem{boylan2025glirel}
+J.~Boylan, C.~Hokamp, D.~G. Ghalandari, {GLiREL}: Generalist model for
+  zero-shot relation extraction, arXiv preprint arXiv:2501.03172 (2025).
+\newblock \href {https://doi.org/10.48550/arXiv.2501.03172}
+  {\path{doi:10.48550/arXiv.2501.03172}}.
+
+\bibitem{josifoski2022genie}
+M.~Josifoski, N.~D. Cao, M.~Peyrard, F.~Petroni, R.~West,
+  \href{https://aclanthology.org/2022.naacl-main.342/}{{GenIE}: Generative
+  information extraction}, in: Proceedings of the 2022 Conference of the North
+  American Chapter of the Association for Computational Linguistics: Human
+  Language Technologies, Association for Computational Linguistics, 2022, pp.
+  4626--4643.
+\newblock \href {https://doi.org/10.18653/v1/2022.naacl-main.342}
+  {\path{doi:10.18653/v1/2022.naacl-main.342}}.
+\newline\urlprefix\url{https://aclanthology.org/2022.naacl-main.342/}
+
+\bibitem{chen2024bgem3}
+J.~Chen, S.~Xiao, P.~Zhang, K.~Luo, D.~Lian, Z.~Liu, {BGE M3}-embedding:
+  Multi-lingual, multi-functionality, multi-granularity text embeddings through
+  self-knowledge distillation, arXiv preprint arXiv:2402.03216 (2024).
+\newblock \href {https://doi.org/10.48550/arXiv.2402.03216}
+  {\path{doi:10.48550/arXiv.2402.03216}}.
+
+\bibitem{dettmers2023qlora}
+T.~Dettmers, A.~Pagnoni, A.~Holtzman, L.~Zettlemoyer,
+  \href{https://proceedings.neurips.cc/paper_files/paper/2023/hash/1feb87871436031bdc0f2beaa62a049b-Abstract-Conference.html}{{QLoRA}:
+  Efficient finetuning of quantized {LLMs}}, in: Advances in Neural Information
+  Processing Systems, Vol.~36, 2023, pp. 10088--10115.
+\newline\urlprefix\url{https://proceedings.neurips.cc/paper_files/paper/2023/hash/1feb87871436031bdc0f2beaa62a049b-Abstract-Conference.html}
+
+\bibitem{qwen2025qwen3}
+{Qwen Team}, {Qwen3} technical report, arXiv preprint arXiv:2505.09388 (2025).
+\newblock \href {https://doi.org/10.48550/arXiv.2505.09388}
+  {\path{doi:10.48550/arXiv.2505.09388}}.
+
+\bibitem{liu2025llmaccidentkg}
+Q.~Liu, X.~Luo, \href{https://strathprints.strath.ac.uk/93269/}{Large language
+  model-based knowledge graph construction of unstructured accident reports to
+  improve construction safety}, in: {EG-ICE} 2025: {AI}-Driven Collaboration
+  for Sustainable and Resilient Built Environments, University of Strathclyde
+  Publishing, 2025, pp. 536--546.
+\newblock \href {https://doi.org/10.17868/strath.00093269}
+  {\path{doi:10.17868/strath.00093269}}.
+\newline\urlprefix\url{https://strathprints.strath.ac.uk/93269/}
+
+\end{thebibliography}

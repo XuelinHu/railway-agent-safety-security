@@ -1,0 +1,35 @@
+{
+  "source_log": "outputs/public_pge_validation_seed42/runner.log",
+  "source_log_sha256": "37c957d3d6aded1f8cf0727bc411748ba45a4010d0f14bbb3be987a3ed1ec9c8",
+  "scope": "seed-42 EAE and HRGE adapters; logged every five optimizer steps",
+  "adapters": {
+    "conll04:eae": {
+      "started_at_utc": "2026-09-04T04:13:40.146744+00:00",
+      "optimizer_steps": 231,
+      "logged_observations": 46,
+      "logging_interval_steps": 5,
+      "final_unlogged_step": true
+    },
+    "conll04:hrge": {
+      "started_at_utc": "2026-09-04T04:31:46.210633+00:00",
+      "optimizer_steps": 231,
+      "logged_observations": 46,
+      "logging_interval_steps": 5,
+      "final_unlogged_step": true
+    },
+    "ade:eae": {
+      "started_at_utc": "2026-09-04T08:54:54.422954+00:00",
+      "optimizer_steps": 866,
+      "logged_observations": 173,
+      "logging_interval_steps": 5,
+      "final_unlogged_step": true
+    },
+    "ade:hrge": {
+      "started_at_utc": "2026-09-04T09:46:48.412932+00:00",
+      "optimizer_steps": 866,
+      "logged_observations": 173,
+      "logging_interval_steps": 5,
+      "final_unlogged_step": true
+    }
+  }
+}
