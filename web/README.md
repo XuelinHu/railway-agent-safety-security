@@ -3,13 +3,13 @@
 启动局域网服务：
 
 ```bash
-python3 scripts/serve_review.py --host 0.0.0.0 --port 8765
+python3 scripts/serve_review.py --host 0.0.0.0 --port 8027
 ```
 
 然后在同一局域网设备访问：
 
 ```text
-http://<本机局域网IP>:8765/web/review.html
+http://<本机局域网IP>:8027/web/review.html
 ```
 
 页面会自动读取：

@@ -24,7 +24,7 @@ def local_ip() -> str:
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--host", default="0.0.0.0")
-    parser.add_argument("--port", type=int, default=8765)
+    parser.add_argument("--port", type=int, default=8027)
     args = parser.parse_args()
     root = Path(__file__).resolve().parents[1]
     handler = functools.partial(http.server.SimpleHTTPRequestHandler, directory=str(root))
